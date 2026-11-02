@@ -13,6 +13,28 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
+    /* 検索画面: 住所(日本地図)・電話番号・マップコード */
+    .sx-tabs { display: flex; gap: 6px; overflow-x: auto; flex-shrink: 0; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+    .sx-tab { flex: 0 0 auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #cbd5e1; background: #0f172a; border: 1.5px solid #334155; white-space: nowrap; }
+    .sx-tab.on { color: #020617; background: #22d3ee; border-color: #22d3ee; }
+    .sx-btn { padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 800; color: #e2e8f0; background: #1e293b; border: 1.5px solid #475569; }
+    .sx-btn:active { transform: scale(.96); }
+    .sx-btn-go { color: #020617; background: #22d3ee; border-color: #22d3ee; font-size: 16px; }
+    .sx-crumbs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex-shrink: 0; font-size: 12px; color: #94a3b8; }
+    .sx-crumb { padding: 5px 10px; border-radius: 8px; font-weight: 800; font-size: 13px; color: #67e8f9; background: #0f172a; border: 1px solid #155e75; }
+    .sx-list { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; align-content: start; padding-right: 2px; -webkit-overflow-scrolling: touch; }
+    .sx-item { padding: 11px 8px; border-radius: 12px; font-size: 14px; font-weight: 800; color: #e2e8f0; background: #0f172a; border: 1.5px solid #334155; text-align: center; }
+    .sx-item:active { background: #155e75; }
+    .sx-display { min-height: 56px; padding: 8px 14px; border-radius: 14px; border: 2px solid #22d3ee; background: #020617; color: #fff; font-size: 30px; font-weight: 900; letter-spacing: .06em; font-variant-numeric: tabular-nums; display: flex; align-items: center; word-break: break-all; }
+    .sx-display.dim { color: #475569; font-size: 18px; font-weight: 700; letter-spacing: 0; }
+    .sx-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .sx-key { height: 52px; border-radius: 12px; font-size: 24px; font-weight: 900; color: #f1f5f9; background: #1e293b; border: 1.5px solid #475569; }
+    .sx-key:active { background: #0e7490; transform: scale(.95); }
+    .sx-key.fn { font-size: 18px; color: #fca5a5; }
+    #sxMap svg { width: 100%; height: 100%; max-height: 100%; }
+    .sx-tile { cursor: pointer; }
+  </style>
+  <style>
     /* オーディオ全画面: タイトルを左へ、空いた場所に地図 */
     #musicMidRow { display: contents; }
     #musicMapBox { display: none; }
@@ -676,6 +698,12 @@ body{animation:shoFade .6s ease-out}
             <button onclick="quickShowFullRoute()" class="bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-700 rounded-lg py-2 flex flex-col items-center gap-1 text-slate-200">
               <i class="fa-solid fa-route text-cyan-400"></i><span class="text-[10px] font-bold">全ルート表示</span>
             </button>
+            <button onclick="quickHighwayAhead()" class="bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-700 rounded-lg py-2 flex flex-col items-center gap-1 text-slate-200">
+              <i class="fa-solid fa-road-circle-check text-cyan-400"></i><span class="text-[10px] font-bold">高速の先の情報</span>
+            </button>
+            <button onclick="toggleSidePanel('quickZoom')" class="bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-700 rounded-lg py-2 flex flex-col items-center gap-1 text-slate-200">
+              <i class="fa-solid fa-magnifying-glass-plus text-cyan-400"></i><span class="text-[10px] font-bold">地図の縮尺</span>
+            </button>
             <button onclick="toggleSidePanel('quickRoad')" class="bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-700 rounded-lg py-2 flex flex-col items-center gap-1 text-slate-200 col-span-2">
               <i class="fa-solid fa-road text-cyan-400"></i><span class="text-[10px] font-bold">道路切換(高速/下道)</span>
             </button>
@@ -700,6 +728,22 @@ body{animation:shoFade .6s ease-out}
             <button onclick="declareRoadLayer('local')" class="bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 text-[11px] font-black py-1.5 rounded-lg transition"><i class="fa-solid fa-traffic-light mr-1"></i>下道</button>
           </div>
           <div class="text-[9px] text-slate-500 leading-snug">GPSは高さが分からないので、高速の上と下道を取り違えたら、ここで教えてください。その道からルートを探し直します(案内中のみ)。</div>
+        </div>
+
+        <!-- MODE: クイック内「地図の縮尺」 -->
+        <div id="sideWidgetQuickZoom" class="hidden flex-1 flex flex-col p-0.5 space-y-1.5 overflow-y-auto">
+          <div class="flex items-center gap-1.5 border-b border-slate-800 pb-1">
+            <button onclick="toggleSidePanel('quick')" class="text-slate-300 hover:text-white text-[10px] px-1.5 py-1 rounded-lg bg-slate-800 border border-slate-700 flex items-center gap-1 active:scale-95">
+              <i class="fa-solid fa-arrow-left"></i> 戻る
+            </button>
+            <span class="text-xs font-black text-cyan-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i>地図の縮尺</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="quickMapZoomBy(1)" class="bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white text-[12px] font-black py-2.5 rounded-lg"><i class="fa-solid fa-plus mr-1"></i>くわしく</button>
+            <button onclick="quickMapZoomBy(-1)" class="bg-slate-700 hover:bg-slate-600 active:scale-95 text-white text-[12px] font-black py-2.5 rounded-lg"><i class="fa-solid fa-minus mr-1"></i>ひろく</button>
+          </div>
+          <div id="qzInfo" class="text-[10px] text-slate-300 text-center leading-snug">--</div>
+          <div id="qzPresets" class="grid grid-cols-2 gap-1"></div>
         </div>
 
         <!-- MODE: クイック内「周辺施設」の一覧(前からある、ワンタップで探せる一覧をそのまま) -->
@@ -1608,8 +1652,8 @@ body{animation:shoFade .6s ease-out}
           </button>
         </div>
 
-        <div class="max-w-xl mx-auto w-full flex flex-col gap-3 flex-1 min-h-0">
-          <div class="relative flex-shrink-0">
+        <div id="searchMainCol" class="max-w-xl mx-auto w-full flex flex-col gap-3 flex-1 min-h-0">
+          <div id="searchInputRow" class="relative flex-shrink-0">
             <input type="text" id="searchInputField" placeholder="キーワードや番号。「近くのコンビニ」「お腹すいた」もOK" oninput="onSearchInputChanged()" onkeydown="if(event.key==='Enter'){executeSearch();}" class="w-full bg-slate-900 border-2 border-cyan-500 rounded-xl px-4 py-3.5 text-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
             <button onclick="executeSearch()" class="absolute right-2 top-2 bottom-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 rounded-lg">
               検索
@@ -1617,10 +1661,29 @@ body{animation:shoFade .6s ease-out}
           </div>
 
           <!-- 候補が多いときは、この枠の中だけを上下にスクロールできる -->
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col flex-1 min-h-0">
+          <div id="searchResultsCard" class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col flex-1 min-h-0">
             <div class="text-xs font-bold text-slate-400 mb-1 flex-shrink-0">候補地・ランドマーク</div>
             <div id="searchResultsList" class="space-y-2 flex-1 min-h-0 overflow-y-auto pr-1" style="-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;">
             </div>
+          </div>
+
+          <!-- 住所探索: 日本地図 → 県 → 市(50音) → 町(50音) → 番号 -->
+          <div id="addrPicker" style="display:none;flex:1;min-height:0;flex-direction:column;gap:8px">
+            <div id="sxRegionTabs" class="sx-tabs"></div>
+            <div style="display:flex;gap:12px;flex:1;min-height:0">
+              <div id="sxMap" style="flex:0 0 46%;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center"></div>
+              <div id="sxRight" style="flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;gap:8px"></div>
+            </div>
+          </div>
+          <!-- 電話番号・マップコード: このアプリのキーボード -->
+          <div id="keypadPanel" style="display:none;flex:1;min-height:0;gap:12px;flex-wrap:wrap">
+            <div style="flex:1 1 280px;min-width:0;min-height:0;display:flex;flex-direction:column;gap:8px">
+              <div id="kpDisplay" class="sx-display"></div>
+              <div id="kpHint" style="font-size:11px;color:#94a3b8"></div>
+              <div style="display:flex;gap:8px"><button class="sx-btn sx-btn-go" onclick="kpGo()" style="flex:1">検索</button><button class="sx-btn" onclick="kpClear()">クリア</button></div>
+              <div id="kpResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
+            </div>
+            <div id="kpPad" class="sx-pad" style="flex:0 0 250px;align-self:flex-start"></div>
           </div>
         </div>
 
@@ -6167,6 +6230,7 @@ body{animation:shoFade .6s ease-out}
       document.getElementById('sideWidgetQuick').classList.add('hidden');
       document.getElementById('sideWidgetQuickRoad').classList.add('hidden');
       document.getElementById('sideWidgetQuickNearby').classList.add('hidden');
+      document.getElementById('sideWidgetQuickZoom').classList.add('hidden');
       document.getElementById('sideWidgetAC').classList.add('hidden');
 
       if (isMinimalMode) return;
@@ -6198,6 +6262,9 @@ body{animation:shoFade .6s ease-out}
       } else if (mode === 'quickRoad') {
         document.getElementById('sideWidgetQuickRoad').classList.remove('hidden');
         updateQuickPanel();
+      } else if (mode === 'quickZoom') {
+        document.getElementById('sideWidgetQuickZoom').classList.remove('hidden');
+        quickZoomRefresh();
       } else if (mode === 'quickNearby') {
         document.getElementById('sideWidgetQuickNearby').classList.remove('hidden');
       } else {
@@ -8584,7 +8651,7 @@ body{animation:shoFade .6s ease-out}
          という作りにしてある。 */
     const SIMULATE_JAM_IN_DEMO = true;
     const hwGuide = {
-      active: false, model: null, facilities: [], loaded: false, congested: [],
+      active: false, model: null, facilities: [], loaded: false, fetchError: false, congested: [],
       traveled: 0, token: 0, autoOpened: false, dismissed: false, manual: false,
       spoken: new Set(), simulated: false
     };
@@ -8643,25 +8710,36 @@ body{animation:shoFade .6s ease-out}
       return { pts, ranges: longRanges, totalM: m, timeAt };
     }
 
+    // 高速施設検索用: 混雑・一時エラー時は既存のOverpass予備サーバーへ順番に切り替える。
+    // null は全サーバー失敗、配列は取得成功(0件を含む)を表す。
     async function overpassFetchElements(query, timeoutMs) {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-      try {
-        const res = await fetch('https://overpass-api.de/api/interpreter', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: 'data=' + encodeURIComponent(query),
-          signal: ctrl.signal
-        });
-        if (!res.ok) return [];
-        const data = await res.json();
-        return data.elements || [];
-      } catch (e) {
-        console.error('Overpass error', e);
-        return [];
-      } finally {
-        clearTimeout(timer);
+      const endpoints = (typeof OVERPASS_URLS !== 'undefined' && OVERPASS_URLS.length)
+        ? OVERPASS_URLS
+        : ['https://overpass-api.de/api/interpreter'];
+      const errors = [];
+      for (const endpoint of endpoints) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs || 15000);
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'data=' + encodeURIComponent(query),
+            signal: ctrl.signal
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (!data || !Array.isArray(data.elements)) throw new Error('応答データ形式が不正');
+          return data.elements;
+        } catch (e) {
+          errors.push(endpoint + ': ' + ((e && e.name === 'AbortError') ? 'timeout' : ((e && e.message) || '通信失敗')));
+          console.warn('Highway Overpass endpoint failed:', endpoint, e);
+        } finally {
+          clearTimeout(timer);
+        }
       }
+      console.error('All highway Overpass endpoints failed:', errors.join(' / '));
+      return null;
     }
 
     function classifyFacility(e) {
@@ -8670,8 +8748,9 @@ body{animation:shoFade .6s ease-out}
       if (!name) return null;
       let kind;
       if (tags.highway === 'motorway_junction') kind = /JCT|ジャンクション/i.test(name) ? 'JCT' : 'IC';
-      else if (tags.highway === 'services') kind = /PA|パーキング/.test(name) ? 'PA' : 'SA';
-      else kind = /SA|サービス/.test(name) ? 'SA' : 'PA';
+      else if (tags.highway === 'services') kind = 'SA';
+      else if (tags.highway === 'rest_area') kind = 'PA';
+      else return null;
       const label = name
         .replace(/[（(][^)）]*[)）]\s*$/, '')
         .replace(/(インターチェンジ|ジャンクション|サービスエリア|パーキングエリア|JCT|IC|SA|PA)\s*$/i, '')
@@ -8701,44 +8780,85 @@ body{animation:shoFade .6s ease-out}
       return best;
     }
 
-    // ルートの高速区間沿いのIC/JCT/PA/SAを取得して、ルート上の距離(m)つきで返す
+    // ルートの高速区間を細かくたどり、IC/JCT/SA/PAを順番に取得する。
+    // OSMに登録されている施設が対象。未登録施設まで保証するものではない。
     async function fetchHighwayFacilities(model) {
-      const total = model.ranges.reduce((a, r) => a + (r.m1 - r.m0), 0);
-      const spacing = Math.max(1500, total / 300);
-      const polys = model.ranges.map(r => {
-        const inRange = model.pts.filter(p => p.m >= r.m0 - 1 && p.m <= r.m1 + 1);
-        const sampled = [];
-        let lastM = -Infinity;
-        inRange.forEach((p, i) => {
-          if (p.m - lastM >= spacing || i === inRange.length - 1) { sampled.push(p); lastM = p.m; }
-        });
-        return sampled.map(p => `${p.lat.toFixed(5)},${p.lon.toFixed(5)}`).join(',');
-      }).filter(s => s.includes(','));
-      if (!polys.length) return [];
-      const clauses = polys.map(poly =>
-        `node["highway"="motorway_junction"](around:350,${poly});nwr["highway"~"^(services|rest_area)$"](around:450,${poly});`
-      ).join('');
-      const elements = await overpassFetchElements(`[out:json][timeout:25];(${clauses});out center tags;`, 30000);
+      if (!model.pts || model.pts.length < 2 || !model.ranges.length) return { items: [], failed: false };
 
-      const rad = Math.PI / 180;
+      const rad = Math.PI / 180, earth = 6371000;
+      const distance = (a, b) => {
+        const y = (b.lat - a.lat) * rad;
+        const x = (b.lon - a.lon) * rad * Math.cos((a.lat + b.lat) * 0.5 * rad);
+        return Math.hypot(x, y) * earth;
+      };
+      const samples = [];
+      // 各高速区間の線分を約700mごとに補間。元のルート点が疎でも検索のすき間を減らす。
+      model.ranges.forEach(range => {
+        const pts = model.pts.filter(p => p.m >= range.m0 - 1 && p.m <= range.m1 + 1);
+        if (pts.length < 2) return;
+        if (!samples.length || samples[samples.length - 1].m < pts[0].m - 1) samples.push(pts[0]);
+        for (let i = 1; i < pts.length; i++) {
+          const a = pts[i - 1], b = pts[i];
+          const len = distance(a, b);
+          const steps = Math.max(1, Math.ceil(len / 700));
+          for (let k = 1; k <= steps; k++) {
+            const t = k / steps;
+            samples.push({
+              lat: a.lat + (b.lat - a.lat) * t,
+              lon: a.lon + (b.lon - a.lon) * t,
+              m: a.m + (b.m - a.m) * t
+            });
+          }
+        }
+      });
+      if (samples.length < 2) return { items: [], failed: false };
+
+      // 1クエリあたり約12km分。境界は2点重ねて施設の取りこぼしを抑える。
+      const chunks = [];
+      for (let i = 0; i < samples.length - 1; i += 16) {
+        const part = samples.slice(i, Math.min(samples.length, i + 18));
+        if (part.length >= 2) chunks.push(part);
+      }
+      const queries = chunks.map(points => {
+        const around = points.map(p => `${p.lat.toFixed(5)},${p.lon.toFixed(5)}`).join(',');
+        return `[out:json][timeout:20];(nwr["highway"~"^(motorway_junction|services|rest_area)$"](around:1100,${around}););out center tags;`;
+      });
+
+      const allElements = [];
+      let failedChunks = 0, cursor = 0;
+      async function worker() {
+        while (cursor < queries.length) {
+          const index = cursor++;
+          const result = await overpassFetchElements(queries[index], 5500);
+          if (result === null) failedChunks++;
+          else allElements.push(...result);
+        }
+      }
+      await Promise.all([worker(), worker()]);
+
+      const unique = new Map();
+      allElements.forEach(e => unique.set(`${e.type || ''}:${e.id || JSON.stringify(e)}`, e));
       const best = new Map();
-      elements.forEach(e => {
+      unique.forEach(e => {
         const f = classifyFacility(e);
         if (!f) return;
         const lat = e.lat !== undefined ? e.lat : (e.center && e.center.lat);
         const lon = e.lon !== undefined ? e.lon : (e.center && e.center.lon);
         if (lat === undefined || lon === undefined) return;
-        // 高速区間の線(点と点をつないだ線分)のうち、いちばん近い位置を探す(近い施設だけ採用)。
-        // まっすぐな区間は点が離れているので、点ではなく線分への垂線で距離を測る
         const near = nearestOnHighwayLine(model.pts, lat, lon);
-        const nearest = near ? { m: near.m } : null, nd = near ? near.d : Infinity;
-        const limit = f.kind === 'IC' || f.kind === 'JCT' ? 300 : 500;
-        if (!nearest || nd > limit) return;
-        const key = f.kind + ':' + f.name;
+        const limit = (f.kind === 'IC' || f.kind === 'JCT') ? 800 : 1100;
+        if (!near || near.d > limit) return;
+        // 同名の別施設(上下線など)を一つにまとめすぎないよう、位置もキーに含める。
+        const key = `${f.kind}:${f.name}:${Math.round(lat * 1000)}:${Math.round(lon * 1000)}`;
         const prev = best.get(key);
-        if (!prev || nd < prev.dist) best.set(key, { kind: f.kind, name: f.name, m: nearest.m, dist: nd, lat, lon, en: f.en, ref: f.ref });
+        if (!prev || near.d < prev.dist) {
+          best.set(key, { kind: f.kind, name: f.name, m: near.m, dist: near.d, lat, lon, en: f.en, ref: f.ref });
+        }
       });
-      return Array.from(best.values()).sort((a, b) => a.m - b.m);
+      return {
+        items: Array.from(best.values()).sort((a, b) => a.m - b.m),
+        failed: failedChunks > 0 && allElements.length === 0
+      };
     }
 
     // デモ走行用: 最初の長い高速区間の中ほどに、模擬の渋滞区間を1つ作る
@@ -8759,15 +8879,24 @@ body{animation:shoFade .6s ease-out}
       hwGuide.model = model;
       hwGuide.facilities = [];
       hwGuide.loaded = false;
+      hwGuide.fetchError = false;
       hwGuide.traveled = 0;
       hwGuide.congested = (isDemo && SIMULATE_JAM_IN_DEMO) ? simulateJamRanges(model) : [];
       hwGuide.simulated = !!(isDemo && SIMULATE_JAM_IN_DEMO);
       hwGuide.spoken = new Set();
       Object.assign(hwGuide, keep);
       const token = ++hwGuide.token;
-      fetchHighwayFacilities(model).then(list => {
+      fetchHighwayFacilities(model).then(result => {
         if (hwGuide.token !== token) return;
-        hwGuide.facilities = list;
+        hwGuide.facilities = result.items || [];
+        hwGuide.fetchError = !!result.failed;
+        hwGuide.loaded = true;
+        if (currentSideMode === 'highway') renderHighwayPanel();
+      }).catch(error => {
+        if (hwGuide.token !== token) return;
+        console.error('Highway facility loading failed:', error);
+        hwGuide.facilities = [];
+        hwGuide.fetchError = true;
         hwGuide.loaded = true;
         if (currentSideMode === 'highway') renderHighwayPanel();
       });
@@ -8967,7 +9096,9 @@ body{animation:shoFade .6s ease-out}
           </div>`;
       });
       if (!upcoming.length) {
-        const msg = hwGuide.loaded ? '前方の施設情報がありません' : '施設情報を取得中…';
+        const msg = !hwGuide.loaded
+          ? '施設情報を取得中…'
+          : (hwGuide.fetchError ? '施設情報を取得できませんでした。通信状態を確認して再度お試しください。' : 'この区間で登録された前方施設はありません');
         html += `<div class="text-[10px] text-slate-500 p-2">${msg}</div>`;
       }
       listEl.innerHTML = html;
@@ -9896,6 +10027,118 @@ body{animation:shoFade .6s ease-out}
       return `${exact ? 'ちょうど' : 'およそ'}${rounded}メートル`;
     }
 
+    // ルート選択画面のお試し機能: 高速道路へ入る地点にIC/JCT/スマートICマークを表示
+    let routeEntranceLayers = [];
+    let routeEntranceToken = 0;
+
+    function clearRouteEntranceMarkers() {
+      routeEntranceToken++;
+      routeEntranceLayers.forEach(layer => { try { layer.remove(); } catch (e) {} });
+      routeEntranceLayers = [];
+    }
+
+    function routeHighwayEntryPoints(route) {
+      const steps = routeSteps(route);
+      const flags = stepHighwayFlags(steps);
+      const entries = [];
+      steps.forEach((step, i) => {
+        const entersHighway = !!flags[i] && (i === 0 || !flags[i - 1]);
+        const isRamp = step.maneuver && step.maneuver.type === 'on ramp';
+        if (!entersHighway && !isRamp) return;
+        let loc = step.maneuver && step.maneuver.location;
+        if (!loc || !Number.isFinite(+loc[0]) || !Number.isFinite(+loc[1])) {
+          const coords = step.geometry && step.geometry.coordinates;
+          if (coords && coords.length) loc = coords[0];
+        }
+        if (!loc || !Number.isFinite(+loc[0]) || !Number.isFinite(+loc[1])) return;
+        const point = {
+          lat: +loc[1], lon: +loc[0],
+          roadName: step.name || '',
+          roadRef: step.ref || '',
+          maneuver: step.maneuver || null
+        };
+        if (entries.every(p => distM(p, point) > 1800)) entries.push(point);
+      });
+      return entries.slice(0, 4);
+    }
+
+    function routeEntranceKind(name) {
+      if (/スマート|smart/i.test(name || '')) return 'スマートIC';
+      if (/JCT|ジャンクション/i.test(name || '')) return 'JCT';
+      return 'IC';
+    }
+
+    function addRouteEntranceMarker(point, title, kind) {
+      if (!map) return;
+      // 画像見本に合わせた緑色の高速道路案内標識。道路番号はルートデータにある場合だけ表示する。
+      const roadRef = String(point.roadRef || '').split(';').map(v => v.trim()).filter(Boolean)[0] || '';
+      const roadName = point.roadName || '';
+      const facilityName = title || '名称未登録';
+      const badge = roadRef
+        ? `<span style="display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:25px;padding:0 5px;border:2px solid #fff;border-radius:4px;background:#fff;color:#087344;font-size:14px;font-weight:1000;line-height:1">${escapeHtml(roadRef)}</span>`
+        : `<span style="display:inline-flex;align-items:center;justify-content:center;height:25px;padding:0 6px;border:2px solid #fff;border-radius:4px;background:#fff;color:#087344;font-size:10px;font-weight:1000">高速</span>`;
+      const facilityType = kind === 'JCT' ? 'JCT' : kind === 'スマートIC' ? 'スマートIC' : kind === 'IC' ? 'IC' : '入口';
+      const arrow = (point.maneuver && /left/.test(point.maneuver.modifier || '')) ? '↖' : (point.maneuver && /right/.test(point.maneuver.modifier || '')) ? '↗' : '↑';
+      const html = `<div style="width:190px;box-sizing:border-box;padding:7px 9px 8px;background:#00834b;border:3px solid #f4fff8;border-radius:8px;box-shadow:0 3px 12px #0009;color:#fff;font-family:Arial,'Noto Sans JP',sans-serif;line-height:1.15;white-space:normal;transform:translate(-50%,-100%);pointer-events:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><span style="font-size:10px;font-weight:900;letter-spacing:.04em">高速道路 入口案内</span><span style="font-size:20px;font-weight:1000;line-height:1">${arrow}</span></div>
+        <div style="display:flex;align-items:center;gap:6px">${badge}<div style="min-width:0"><div style="font-size:13px;font-weight:1000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(roadName || '高速道路')}</div><div style="font-size:10px;font-weight:900;opacity:.95">${escapeHtml(facilityType)} ・ ${escapeHtml(facilityName)}</div></div></div>
+      </div>`;
+      const icon = L.divIcon({ className: 'sho-route-entry-marker', html, iconSize: [190, 66], iconAnchor: [95, 66] });
+      routeEntranceLayers.push(L.marker([point.lat, point.lon], { icon, interactive: false, keyboard: false, zIndexOffset: 1200 }).addTo(map));
+    }
+
+    async function renderRouteEntranceMarkers(route) {
+      clearRouteEntranceMarkers();
+      if (!map || !route) return;
+      const token = routeEntranceToken;
+      const entries = routeHighwayEntryPoints(route);
+      if (!entries.length) return;
+
+      // 先に入口位置だけ表示し、地名はOpenStreetMapから後で補完する
+      entries.forEach(p => addRouteEntranceMarker(p, p.road ? `${p.road}入口` : '高速道路入口', '高速入口'));
+      const endpoints = (typeof OVERPASS_URLS !== 'undefined' && OVERPASS_URLS.length)
+        ? OVERPASS_URLS : ['https://overpass-api.de/api/interpreter'];
+      const clauses = entries.map(p => `node["highway"="motorway_junction"](around:3000,${p.lat.toFixed(6)},${p.lon.toFixed(6)});`).join('');
+      const query = `[out:json][timeout:8];(${clauses});out tags;`;
+      let elements = null;
+      for (const endpoint of endpoints.slice(0, 2)) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 6500);
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'data=' + encodeURIComponent(query),
+            signal: controller.signal
+          });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (data && Array.isArray(data.elements)) { elements = data.elements; break; }
+        } catch (e) {
+          console.warn('ルート入口の名称取得に失敗:', e);
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      if (token !== routeEntranceToken || !map) return;
+      if (!elements) return; // 通信できなくても、先に表示した「高速道路入口」マークは残す
+
+      const namedNodes = elements.filter(el => el.type === 'node' && Number.isFinite(+el.lat) && Number.isFinite(+el.lon) && el.tags)
+        .map(el => ({ lat: +el.lat, lon: +el.lon, name: el.tags.name || el.tags['name:ja'] || '', ref: el.tags.ref || '' }))
+        .filter(n => n.name || n.ref);
+      clearRouteEntranceMarkers();
+      entries.forEach(point => {
+        const nearest = namedNodes.map(n => ({ node: n, distance: distM(point, n) }))
+          .filter(x => x.distance <= 3000).sort((a, b) => a.distance - b.distance)[0];
+        if (!nearest) {
+          addRouteEntranceMarker(point, point.roadName || '高速道路入口', '高速入口');
+          return;
+        }
+        const title = nearest.node.name || nearest.node.ref;
+        addRouteEntranceMarker(point, title, routeEntranceKind(title));
+      });
+    }
+
     // 出発前のプレビュー表示: 現在地→目的地の実ルートを1本の線(水色)で地図に描く
     function drawRoutePreview(geometry) {
       if (!map || !geometry) return;
@@ -9915,6 +10158,11 @@ body{animation:shoFade .6s ease-out}
       // 選んだルートは太く、その種別の色で一番上に描く
       const selColor = (ROUTE_MODES[currentRouteMode] || ROUTE_MODES.recommended).color;
       routeLine = L.geoJSON(geometry, { style: { color: selColor, weight: 8, opacity: 0.95 } }).addTo(map);
+      if (lastRouteChoice && lastRouteChoice.cand && lastRouteChoice.cand.route) {
+        renderRouteEntranceMarkers(lastRouteChoice.cand.route);
+      } else {
+        clearRouteEntranceMarkers();
+      }
       fitRouteOverview();
     }
 
@@ -10000,6 +10248,7 @@ body{animation:shoFade .6s ease-out}
     // (一般道=緑、高速道路=青。OSRMのstepsに含まれる"on ramp"/"off ramp"の
     //  マニューバで高速区間を判定する)
     function clearRouteDisplay() {
+      clearRouteEntranceMarkers();
       if (routeLine) { routeLine.remove(); routeLine = null; }
       routeSegmentLayers.forEach(l => l.remove());
       routeSegmentLayers = [];
@@ -10065,9 +10314,22 @@ body{animation:shoFade .6s ease-out}
         playBeepSound('navChime');
         setTimeout(() => speak('高速道路に入りました。'), 200);
       } else if (point.maneuver.type === 'off ramp') {
-        const toll = Math.floor(Math.random() * (999999 - 100 + 1)) + 100;
+        // ランダム料金は使わず、走行中の高速区間の距離から概算する。
+        // 実際の料金表/APIではないため、音声でも必ず「概算」と伝える。
+        let tollText = '料金は概算を表示しています。';
+        if (hwGuide && hwGuide.model && hwGuide.model.ranges.length) {
+          const traveled = Number(hwGuide.traveled) || 0;
+          const range = currentHighwayRange(traveled)
+            || hwGuide.model.ranges.filter(r => Math.abs(r.m1 - traveled) <= 2500)
+                .sort((a, b) => Math.abs(a.m1 - traveled) - Math.abs(b.m1 - traveled))[0];
+          if (range) {
+            const exit = hwExitFacility(range);
+            const exitM = exit ? exit.m : range.m1;
+            tollText = `この区間の通行料金は、約${hwTollFrom(range, exitM).toLocaleString()}円です。概算です。`;
+          }
+        }
         playBeepSound('navChime');
-        setTimeout(() => speak(`高速道路を出ました。料金は${toll}円です。`), 200);
+        setTimeout(() => speak(`高速道路を出ました。${tollText}`), 200);
       }
     }
 
@@ -12557,6 +12819,369 @@ body{animation:shoFade .6s ease-out}
       else if (msg !== APREAL.lastKey && now - APREAL.last > 3500) { APREAL.last = now; try { speak(msg + '。'); } catch (e) { /* 無視 */ } }
       APREAL.lastKey = msg;
     }
+
+    /* ============ 検索画面の拡張: 住所(日本地図)・電話番号・マップコード ============
+       ・住所探索: 日本地図(県のタイル)→県→市(50音)→町(50音)→番地(このアプリのキーボード)
+       ・電話番号探索 / マップコード検索: このアプリのキーボードで数字を入れる
+       ・名所探索(名前での検索)は、今までどおり */
+    const SX_REGIONS = ['北海道', '東北', '関東', '中部', '近畿', '中国', '四国', '九州・沖縄'];
+    const SX_COLORS = { '北海道': '#38bdf8', '東北': '#34d399', '関東': '#fbbf24', '中部': '#a78bfa', '近畿': '#fb7185', '中国': '#fb923c', '四国': '#2dd4bf', '九州・沖縄': '#e879f9' };
+    const SX_PREFS = [
+      ['北海道', '北海道', 11, 0, '北海道'],
+      ['青森県', '青森', 11, 1, '東北'], ['秋田県', '秋田', 10, 2, '東北'], ['岩手県', '岩手', 11, 2, '東北'], ['山形県', '山形', 10, 3, '東北'], ['宮城県', '宮城', 11, 3, '東北'], ['福島県', '福島', 10, 4, '東北'],
+      ['新潟県', '新潟', 9, 4, '中部'], ['福井県', '福井', 5, 5, '中部'], ['石川県', '石川', 6, 5, '中部'], ['富山県', '富山', 7, 5, '中部'], ['長野県', '長野', 8, 5, '中部'],
+      ['群馬県', '群馬', 9, 5, '関東'], ['栃木県', '栃木', 10, 5, '関東'], ['茨城県', '茨城', 11, 5, '関東'],
+      ['島根県', '島根', 1, 6, '中国'], ['鳥取県', '鳥取', 2, 6, '中国'], ['兵庫県', '兵庫', 3, 6, '近畿'], ['京都府', '京都', 4, 6, '近畿'], ['滋賀県', '滋賀', 5, 6, '近畿'], ['岐阜県', '岐阜', 6, 6, '中部'],
+      ['山梨県', '山梨', 8, 6, '中部'], ['埼玉県', '埼玉', 9, 6, '関東'], ['東京都', '東京', 10, 6, '関東'], ['千葉県', '千葉', 11, 6, '関東'],
+      ['山口県', '山口', 0, 7, '中国'], ['広島県', '広島', 1, 7, '中国'], ['岡山県', '岡山', 2, 7, '中国'], ['大阪府', '大阪', 4, 7, '近畿'], ['奈良県', '奈良', 5, 7, '近畿'], ['三重県', '三重', 6, 7, '近畿'],
+      ['愛知県', '愛知', 7, 7, '中部'], ['静岡県', '静岡', 8, 7, '中部'], ['神奈川県', '神奈川', 10, 7, '関東'],
+      ['佐賀県', '佐賀', 0, 8, '九州・沖縄'], ['福岡県', '福岡', 1, 8, '九州・沖縄'], ['大分県', '大分', 2, 8, '九州・沖縄'], ['香川県', '香川', 3, 8, '四国'], ['徳島県', '徳島', 4, 8, '四国'], ['和歌山県', '和歌山', 5, 8, '近畿'],
+      ['長崎県', '長崎', 0, 9, '九州・沖縄'], ['熊本県', '熊本', 1, 9, '九州・沖縄'], ['宮崎県', '宮崎', 2, 9, '九州・沖縄'], ['愛媛県', '愛媛', 3, 9, '四国'], ['高知県', '高知', 4, 9, '四国'],
+      ['鹿児島県', '鹿児島', 1, 10, '九州・沖縄'], ['沖縄県', '沖縄', 3, 10, '九州・沖縄']
+    ];
+    const SX_KANA = [['あ', 'あいうえおぁぃぅぇぉゔ'], ['か', 'かきくけこ'], ['さ', 'さしすせそ'], ['た', 'たちつてとっ'], ['な', 'なにぬねの'], ['は', 'はひふへほ'], ['ま', 'まみむめも'], ['や', 'やゆよゃゅょ'], ['ら', 'らりるれろ'], ['わ', 'わゐゑをん']];
+    const SX = { mode: 'name', region: '', pref: '', city: null, town: null, row: '', cities: null, towns: null, loading: false, err: '', num: '', view: 'pref', kp: '', cardHome: null, cache: {} };
+    const sx$ = (id) => document.getElementById(id);
+    function sxHira(t) { return String(t || '').replace(/[\u30a1-\u30f6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60)); }
+    function sxRowOf(kana) { const k = (sxHira(kana).normalize('NFD')[0] || ''); for (const r of SX_KANA) if (r[1].indexOf(k) >= 0) return r[0]; return 'わ'; }
+
+    function sxMountCard(host) {                                    // 検索結果の枠を、その場所に移す(host が空なら元の場所へ)
+      const card = sx$('searchResultsCard'); if (!card) return;
+      if (!SX.cardHome) SX.cardHome = card.parentNode;
+      (host || SX.cardHome).appendChild(card);
+    }
+    const _openFullSearchBase = openFullSearch;
+    window.openFullSearch = function (title) {
+      _openFullSearchBase(title);
+      const mode = title === '住所探索' ? 'addr' : title === '電話番号探索' ? 'phone' : title === 'マップコード検索' ? 'mapcode' : 'name';
+      SX.mode = mode;
+      const col = sx$('searchMainCol'), row = sx$('searchInputRow'), ap = sx$('addrPicker'), kp = sx$('keypadPanel'), card = sx$('searchResultsCard');
+      const wide = mode === 'addr' || mode === 'phone' || mode === 'mapcode';
+      col.classList.toggle('max-w-xl', !wide); col.classList.toggle('max-w-5xl', wide);
+      row.style.display = wide ? 'none' : ''; ap.style.display = mode === 'addr' ? 'flex' : 'none'; kp.style.display = (mode === 'phone' || mode === 'mapcode') ? 'flex' : 'none';
+      card.style.flex = '1 1 0%'; card.style.display = '';
+      if (mode === 'name') { sxMountCard(null); return; }
+      if (mode === 'addr') { sxMountCard(null); card.style.display = 'none'; Object.assign(SX, { region: '', pref: '', city: null, town: null, row: '', cities: null, towns: null, err: '', num: '', view: 'pref' }); sxRenderAddr(); return; }
+      SX.kp = ''; sxMountCard(sx$('kpResultHost')); sxKeypadSetup();
+    };
+
+    /* ---------- 住所探索 ---------- */
+    function sxRenderMap() {
+      const T = 32, G = 3, st = T + G, W = 12 * st, H = 11 * st;
+      let h = `<svg viewBox="-4 -4 ${W + 8} ${H + 8}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
+      SX_PREFS.forEach((p) => {
+        const x = p[2] * st, y = p[3] * st, c = SX_COLORS[p[4]], dim = SX.region && SX.region !== p[4], sel = SX.pref === p[0], fs = p[1].length >= 3 ? 8.5 : 11.5;
+        h += `<g class="sx-tile" onclick="sxPickPref('${p[0]}')" opacity="${dim ? 0.28 : 1}"><rect x="${x}" y="${y}" width="${T}" height="${T}" rx="6" fill="${sel ? c : '#0f172a'}" stroke="${c}" stroke-width="${sel ? 2.5 : 1.5}"/><text x="${x + T / 2}" y="${y + T / 2 + fs * 0.36}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${sel ? '#020617' : c}" font-family="sans-serif">${p[1]}</text></g>`;
+      });
+      h += '</svg>';
+      sx$('sxMap').innerHTML = h;
+    }
+    function sxRenderTabs() {
+      sx$('sxRegionTabs').innerHTML = ['全国'].concat(SX_REGIONS).map((r) => `<button class="sx-tab ${(r === '全国' ? !SX.region : SX.region === r) ? 'on' : ''}" onclick="sxPickRegion('${r}')">${r}</button>`).join('');
+    }
+    function sxCrumbs() {
+      const parts = [];
+      parts.push(`<button class="sx-crumb" onclick="sxBack('pref')">${SX.pref ? escapeHtml(SX.pref) : '県を選ぶ'}</button>`);
+      if (SX.city) parts.push(`<span>›</span><button class="sx-crumb" onclick="sxBack('city')">${escapeHtml(SX.city.city)}</button>`);
+      if (SX.town) parts.push(`<span>›</span><button class="sx-crumb" onclick="sxBack('town')">${escapeHtml(SX.town.town)}</button>`);
+      return `<div class="sx-crumbs">${parts.join('')}</div>`;
+    }
+    function sxKanaTabs(items, key) {                                 // 50音のタブ(あ・か・さ…)。その行に入るものだけ数字つきで出す
+      const cnt = {}; items.forEach((it) => { const r = sxRowOf(it.kana); cnt[r] = (cnt[r] || 0) + 1; });
+      return `<div class="sx-tabs">` + SX_KANA.filter((r) => cnt[r[0]]).map((r) => `<button class="sx-tab ${SX.row === r[0] ? 'on' : ''}" onclick="sxPickRow('${r[0]}')">${r[0]}<span style="font-size:10px;opacity:.7"> ${cnt[r[0]]}</span></button>`).join('') + '</div>';
+    }
+    function sxRenderAddr() {
+      sxRenderTabs(); sxRenderMap();
+      const R = sx$('sxRight'); if (!R) return;
+      if (SX.view === 'result') { R.innerHTML = sxCrumbs() + '<div id="sxResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div><div style="display:flex;gap:8px;flex-shrink:0"><button class="sx-btn" onclick="sxBack(\'num\')">番地を直す</button></div>'; sxMountCard(sx$('sxResultHost')); sx$('searchResultsCard').style.display = ''; return; }
+      if (SX.view === 'pref') {
+        const list = SX_PREFS.filter((p) => !SX.region || p[4] === SX.region);
+        R.innerHTML = `<div style="font-size:13px;color:#cbd5e1;font-weight:800">${SX.region ? SX.region + 'の県を選んでください' : '上のタブか、日本地図の県をタッチしてください'}</div><div class="sx-list">${list.map((p) => `<button class="sx-item" onclick="sxPickPref('${p[0]}')">${p[0]}</button>`).join('')}</div>`;
+        return;
+      }
+      if (SX.loading || SX.err) {
+        R.innerHTML = sxCrumbs() + (SX.loading ? '<div style="color:#94a3b8;padding:20px;text-align:center">読み込み中…</div>' : `<div style="color:#fca5a5;padding:14px;text-align:center;font-size:13px">${escapeHtml(SX.err)}<br><button class="sx-btn" style="margin-top:10px" onclick="sxRetry()">もう一度</button></div>`);
+        return;
+      }
+      if (SX.view === 'city' || SX.view === 'town') {
+        const items = SX.view === 'city' ? (SX.cities || []) : (SX.towns || []);
+        const key = SX.view === 'city' ? 'city' : 'town';
+        const shown = items.filter((it) => !SX.row || sxRowOf(it.kana) === SX.row);
+        const title = SX.view === 'city' ? '市区町村を、50音で選んでください' : '町名を、50音で選んでください';
+        R.innerHTML = sxCrumbs() + `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">${title}</div>` + sxKanaTabs(items, key)
+          + `<div class="sx-list">${shown.map((it) => `<button class="sx-item" onclick="${SX.view === 'city' ? 'sxPickCity' : 'sxPickTown'}(${items.indexOf(it)})">${escapeHtml(it[key])}</button>`).join('') || '<div style="color:#64748b;grid-column:1/-1;text-align:center;padding:14px">上の「あ・か・さ…」をタッチしてください</div>'}</div>`
+          + (SX.view === 'town' ? '<button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">町を選ばず、市の中心へ</button>' : '');
+        return;
+      }
+      if (SX.view === 'num') {
+        R.innerHTML = sxCrumbs() + `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">番地を入れてください(例: 1700-155)</div><div class="sx-display ${SX.num ? '' : 'dim'}" style="flex-shrink:0">${SX.num ? escapeHtml(SX.num) : '数字を入れる'}</div>`
+          + `<div style="display:flex;gap:10px;flex:1;min-height:0"><div class="sx-pad" id="sxPad" style="flex:0 0 230px;align-self:flex-start"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><button class="sx-btn sx-btn-go" onclick="sxAddrGo()">検索</button><button class="sx-btn" onclick="sxNumKey('C')">クリア</button><button class="sx-btn" onclick="sxGoCenter()">番地なしで町の中心へ</button></div></div>`;
+        sxPadFill(sx$('sxPad'), ['1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '0', '⌫'], sxNumKey);
+      }
+    }
+    function sxPadFill(el, keys, fn) {
+      el.innerHTML = keys.map((k) => `<button class="sx-key ${k === '⌫' ? 'fn' : ''}" data-k="${k}">${k}</button>`).join('');
+      el.onclick = (e) => { const b = e.target.closest('button[data-k]'); if (b) fn(b.dataset.k); };
+    }
+    function sxPickRegion(r) { SX.region = r === '全国' ? '' : r; if (SX.pref && SX.region && (SX_PREFS.find((p) => p[0] === SX.pref) || [])[4] !== SX.region) { SX.pref = ''; SX.city = null; SX.town = null; SX.view = 'pref'; } sxRenderAddr(); }
+    async function sxApi(params) {                                  // 市区町村・町名の一覧(HeartRails Geo API)。一度取ったものは覚えておく
+      const key = JSON.stringify(params); if (SX.cache[key]) return SX.cache[key];
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 15000);
+      try {
+        const res = await fetch('https://geoapi.heartrails.com/api/json?' + new URLSearchParams(params), { signal: ctrl.signal });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const j = await res.json(); const loc = (j.response && j.response.location) || [];
+        if (!loc.length) throw new Error('empty');
+        SX.cache[key] = loc; return loc;
+      } finally { clearTimeout(timer); }
+    }
+    async function sxLoadCities() {
+      SX.view = 'city'; SX.row = ''; SX.city = null; SX.town = null; SX.loading = true; SX.err = ''; sxRenderAddr();
+      try {
+        const loc = await sxApi({ method: 'getCities', prefecture: SX.pref }), seen = {};
+        SX.cities = loc.filter((l) => !l.prefecture || l.prefecture === SX.pref).filter((l) => !seen[l.city] && (seen[l.city] = 1)).map((l) => ({ city: l.city, kana: l.city_kana || '' }));
+      } catch (e) { SX.err = '市区町村の一覧を取得できませんでした。通信を確認してください。'; }
+      SX.loading = false; sxRenderAddr();
+    }
+    async function sxLoadTowns() {
+      SX.view = 'town'; SX.row = ''; SX.town = null; SX.loading = true; SX.err = ''; sxRenderAddr();
+      try {
+        const loc = await sxApi({ method: 'getTowns', city: SX.city.city, prefecture: SX.pref }), seen = {};
+        SX.towns = loc.filter((l) => !l.prefecture || l.prefecture === SX.pref).filter((l) => !seen[l.town] && (seen[l.town] = 1)).map((l) => ({ town: l.town, kana: l.town_kana || '', x: parseFloat(l.x), y: parseFloat(l.y) }));
+        if (!SX.towns.length) throw new Error('none');
+      } catch (e) { SX.err = '町名の一覧を取得できませんでした。「町を選ばず、市の中心へ」でも進めます。'; SX.towns = []; }
+      SX.loading = false; sxRenderAddr();
+    }
+    function sxPickPref(name) { SX.pref = name; const p = SX_PREFS.find((q) => q[0] === name); if (p && SX.region && p[4] !== SX.region) SX.region = p[4]; else if (p && !SX.region) SX.region = ''; sxLoadCities(); }
+    function sxPickRow(r) { SX.row = (SX.row === r) ? '' : r; sxRenderAddr(); }
+    function sxPickCity(i) { SX.city = SX.cities[i]; sxLoadTowns(); }
+    function sxPickTown(i) { SX.town = SX.towns[i]; SX.view = 'num'; SX.num = ''; sxRenderAddr(); }
+    function sxGoCenter() { SX.num = ''; if (!SX.town) { SX.town = { town: '', kana: '', x: NaN, y: NaN }; } sxAddrGo(); }
+    function sxRetry() { if (SX.view === 'city') sxLoadCities(); else sxLoadTowns(); }
+    function sxBack(level) {
+      SX.err = ''; SX.loading = false;
+      if (level === 'pref') { SX.pref = ''; SX.city = null; SX.town = null; SX.view = 'pref'; }
+      else if (level === 'city') { SX.town = null; SX.view = 'city'; SX.row = ''; }
+      else if (level === 'town') { SX.view = 'town'; SX.row = ''; SX.town = null; }
+      else if (level === 'num') { SX.view = 'num'; sxMountCard(null); }
+      sxRenderAddr();
+    }
+    function sxNumKey(k) {
+      if (k === '⌫') SX.num = SX.num.slice(0, -1); else if (k === 'C') SX.num = ''; else if (SX.num.length < 14) SX.num += k;
+      const d = document.querySelector('#sxRight .sx-display'); if (d) { d.textContent = SX.num || '数字を入れる'; d.classList.toggle('dim', !SX.num); }
+    }
+    async function sxAddrGo() {                                     // 住所から場所をさがす(国土地理院 → OpenStreetMap → 町の中心 の順)
+      const town = SX.town ? SX.town.town : '', num = SX.num.replace(/-+$/, ''), full = SX.pref + SX.city.city + town + num;
+      SX.view = 'result'; sxRenderAddr();
+      const listEl = sx$('searchResultsList'); listEl.innerHTML = '<div class="text-center text-slate-500 text-sm py-4">場所を探しています…</div>';
+      const out = [], origin = getSearchOrigin(), add = (name, lat, lon, tag, exact) => {
+        if (!isFinite(lat) || !isFinite(lon)) return; if (out.some((o) => Math.abs(o.lat - lat) < 1e-4 && Math.abs(o.lon - lon) < 1e-4)) return;
+        out.push({ display_name: name, lat: lat, lon: lon, _name: name, _tag: tag, _exact: exact });
+      };
+      const hasNum = !!num, d1 = (num.match(/\d+/) || [''])[0];
+      try {
+        const res = await fetch('https://msearch.gsi.go.jp/address-search/AddressSearch?q=' + encodeURIComponent(full));
+        if (res.ok) (await res.json()).slice(0, 5).forEach((f) => { const t = (f.properties && f.properties.title) || '', c = f.geometry && f.geometry.coordinates; if (c && t.indexOf(SX.city.city) >= 0) add(t, c[1], c[0], '国土地理院', hasNum && d1 && t.indexOf(d1) >= 0); });
+      } catch (e) { /* 次へ */ }
+      if (!out.length || (hasNum && !out.some((o) => o._exact))) {
+        try {
+          const r = await nominatimSearch(full, origin, 3);
+          (r.results || []).forEach((x) => add(full, parseFloat(x.lat), parseFloat(x.lon), 'OpenStreetMap', hasNum && (x.display_name || '').indexOf(d1) >= 0));
+        } catch (e) { /* 次へ */ }
+      }
+      if (SX.town && isFinite(SX.town.x) && isFinite(SX.town.y)) add(SX.pref + SX.city.city + town + '(町の中心)', SX.town.y, SX.town.x, '町の中心', false);
+      if (!out.length) { try { const r = await nominatimSearch(SX.pref + SX.city.city, origin, 1); (r.results || []).forEach((x) => add(SX.pref + SX.city.city + '(市の中心)', parseFloat(x.lat), parseFloat(x.lon), '市の中心', false)); } catch (e) { /* 無視 */ } }
+      lastSearchResults = out.map((o) => Object.assign({}, o, { lat: String(o.lat), lon: String(o.lon), display_name: o.display_name.replace(/,/g, '') }));
+      let note = '';
+      if (!out.length) note = '場所が見つかりませんでした。住所を確認してください。';
+      else if (hasNum && !out.some((o) => o._exact)) note = `「${num}」の番地までは地図データに無かったので、近い場所を出しています。`;
+      renderSearchResults(lastSearchResults, note ? `<div class="text-[11px] text-amber-300 mb-1">${escapeHtml(note)}</div>` : `<div class="text-[11px] text-cyan-300 mb-1">住所から探しました。行きたい場所をタッチしてください。</div>`);
+    }
+
+    /* ---------- 電話番号・マップコード(このアプリのキーボード) ---------- */
+    function sxKeypadSetup() {
+      const isPh = SX.mode === 'phone';
+      sx$('kpHint').textContent = isPh ? '電話番号を入れてください(市外局番から。例: 0X-XXXX-XXXX)' : 'マップコードを入れてください(例: 123 456*78 → 12345678 の形で、* はキーの「*」)';
+      sxPadFill(sx$('kpPad'), isPh ? ['1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '0', '⌫'] : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '⌫'], kpKey);
+      sxKpShow();
+      sx$('searchResultsList').innerHTML = '';
+    }
+    function sxKpShow() { const d = sx$('kpDisplay'); d.textContent = SX.kp || (SX.mode === 'phone' ? '電話番号' : 'マップコード'); d.classList.toggle('dim', !SX.kp); }
+    function kpKey(k) { if (k === '⌫') SX.kp = SX.kp.slice(0, -1); else if (SX.kp.length < 16) SX.kp += k; sxKpShow(); }
+    function kpClear() { SX.kp = ''; sxKpShow(); sx$('searchResultsList').innerHTML = ''; }
+    function kpGo() { if (SX.mode === 'phone') sxPhoneSearch(); else sxMapcodeSearch(); }
+    async function overpassQuerySlow(body, ms) {                    // 全国を調べるので、待つ時間を長めにした Overpass 問い合わせ
+      for (const url of OVERPASS_URLS) {
+        const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), ms);
+        try { const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'data=' + encodeURIComponent(body), signal: ctrl.signal }); if (!res.ok) continue; return (await res.json()).elements || []; }
+        catch (e) { /* 次のサーバーへ */ } finally { clearTimeout(timer); }
+      }
+      return null;
+    }
+    async function sxPhoneSearch() {
+      const listEl = sx$('searchResultsList'), digits = SX.kp.replace(/\D/g, '');
+      if (digits.length < 8) { listEl.innerHTML = '<div class="text-center text-amber-300 text-sm py-4">電話番号を、市外局番から全部入れてください。</div>'; return; }
+      listEl.innerHTML = '<div class="text-center text-slate-500 text-sm py-4">全国から探しています…(少し時間がかかります)</div>';
+      const nat = digits.charAt(0) === '0' ? digits.slice(1) : digits, sep = '[- ().]*', re = '^(\\\\+81|0)' + sep + nat.split('').join(sep) + '$';
+      const els = await overpassQuerySlow('[out:json][timeout:50];(nwr["phone"~"' + re + '"](24,122,46,146);nwr["contact:phone"~"' + re + '"](24,122,46,146););out center 15;', 55000);
+      if (els === null) { listEl.innerHTML = '<div class="text-center text-slate-500 text-sm py-4">検索に失敗しました。通信状況を確認してください。</div>'; return; }
+      const origin = getSearchOrigin(), list = [];
+      els.forEach((e) => {
+        const lat = e.lat !== undefined ? e.lat : (e.center && e.center.lat), lon = e.lon !== undefined ? e.lon : (e.center && e.center.lon); if (lat === undefined) return;
+        const t = e.tags || {}, name = t['name:ja'] || t.name || t.brand || '電話番号の場所', addr = t['addr:full'] || [t['addr:city'], t['addr:suburb'], t['addr:quarter'], t['addr:neighbourhood'], t['addr:block_number']].filter(Boolean).join('');
+        const r = { display_name: (name + (addr ? ' ' + addr : '')).replace(/,/g, ''), lat: String(lat), lon: String(lon) };
+        if (origin.real) { const d = distM(origin, { lat: lat, lon: lon }); r._dist = d; r._distText = fmtSearchDist(d); }
+        list.push(r);
+      });
+      list.sort((a, b) => (a._dist || 0) - (b._dist || 0));
+      lastSearchResults = list;
+      renderSearchResults(list, list.length ? '<div class="text-[11px] text-cyan-300 mb-1">電話番号が登録されている場所です。</div>' : '<div class="text-[11px] text-amber-300 mb-1">この電話番号の場所は見つかりませんでした。地図データ(OpenStreetMap)に電話番号が登録されているお店・施設だけ探せます。</div>');
+    }
+    function sxMapcodeSearch() {
+      const listEl = sx$('searchResultsList'), raw = SX.kp, ok = /^\d{4,10}\*\d{2}$/.test(raw);
+      if (!ok) { listEl.innerHTML = '<div class="text-center text-amber-300 text-sm py-4">マップコードの形(数字 + 「*」 + 数字2けた。例: 12345678*55)で入れてください。</div>'; return; }
+      if (typeof window.MAPCODE_RESOLVER === 'function') {            // マップコードの変換データ/サービスが用意できたら、ここにつなぐ(住所は使わない)
+        Promise.resolve(window.MAPCODE_RESOLVER(raw)).then((p) => {
+          if (!p) { listEl.innerHTML = '<div class="text-center text-slate-500 text-sm py-4">そのマップコードの場所は見つかりませんでした。</div>'; return; }
+          lastSearchResults = [{ display_name: 'マップコード ' + raw, lat: String(p.lat), lon: String(p.lon) }]; renderSearchResults(lastSearchResults, '');
+        });
+        return;
+      }
+      listEl.innerHTML = '<div class="text-sm py-3" style="color:#fcd34d;line-height:1.6">マップコード「' + escapeHtml(raw) + '」を受け付けました。<br>マップコードを場所に変える変換データ(デンソーが管理している非公開の対応表)が手に入らず、このアプリではまだ場所に変えられません。変換できるサービスかデータがつながるまでは、住所・名前・電話番号で探してください。</div>';
+    }
+
+    /* ============ クイック: 地図の縮尺 / 高速の先の情報 ============ */
+    // 縮尺は「画面の線100pxぶんが、実際に何mか」で決める(25m〜10km)
+    const QZ_BAR_PX = 100;
+    const QZ_PRESETS = [['25m', 25], ['50m', 50], ['100m', 100], ['150m', 150], ['200m', 200], ['300m', 300], ['400m', 400], ['500m', 500], ['1km', 1000], ['5km', 5000], ['10km', 10000]];
+    function qzLat() { return (typeof userPos !== 'undefined' && userPos && userPos.lat) || ((typeof map !== 'undefined' && map) ? map.getCenter().lat : 35.7); }
+    function qzMetersForZoom(z) { return 156543.03 * Math.cos(qzLat() * Math.PI / 180) / Math.pow(2, z) * QZ_BAR_PX; }
+    function qzZoomForMeters(m) { return Math.log2(156543.03 * Math.cos(qzLat() * Math.PI / 180) / (m / QZ_BAR_PX)); }
+    function qzNear(m, z) { return Math.abs(Math.log(qzMetersForZoom(z) / m)) < 0.06; }
+    function qzFmt(m) { return m >= 1000 ? (+(m / 1000).toFixed(m < 10000 ? 1 : 0)) + 'km' : Math.round(m) + 'm'; }
+    function quickMapZoomMeters(m) {
+      initAudio(); if (typeof map === 'undefined' || !map) return;
+      map.options.zoomSnap = 0;                                    // 25m・150mなど、ちょうどの縮尺にするため、中間のズームを許す
+      const z = Math.max(5, Math.min(19, qzZoomForMeters(m)));
+      if (userPos && !crosshairActive) setViewOnUser([userPos.lat, userPos.lon], z, { animate: true }); else map.setZoom(z);
+      setTimeout(quickZoomRefresh, 450); quickZoomRefresh(z);
+    }
+    function quickMapZoomTo(z) {
+      initAudio(); if (typeof map === 'undefined' || !map) return;
+      z = Math.max(5, Math.min(19, Math.round(z)));
+      if (userPos && !crosshairActive) setViewOnUser([userPos.lat, userPos.lon], z, { animate: true }); else map.setZoom(z);
+      setTimeout(quickZoomRefresh, 450); quickZoomRefresh(z);
+    }
+    function quickMapZoomBy(d) {                                    // 「くわしく/ひろく」は、ひとつ隣の縮尺(25m, 50m, 100m…)へ
+      if (typeof map === 'undefined' || !map) return;
+      const cur = qzMetersForZoom(map.getZoom()); let t = null;
+      if (d > 0) { for (let i = QZ_PRESETS.length - 1; i >= 0; i--) if (QZ_PRESETS[i][1] < cur * 0.97) { t = QZ_PRESETS[i][1]; break; } }
+      else { for (let i = 0; i < QZ_PRESETS.length; i++) if (QZ_PRESETS[i][1] > cur * 1.03) { t = QZ_PRESETS[i][1]; break; } }
+      if (t != null) quickMapZoomMeters(t);
+    }
+    function quickZoomRefresh(zOverride) {
+      const info = document.getElementById('qzInfo'), box = document.getElementById('qzPresets'); if (!info || !box || typeof map === 'undefined' || !map) return;
+      const z = zOverride != null ? zOverride : map.getZoom(), lat = (userPos && userPos.lat) || 35.7;
+      const mpp = 156543.03 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), cont = document.getElementById('mapContainer'), w = ((cont && cont.clientWidth) || 800) * mpp;
+      info.innerHTML = `いまの縮尺: 約${qzFmt(qzMetersForZoom(z))}(画面の線${QZ_BAR_PX}pxぶん)<br>地図の横はば 約${w < 1000 ? Math.round(w / 10) * 10 + 'm' : (w / 1000).toFixed(w < 10000 ? 1 : 0) + 'km'}`;
+      box.innerHTML = QZ_PRESETS.map((p) => `<button onclick="quickMapZoomMeters(${p[1]})" class="text-[10px] font-bold py-1.5 rounded-lg border active:scale-95 ${qzNear(p[1], z) ? 'bg-cyan-600 border-cyan-300 text-white' : 'bg-slate-900 border-slate-700 text-slate-200'}">${p[0]}</button>`).join('');
+    }
+    function quickHighwayAhead() {                                  // 高速道路のこの先(出口・SA/PA・JCT・料金・渋滞)を、右の画面に出す
+      initAudio();
+      if (!hwGuide.active || !hwGuide.model || !hwGuide.model.ranges.length) { speak('高速道路を通るルートを案内しているときに使えます。', { force: true }); return; }
+      hwGuide.manual = true; hwGuide.autoOpened = true; hwGuide.dismissed = false;
+      toggleSidePanel('highway'); renderHighwayPanel();
+      // 前回の取得が失敗した/0件だった場合は、ボタンを押したタイミングで再取得する。
+      if (hwGuide.loaded && (!hwGuide.facilities.length || hwGuide.fetchError)) {
+        const model = hwGuide.model, token = ++hwGuide.token;
+        hwGuide.loaded = false;
+        hwGuide.fetchError = false;
+        renderHighwayPanel();
+        fetchHighwayFacilities(model).then(result => {
+          if (hwGuide.token !== token) return;
+          hwGuide.facilities = result.items || [];
+          hwGuide.fetchError = !!result.failed;
+          hwGuide.loaded = true;
+          if (currentSideMode === 'highway') renderHighwayPanel();
+        }).catch(error => {
+          if (hwGuide.token !== token) return;
+          console.error('Highway facility retry failed:', error);
+          hwGuide.facilities = [];
+          hwGuide.fetchError = true;
+          hwGuide.loaded = true;
+          if (currentSideMode === 'highway') renderHighwayPanel();
+        });
+      }
+    }
+
+    /* ============ 住所探索の日本地図(本物の県境) ============
+       県の形(GeoJSON)をネットから取ってきて描く。取れなかったときは、四角いタイルの地図のまま。
+       沖縄は、南の海の上に小さく移して表示する */
+    const SX_GEO_URLS = ['https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson', 'https://cdn.jsdelivr.net/gh/dataofjapan/land@master/japan.geojson'];
+    SX.geo = null; SX.geoState = 'idle'; SX.vb = null;
+    const SX_FULL = {}; SX_PREFS.forEach((p) => { SX_FULL[p[0]] = p[0]; SX_FULL[p[1]] = p[0]; });
+    function sxProj(lon, lat, okinawa) {
+      if (okinawa) { lon += 15.6; lat += 7.2; }
+      return [(lon - 128.6) * 79.3, (45.9 - lat) * 100];
+    }
+    function sxBuildGeo(gj) {
+      const geo = {};
+      (gj.features || []).forEach((f) => {
+        let name = null; const pr = f.properties || {};
+        for (const v of Object.values(pr)) { if (typeof v === 'string' && SX_FULL[v]) { name = SX_FULL[v]; break; } }
+        if (!name || !f.geometry) return;
+        const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [];
+        let d = '', best = null;
+        polys.forEach((poly) => poly.forEach((ring, ri) => {
+          let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, str = '';
+          ring.forEach((c, i) => { const p = sxProj(c[0], c[1], name === '沖縄県'); str += (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); });
+          d += str + 'Z';
+          const area = (x1 - x0) * (y1 - y0);
+          if (ri === 0 && (!best || area > best.area)) best = { area: area, x0: x0, y0: y0, x1: x1, y1: y1 };
+        }));
+        if (best && d) geo[name] = { d: d, bb: best, cx: (best.x0 + best.x1) / 2, cy: (best.y0 + best.y1) / 2 };
+      });
+      return Object.keys(geo).length >= 40 ? geo : null;
+    }
+    async function sxLoadGeo() {
+      if (SX.geoState !== 'idle') return; SX.geoState = 'loading';
+      for (const url of SX_GEO_URLS) {
+        const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 20000);
+        try {
+          const res = await fetch(url, { signal: ctrl.signal }); if (!res.ok) continue;
+          const geo = sxBuildGeo(await res.json());
+          if (geo) { SX.geo = geo; SX.geoState = 'ok'; if (SX.mode === 'addr') sxRenderMap(); return; }
+        } catch (e) { /* 次のURLへ */ } finally { clearTimeout(timer); }
+      }
+      SX.geoState = 'fail';
+    }
+    function sxGeoViewBox() {                                       // 地方のタブを選んだら、その地方にズームする
+      let x0 = 0, y0 = 0, x1 = 1404, y1 = 1530;
+      if (SX.region && SX.geo) {
+        x0 = 1e9; y0 = 1e9; x1 = -1e9; y1 = -1e9;
+        SX_PREFS.filter((p) => p[4] === SX.region && SX.geo[p[0]] && !(SX.region === '九州・沖縄' && p[0] === '沖縄県')).forEach((p) => { const b = SX.geo[p[0]].bb; x0 = Math.min(x0, b.x0); y0 = Math.min(y0, b.y0); x1 = Math.max(x1, b.x1); y1 = Math.max(y1, b.y1); });
+        const px = (x1 - x0) * 0.08 + 20, py = (y1 - y0) * 0.08 + 20; x0 -= px; x1 += px; y0 -= py; y1 += py;
+        if (SX.region === '九州・沖縄') { x1 = Math.max(x1, 1200); y1 = Math.max(y1, 1000); }   // 沖縄の枠も入れる
+      }
+      return [x0, y0, x1 - x0, y1 - y0];
+    }
+    const _sxRenderMapTiles = sxRenderMap;
+    sxRenderMap = function () {                                     // eslint-disable-line no-func-assign
+      if (SX.geoState === 'idle') sxLoadGeo();
+      if (!SX.geo) { _sxRenderMapTiles(); return; }
+      const vb = sxGeoViewBox(), fs = Math.max(14, vb[2] / 52);
+      let h = `<svg viewBox="${vb[0].toFixed(0)} ${vb[1].toFixed(0)} ${vb[2].toFixed(0)} ${vb[3].toFixed(0)}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
+      const ok = SX.geo['沖縄県'];
+      if (ok) h += `<rect x="${(ok.bb.x0 - 25).toFixed(0)}" y="${(ok.bb.y0 - 25).toFixed(0)}" width="${(ok.bb.x1 - ok.bb.x0 + 50).toFixed(0)}" height="${(ok.bb.y1 - ok.bb.y0 + 50).toFixed(0)}" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="10 8" rx="12"/>`;
+      let labels = '';
+      SX_PREFS.forEach((p) => {
+        const g = SX.geo[p[0]]; if (!g) return;
+        const c = SX_COLORS[p[4]], dim = SX.region && SX.region !== p[4], sel = SX.pref === p[0];
+        h += `<path class="sx-tile" onclick="sxPickPref('${p[0]}')" d="${g.d}" fill="${c}" fill-opacity="${sel ? 0.95 : dim ? 0.1 : 0.32}" stroke="${sel ? '#fff' : c}" stroke-width="${sel ? 4 : 1.6}" stroke-linejoin="round" opacity="${dim ? 0.55 : 1}"/>`;
+        if (!dim && (SX.region || p[1].length <= 3)) labels += `<text x="${g.cx.toFixed(0)}" y="${(g.cy + fs * 0.35).toFixed(0)}" text-anchor="middle" font-size="${fs.toFixed(0)}" font-weight="800" fill="${sel ? '#fff' : '#e2e8f0'}" stroke="#020617" stroke-width="${(fs / 7).toFixed(1)}" paint-order="stroke" style="pointer-events:none" font-family="sans-serif">${p[1]}</text>`;
+      });
+      sx$('sxMap').innerHTML = h + labels + '</svg>';
+    };
 </script>
 </body>
 </html>

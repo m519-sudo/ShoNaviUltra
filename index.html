@@ -231,6 +231,23 @@ body{animation:shoFade .6s ease-out}
 .dg-pad-s{transform-origin:56px 70px;animation:dgPadS 1.5s ease-in-out infinite}
 .dg-arrow-s{animation:dgArrowS 1.5s ease-in-out infinite}
 </style>
+<style>
+/* 住所探索: 上の段(パンくず+都道府県を選ぶ)と、横画面でも全部見えるキーパッド */
+.sx-topbar { display: flex; align-items: center; gap: 6px; flex-shrink: 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+.sx-topbar .sx-crumb { flex: 0 0 auto; }
+.sx-pickbtn { flex: 0 0 auto; margin-left: auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #020617; background: #22d3ee; border: 1.5px solid #22d3ee; }
+.sx-pickbtn:active { transform: scale(.96); }
+#sxPad { grid-template-rows: repeat(4, minmax(0, 1fr)); max-height: 360px; }
+#sxPad .sx-key { height: auto; min-height: 0; }
+@media (orientation: landscape) and (max-height: 520px) {
+  #fullSearchOverlay { padding: 8px 12px; }
+  #fullSearchOverlay > div:first-child { padding-bottom: 4px; margin-bottom: 4px; }
+  #fullSearchTitle { font-size: 1.05rem !important; }
+  #addrPicker .sx-display { min-height: 40px; font-size: 24px; }
+  #sxPad { gap: 6px; }
+  #sxPad .sx-key { font-size: 20px; }
+}
+</style>
 </head>
 <body class="h-[100dvh] w-screen flex flex-col justify-between p-0 bg-slate-950 text-slate-100 overflow-hidden">
 
@@ -468,8 +485,8 @@ body{animation:shoFade .6s ease-out}
             <!-- RECENTER (現在地に戻る) BUTTON -->
             <button onclick="recenterToCurrentLocation()" id="recenterBtnContainer" class="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-cyan-400 active:scale-90 transition cursor-pointer relative" title="現在地に戻る">
               <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2 L3 21 Q12 16.5 12 21 Z" fill="#cbd5e1"/>
-                <path d="M12 2 L21 21 Q12 16.5 12 21 Z" fill="#94a3b8"/>
+                <path d="M12 2 L3 21 Q7.5 18.75 12 18.75 Z" fill="#cbd5e1"/>
+                <path d="M12 2 L21 21 Q16.5 18.75 12 18.75 Z" fill="#94a3b8"/>
               </svg>
             </button>
 
@@ -547,7 +564,7 @@ body{animation:shoFade .6s ease-out}
               <i class="fa-solid fa-route text-cyan-400 text-xs"></i>
               <div>
                 <div class="font-bold text-slate-200">Root探索 (検索)</div>
-                <div class="text-[9px] text-slate-500">住所・名所・電話番号探索</div>
+                <div class="text-[9px] text-slate-500">住所・名所探索</div>
               </div>
             </button>
 
@@ -870,7 +887,7 @@ body{animation:shoFade .6s ease-out}
         </div>
 
         <!-- MODE 2: Search Panel with Conditional Red Termination Button -->
-        <div id="sideWidgetSearch" class="hidden flex-1 flex flex-col justify-between p-0.5 space-y-2">
+        <div id="sideWidgetSearch" class="hidden flex-1 flex flex-col justify-start p-0.5 space-y-2">
           <div>
             <div class="text-base font-black text-cyan-400 border-b border-slate-800 pb-1.5 mb-2 flex items-center justify-between">
               <span class="flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> Root探索</span>
@@ -905,27 +922,20 @@ body{animation:shoFade .6s ease-out}
                 <span class="text-[10px] font-bold text-slate-200">名所探索</span>
               </button>
 
-              <button onclick="openFullSearch('電話番号探索')" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl flex flex-col items-center justify-center text-center group">
-                <div class="w-7 h-7 bg-emerald-950 border border-emerald-500 rounded-lg flex items-center justify-center mb-1 text-emerald-400 text-xs">
-                  <i class="fa-solid fa-phone"></i>
+              <button onclick="openFullSearch('オンライン検索')" class="col-span-2 bg-slate-900 hover:bg-slate-800 border border-emerald-500/60 p-2 rounded-xl flex items-center justify-center gap-2 text-center group">
+                <div class="w-7 h-7 bg-emerald-950 border border-emerald-400 rounded-lg flex items-center justify-center text-emerald-300 text-xs flex-shrink-0">
+                  <i class="fa-solid fa-globe"></i>
                 </div>
-                <span class="text-[10px] font-bold text-slate-200">電話番号探索</span>
-              </button>
-
-              <button onclick="openFullSearch('マップコード検索')" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl flex flex-col items-center justify-center text-center group">
-                <div class="w-7 h-7 bg-amber-950 border border-amber-500 rounded-lg flex items-center justify-center mb-1 text-amber-400 text-xs">
-                  <i class="fa-solid fa-barcode"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-200">マップコード検索</span>
-              </button>
-
-              <button onclick="openFullSearch('登録地点')" class="col-span-2 bg-slate-900 hover:bg-slate-800 border border-cyan-500/60 p-2 rounded-xl flex items-center justify-center gap-2 text-center group">
-                <div class="w-7 h-7 bg-cyan-950 border border-cyan-400 rounded-lg flex items-center justify-center text-cyan-300 text-xs flex-shrink-0">
-                  <i class="fa-solid fa-star"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-200">登録地点 (自宅など) から探す</span>
+                <span class="text-[10px] font-bold text-slate-200">オンライン検索</span>
               </button>
             </div>
+
+            <button onclick="openFullSearch('登録地点')" class="w-full mb-2 bg-slate-900 hover:bg-slate-800 border border-cyan-500/60 p-2 rounded-xl flex items-center justify-center gap-2 text-center group">
+              <div class="w-7 h-7 bg-cyan-950 border border-cyan-400 rounded-lg flex items-center justify-center text-cyan-300 text-xs flex-shrink-0">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-200 leading-tight">登録地点 (自宅など) から探す</span>
+            </button>
           </div>
 
           <div class="mt-1 border-t border-slate-800 pt-1.5">
@@ -1647,7 +1657,7 @@ body{animation:shoFade .6s ease-out}
           <div class="flex items-center gap-3 text-cyan-400 font-black text-2xl" id="fullSearchTitle">
             <i class="fa-solid fa-magnifying-glass"></i> 住所探索
           </div>
-          <button onclick="closeFullSearch()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold border border-slate-700">
+          <button onclick="closeFullSearchByUser()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold border border-slate-700">
             <i class="fa-solid fa-xmark mr-1"></i> 戻る
           </button>
         </div>
@@ -4814,8 +4824,87 @@ body{animation:shoFade .6s ease-out}
       waves.forEach(el => el && el.classList.add('hidden'));
     }
 
+    // ---- 音声ダイアログの取り消し(「中止」「取り消し」「キャンセル」「やめて」) ----
+    function cancelVoiceDialog() {
+      waitingForDestinationName = false;
+      waitingForCandidateNumber = false;
+      waitingForGoOrWaypoint = false;
+      waitingForRouteChoice = false;
+      voiceSearchCandidates = [];
+      pendingVoiceDestination = null;
+      try { closeFullSearch(); } catch (e) {}
+      try { closePinPanel(); } catch (e) {}
+    }
+    // 検索画面の「戻る」ボタン: 音声検索の候補を出している途中なら、音声の待ち状態も一緒に解除する
+    function closeFullSearchByUser() {
+      if (waitingForCandidateNumber) cancelVoiceDialog(); else closeFullSearch();
+    }
+
+    // ---- 車の操作の音声コマンド(エアコン・窓) ----
+    // エアコンは、本当に設定が変わる。窓は、この画面に窓の操作がないため、声の返事だけ。
+    function qvToNumber(str) {
+      if (/^[0-9.]+$/.test(str)) return parseFloat(str);
+      const d = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+      let n = 0, t = str;
+      const ten = t.indexOf('十');
+      if (ten >= 0) { n += (ten === 0 ? 1 : (d[t[ten - 1]] || 0)) * 10; t = t.slice(ten + 1); }
+      if (t.length) n += d[t[0]] || 0;
+      return n || NaN;
+    }
+    function handleVehicleVoiceCommand(command) {
+      const c = command.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)).replace(/．/g, '.');
+      // --- 窓 ---
+      if (c.indexOf('窓') >= 0) {
+        const open = /開け|あけ|開いて|開く/.test(c), close = /閉め|しめ|閉じ|閉まる/.test(c);
+        if (open || close) {
+          const m = c.match(/(運転席|助手席|右後ろ|左後ろ|右後部座席|左後部座席|後部座席|後ろ|全部|すべて|全て|全席)の?窓/);
+          const label = m ? (/全部|すべて|全て|全席/.test(m[1]) ? 'すべての窓' : m[1] + 'の窓') : '窓';
+          voiceAnnounce(label + 'を' + (open ? '開けます' : '閉めます'));
+          return true;
+        }
+      }
+      // --- エアコン ---
+      if (/エアコン|空調|クーラー|ヒーター|温度/.test(c)) {
+        const nm = c.match(/([0-9]+(?:\.[0-9])?|[一二三四五六七八九十]+)\s*度/);
+        if (nm) {
+          const t = qvToNumber(nm[1]);
+          if (!isFinite(t) || t < 16 || t > 30) { voiceAnnounce('エアコンの設定温度は、16度から30度の間で設定できます。'); return true; }
+          AC.temp = Math.round(t * 2) / 2; AC.on = true; acSave(); acRender();
+          voiceAnnounce('エアコンを' + (Number.isInteger(AC.temp) ? AC.temp : AC.temp.toFixed(1)) + '度に変更します');
+          return true;
+        }
+        const up = /上げ|あげ|高く|高め/.test(c), down = /下げ|さげ|低く|低め/.test(c);
+        if (up || down) {
+          const before = AC.temp;
+          acTemp(up ? 1 : -1);
+          voiceAnnounce(AC.temp === before ? (up ? 'エアコンは、すでに最高の30度です。' : 'エアコンは、すでに最低の16度です。') : 'エアコンの温度を' + (up ? '上げて' : '下げて') + '、' + AC.temp + '度にします');
+          return true;
+        }
+        if (/つけ|付け|入れ|オン|起動|スタート/.test(c)) { AC.on = true; acSave(); acRender(); voiceAnnounce('エアコンをつけます'); return true; }
+        if (/消し|切っ|切る|オフ|止め|とめ/.test(c)) { AC.on = false; acSave(); acRender(); voiceAnnounce('エアコンを切ります'); return true; }
+      }
+      return false;
+    }
+
     function processTwoStepVoiceCommand(command) {
       let responseText = "";
+
+      // 「中止」「取り消し」「キャンセル」: 音声での目的地設定の途中でも、いつでも取り消せる
+      if (/中止|取り消|取消|キャンセル/.test(command) || (command.length <= 8 && /やめ|ストップ/.test(command))) {
+        const inDialog = waitingForDestinationName || waitingForCandidateNumber || waitingForGoOrWaypoint || waitingForRouteChoice;
+        const wasRouteChoice = waitingForRouteChoice;
+        if (inDialog) {
+          cancelVoiceDialog();
+          if (wasRouteChoice && hasDestinationSet) terminateRoute();   // ルート選びの途中なら、決めかけた目的地もやめる
+          else voiceAnnounce('取り消しました。');
+        } else if (hasDestinationSet && /案内|ルート|ナビ|目的地/.test(command)) {
+          terminateRoute();
+        } else {
+          voiceAnnounce('いま取り消す操作はありません。');
+        }
+        return;
+      }
+
 
       if (command.includes("案内を終了する") || command.includes("ルート終了") || command.includes("ナビ終了")) {
         waitingForDestinationName = false;
@@ -4851,6 +4940,9 @@ body{animation:shoFade .6s ease-out}
         announceRemainingToDestination();
         return;
       }
+
+      // エアコン・窓の音声コマンド(目的地の名前を待っている最中は、場所の名前として扱う)
+      if (!waitingForDestinationName && handleVehicleVoiceCommand(command)) return;
 
       if (waitingForDestinationName) {
         let dest = command.replace(/にして|へ行って|行きたい|お願い|登録して|目的地/g, "").trim();
@@ -5352,7 +5444,7 @@ body{animation:shoFade .6s ease-out}
         screen.classList.add('opacity-0');
         setTimeout(() => {
           screen.classList.add('hidden');
-          if (map) map.invalidateSize();
+          if (map) { map.invalidateSize(); refocusOnUserAfterResize(); setTimeout(refocusOnUserAfterResize, 600); }
           initThreeJS();
           startDriveWatch();                                       // 3Dビューが出た。30秒の見張りを始める
         }, 700);
@@ -6658,7 +6750,7 @@ body{animation:shoFade .6s ease-out}
        ・「行きたい」「案内して」などの言い回しは取り除く */
     function toKatakana(s) { return String(s).replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60)); }
     function sleepMs(ms) { return new Promise(r => setTimeout(r, ms)); }
-    const SEARCH_SUFFIX = '(?:屋|店|さん|や|系|の?お店|のある?ところ|のある?場所|の?場所|の?ところ|の?施設)?';
+    const SEARCH_SUFFIX = '(?:屋|店|や|系)?(?:さん)?(?:の?お店|のある?ところ|のある?場所|の?場所|の?ところ|の?施設)?';
     function compileSearchRe(src) { return new RegExp(toKatakana('^(?:' + src + ')' + SEARCH_SUFFIX + '$'), 'i'); }
 
     // 種類の言葉。上にあるものほど優先(「充電スタンド」がガソリンスタンドと混ざらないよう、充電を先に置く)
@@ -6671,8 +6763,18 @@ body{animation:shoFade .6s ease-out}
       { label: '焼肉店', re: '焼肉|焼き肉|ヤキニク', filters: ['["amenity"="restaurant"]["cuisine"~"yakiniku|barbecue"]', '["amenity"~"restaurant"]["name"~"焼肉|焼き肉|ホルモン"]'] },
       { label: 'うどん・そば', re: 'うどん|そば|蕎麦|ウドン', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"udon|soba|noodle"]', '["amenity"~"restaurant|fast_food"]["name"~"うどん|そば|蕎麦"]'] },
       { label: 'カレー店', re: 'カレー', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"curry"]', '["amenity"~"restaurant|fast_food"]["name"~"カレー"]'] },
+      { label: 'ハンバーグ・ステーキ', re: 'ハンバーグ|ステーキ', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"steak_house|hamburger_steak|steak"]', '["amenity"~"restaurant|fast_food"]["name"~"ハンバーグ|ステーキ"]'] },
+      { label: 'ファストフード', re: 'ファスト?フード|ファーストフード|ハンバーガー|バーガー', filters: ['["amenity"="fast_food"]'] },
+      { label: '牛丼・丼もの', re: '牛丼|丼|どんぶり|丼もの|定食', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"donburi|rice_bowl|japanese"]["name"~"丼|定食|食堂|吉野家|すき家|松屋|なか卯"]', '["amenity"~"restaurant|fast_food"]["name"~"丼|定食|食堂|吉野家|すき家|松屋|なか卯|やよい軒|大戸屋"]'] },
+      { label: 'ピザ', re: 'ピザ|ピッツァ', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"pizza"]', '["amenity"~"restaurant|fast_food"]["name"~"ピザ|ピッツァ"]'] },
+      { label: '中華・餃子', re: '中華(?:料理)?|餃子|ぎょうざ|チャーハン', filters: ['["amenity"~"restaurant|fast_food"]["cuisine"~"chinese"]', '["amenity"~"restaurant|fast_food"]["name"~"中華|餃子|王将|バーミヤン|日高屋"]'] },
+      { label: '居酒屋', re: '居酒屋|飲み屋|飲みに|バー|酒場|飲み会', filters: ['["amenity"~"restaurant|bar|pub"]["cuisine"~"izakaya"]', '["amenity"~"restaurant|bar|pub"]["name"~"居酒屋|酒場|酒蔵"]'] },
+      { label: 'とんかつ・揚げ物', re: 'とんかつ|トンカツ|カツ|天ぷら|天婦羅|揚げ物|唐揚げ|からあげ', filters: ['["amenity"~"restaurant|fast_food"]["name"~"とんかつ|トンカツ|かつ|カツ|天ぷら|天麩羅|唐揚げ|からあげ"]'] },
+      { label: 'うなぎ', re: 'うなぎ|鰻|ウナギ', filters: ['["amenity"~"restaurant"]["name"~"うなぎ|鰻|ウナギ"]'] },
+      { label: 'パン屋', re: 'パン|ベーカリー|パン屋', filters: ['["shop"="bakery"]'] },
+      { label: 'スイーツ・ケーキ', re: 'スイーツ|ケーキ|洋菓子|和菓子|甘いもの|デザート|アイス', filters: ['["shop"~"pastry|confectionery|bakery"]', '["amenity"="ice_cream"]'] },
       { label: 'カフェ', re: 'カフェ|喫茶(?:店)?|コーヒー|珈琲|お茶|喫茶室', filters: ['["amenity"="cafe"]'] },
-      { label: '食事のできるお店', re: 'ご飯|飯|食事|ランチ|ディナー|レストラン|飲食(?:店)?|食べ(?:たい|るところ|る所)|お?腹(?:が)?(?:すいた|空いた|すいてる|ぺこぺこ)|おなか(?:が)?(?:すいた|空いた|すいてる|ぺこぺこ)|腹(?:減った|へった)|めし|メシ|ファミレス|食堂|何か食べ|なにか食べ', filters: ['["amenity"~"restaurant|fast_food|food_court"]'] },
+      { label: '食事のできるお店', re: '(?:ご飯|ごはん|めし|メシ|ランチ|昼ご飯|晩ご飯|夜ご飯|朝ご飯|ご飯屋)(?:を|が)?(?:食べたい|たべたい|食べる|食べに行きたい)|ご飯|飯|食事|ランチ|ディナー|レストラン|飲食(?:店)?|食べ(?:たい|るところ|る所)|お?腹(?:が)?(?:すいた|空いた|すいてる|ぺこぺこ)|おなか(?:が)?(?:すいた|空いた|すいてる|ぺこぺこ)|腹(?:減った|へった)|めし|メシ|ファミレス|食堂|何か食べ(?:たい|る)?|なにか食べ(?:たい|る)?', filters: ['["amenity"~"restaurant|fast_food|food_court"]'] },
       { label: '道の駅', re: '道の駅|ミチノエキ', filters: ['["name"~"道の駅"]'] },
       { label: 'SA・PA', re: 'サービスエリア|パーキングエリア|SA|PA', filters: ['["highway"="services"]', '["highway"="rest_area"]'] },
       { label: '休憩できる場所', re: '休憩|一息|ひと休み|ひと息|休みたい|眠い|ねむい|眠たい|眠気|疲れた|仮眠|寝たい|一休み', filters: ['["highway"="rest_area"]', '["highway"="services"]', '["name"~"道の駅"]', '["amenity"="cafe"]'] },
@@ -6734,7 +6836,41 @@ body{animation:shoFade .6s ease-out}
       ['ワークマン', 'ワークマン', 'ワークマン'],
       ['コストコ', 'コストコ|COSTCO', 'コストコ|Costco'],
       ['ハードオフ', 'ハードオフ|ブックオフ', 'ハードオフ|ブックオフ|HARD OFF|BOOKOFF'],
-      ['日高屋', '日高屋', '日高屋']
+      ['日高屋', '日高屋', '日高屋'],
+      ['びっくりドンキー', 'びっくりドンキー|びっくりドンキ|びっくりどんきー', 'びっくりドンキー|びっくりドンキ|ビックリドンキー|Bikkuri'],
+      ['はま寿司', 'はま寿司|はまずし', 'はま寿司|はまずし'],
+      ['かっぱ寿司', 'かっぱ寿司', 'かっぱ寿司'],
+      ['丸亀製麺', '丸亀製麺|丸亀', '丸亀製麺'],
+      ['餃子の王将', '餃子の王将|王将', '餃子の王将|王将'],
+      ['バーミヤン', 'バーミヤン', 'バーミヤン'],
+      ['ジョナサン', 'ジョナサン', 'ジョナサン'],
+      ['デニーズ', 'デニーズ', 'デニーズ'],
+      ['ココス', 'ココス', 'ココス'],
+      ['ジョイフル', 'ジョイフル', 'ジョイフル'],
+      ['大戸屋', '大戸屋', '大戸屋'],
+      ['やよい軒', 'やよい軒|やよいけん', 'やよい軒'],
+      ['なか卯', 'なか卯|なかう', 'なか卯'],
+      ['天下一品', '天下一品|てんいち', '天下一品'],
+      ['幸楽苑', '幸楽苑', '幸楽苑'],
+      ['8番らーめん', '8番らーめん|八番らーめん|8番ラーメン', '8番らーめん|８番らーめん|8番ラーメン'],
+      ['リンガーハット', 'リンガーハット', 'リンガーハット'],
+      ['丸源ラーメン', '丸源ラーメン|丸源', '丸源ラーメン'],
+      ['来来亭', '来来亭', '来来亭'],
+      ['ケンタッキー', 'ケンタッキー|ケンタ|KFC', 'ケンタッキー|KFC'],
+      ['モスバーガー', 'モス(?:バーガー)?', 'モスバーガー'],
+      ['ミスタードーナツ', 'ミスド|ミスタードーナツ', 'ミスタードーナツ|ミスド'],
+      ['バーガーキング', 'バーガーキング|バーキン', 'バーガーキング'],
+      ['ほっともっと', 'ほっともっと', 'ほっともっと'],
+      ['ブロンコビリー', 'ブロンコビリー', 'ブロンコビリー'],
+      ['焼肉きんぐ', '焼肉きんぐ', '焼肉きんぐ'],
+      ['牛角', '牛角', '牛角'],
+      ['銀だこ', '銀だこ|築地銀だこ', '銀だこ'],
+      ['キャンドゥ', 'キャンドゥ|Can-?Do', 'キャンドゥ|Can.?Do'],
+      ['カインズ', 'カインズ', 'カインズ'],
+      ['コーナン', 'コーナン', 'コーナン'],
+      ['業務スーパー', '業務スーパー', '業務スーパー'],
+      ['マックスバリュ', 'マックスバリュ(?:ー)?', 'マックスバリュ'],
+      ['ベイシア', 'ベイシア', 'ベイシア']
     ];
     SEARCH_CATEGORIES.forEach(d => { d.rx = compileSearchRe(d.re); });
     const SEARCH_BRAND_DEFS = SEARCH_BRANDS.map(b => ({ label: b[0], rx: compileSearchRe(b[1]), nameRe: b[2] }));
@@ -6776,7 +6912,7 @@ body{animation:shoFade .6s ease-out}
       }
       q = stripSearchFillers(q);
       // 「渋谷のラーメン」のように、後ろが種類の言葉なら、前をエリアとして扱う
-      if (!area) {
+      if (!area && !matchSearchCategory(q)) {
         const m2 = q.match(/^(.+?)の(.+)$/);
         if (m2 && matchSearchCategory(stripSearchFillers(m2[2]))) { area = m2[1].trim(); q = stripSearchFillers(m2[2]); }
       }
@@ -7089,6 +7225,15 @@ body{animation:shoFade .6s ease-out}
       map.panTo(computeOffsetCenter(latlng, map.getZoom()), options);
     }
 
+    // 画面の大きさが変わった(起動直後のレイアウト確定・パネル開閉など)あとに、現在地を設定した位置へ置き直す。
+    // 十字ピンを出している(地図を動かしている)間は動かさない。
+    function refocusOnUserAfterResize() {
+      try {
+        if (!map || typeof userPos === 'undefined' || !userPos || crosshairActive || isRouteOverview()) return;
+        setViewOnUser([userPos.lat, userPos.lon], map.getZoom(), { animate: false });
+      } catch (e) { /* 無視 */ }
+    }
+
     function initRealMap() {
       map = L.map('realMap', { zoomControl: false, attributionControl: false, dragging: false })
         .setView([DEFAULT_POS.lat, DEFAULT_POS.lon], 14);
@@ -7110,6 +7255,8 @@ body{animation:shoFade .6s ease-out}
           if (isRouteOverview()) {   // ルートを選ぶ画面の間は、枠が変わるたびに全体が見えるよう合わせ直す
             clearTimeout(refitTimer);
             refitTimer = setTimeout(fitRouteOverview, 150);
+          } else {
+            refocusOnUserAfterResize();   // 枠の大きさが変わったら、現在地をいつもの位置(下寄り)に置き直す
           }
         }).observe(container);
       }
@@ -7665,8 +7812,8 @@ body{animation:shoFade .6s ease-out}
       // 赤×黒モードはボトムバーの現在地ボタンと同じ「左赤・右黒」の色分けにする
       if (mode === 'redblack') {
         const svg = `<div class="user-marker-rotor"><svg width="34" height="34" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2 L3 21 Q12 16.5 12 21 Z" fill="#ef4444"/>
-            <path d="M12 2 L21 21 Q12 16.5 12 21 Z" fill="#0f172a"/>
+            <path d="M12 2 L3 21 Q7.5 18.75 12 18.75 Z" fill="#ef4444"/>
+            <path d="M12 2 L21 21 Q16.5 18.75 12 18.75 Z" fill="#0f172a"/>
             <path d="M12 2 L21 21 Q12 16.5 3 21 Z" fill="none" stroke="#f8fafc" stroke-width="1.2" stroke-linejoin="round"/>
           </svg></div>`;
         return L.divIcon({
@@ -12876,8 +13023,19 @@ body{animation:shoFade .6s ease-out}
       h += '</svg>';
       sx$('sxMap').innerHTML = h;
     }
-    function sxRenderTabs() {
-      sx$('sxRegionTabs').innerHTML = ['全国'].concat(SX_REGIONS).map((r) => `<button class="sx-tab ${(r === '全国' ? !SX.region : SX.region === r) ? 'on' : ''}" onclick="sxPickRegion('${r}')">${r}</button>`).join('');
+    function sxRenderTabs() {                                        // 上の段: 県を選ぶ前は「地方のタブ」、県を選んだ後は「パンくず+都道府県を選ぶ」
+      const el = sx$('sxRegionTabs'); if (!el) return;
+      if (!SX.pref) {
+        el.className = 'sx-tabs';
+        el.innerHTML = ['全国'].concat(SX_REGIONS).map((r) => `<button class="sx-tab ${(r === '全国' ? !SX.region : SX.region === r) ? 'on' : ''}" onclick="sxPickRegion('${r}')">${r}</button>`).join('');
+        return;
+      }
+      const parts = [];
+      parts.push(`<button class="sx-crumb" onclick="sxBack('pref')">${escapeHtml(SX.pref)}</button>`);
+      if (SX.city) parts.push(`<span>›</span><button class="sx-crumb" onclick="sxBack('city')">${escapeHtml(SX.city.city)}</button>`);
+      if (SX.town && SX.town.town) parts.push(`<span>›</span><button class="sx-crumb" onclick="sxBack('town')">${escapeHtml(SX.town.town)}</button>`);
+      el.className = 'sx-topbar';
+      el.innerHTML = parts.join('') + `<button class="sx-pickbtn" onclick="sxBack('pref')">都道府県を選ぶ</button>`;
     }
     function sxCrumbs() {
       const parts = [];
@@ -12893,14 +13051,14 @@ body{animation:shoFade .6s ease-out}
     function sxRenderAddr() {
       sxRenderTabs(); sxRenderMap();
       const R = sx$('sxRight'); if (!R) return;
-      if (SX.view === 'result') { R.innerHTML = sxCrumbs() + '<div id="sxResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div><div style="display:flex;gap:8px;flex-shrink:0"><button class="sx-btn" onclick="sxBack(\'num\')">番地を直す</button></div>'; sxMountCard(sx$('sxResultHost')); sx$('searchResultsCard').style.display = ''; return; }
+      if (SX.view === 'result') { R.innerHTML = '<div id="sxResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div><div style="display:flex;gap:8px;flex-shrink:0"><button class="sx-btn" onclick="sxBack(\'num\')">番地を直す</button></div>'; sxMountCard(sx$('sxResultHost')); sx$('searchResultsCard').style.display = ''; return; }
       if (SX.view === 'pref') {
         const list = SX_PREFS.filter((p) => !SX.region || p[4] === SX.region);
         R.innerHTML = `<div style="font-size:13px;color:#cbd5e1;font-weight:800">${SX.region ? SX.region + 'の県を選んでください' : '上のタブか、日本地図の県をタッチしてください'}</div><div class="sx-list">${list.map((p) => `<button class="sx-item" onclick="sxPickPref('${p[0]}')">${p[0]}</button>`).join('')}</div>`;
         return;
       }
       if (SX.loading || SX.err) {
-        R.innerHTML = sxCrumbs() + (SX.loading ? '<div style="color:#94a3b8;padding:20px;text-align:center">読み込み中…</div>' : `<div style="color:#fca5a5;padding:14px;text-align:center;font-size:13px">${escapeHtml(SX.err)}<br><button class="sx-btn" style="margin-top:10px" onclick="sxRetry()">もう一度</button></div>`);
+        R.innerHTML = (SX.loading ? '<div style="color:#94a3b8;padding:20px;text-align:center">読み込み中…</div>' : `<div style="color:#fca5a5;padding:14px;text-align:center;font-size:13px">${escapeHtml(SX.err)}<br><button class="sx-btn" style="margin-top:10px" onclick="sxRetry()">もう一度</button></div>`);
         return;
       }
       if (SX.view === 'city' || SX.view === 'town') {
@@ -12908,14 +13066,15 @@ body{animation:shoFade .6s ease-out}
         const key = SX.view === 'city' ? 'city' : 'town';
         const shown = items.filter((it) => !SX.row || sxRowOf(it.kana) === SX.row);
         const title = SX.view === 'city' ? '市区町村を、50音で選んでください' : '町名を、50音で選んでください';
-        R.innerHTML = sxCrumbs() + `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">${title}</div>` + sxKanaTabs(items, key)
+        R.innerHTML = `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">${title}</div>` + sxKanaTabs(items, key)
           + `<div class="sx-list">${shown.map((it) => `<button class="sx-item" onclick="${SX.view === 'city' ? 'sxPickCity' : 'sxPickTown'}(${items.indexOf(it)})">${escapeHtml(it[key])}</button>`).join('') || '<div style="color:#64748b;grid-column:1/-1;text-align:center;padding:14px">上の「あ・か・さ…」をタッチしてください</div>'}</div>`
           + (SX.view === 'town' ? '<button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">町を選ばず、市の中心へ</button>' : '');
         return;
       }
-      if (SX.view === 'num') {
-        R.innerHTML = sxCrumbs() + `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">番地を入れてください(例: 1700-155)</div><div class="sx-display ${SX.num ? '' : 'dim'}" style="flex-shrink:0">${SX.num ? escapeHtml(SX.num) : '数字を入れる'}</div>`
-          + `<div style="display:flex;gap:10px;flex:1;min-height:0"><div class="sx-pad" id="sxPad" style="flex:0 0 230px;align-self:flex-start"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><button class="sx-btn sx-btn-go" onclick="sxAddrGo()">検索</button><button class="sx-btn" onclick="sxNumKey('C')">クリア</button><button class="sx-btn" onclick="sxGoCenter()">番地なしで町の中心へ</button></div></div>`;
+      if (SX.view === 'num') {                                       // 番地の入力: 左に表示とボタン、右にキーパッド(高さいっぱい)
+        R.innerHTML = `<div style="display:flex;gap:10px;flex:1;min-height:0">`
+          + `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto"><div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">番地を入れてください(例: 1700-155)</div><div class="sx-display ${SX.num ? '' : 'dim'}" style="flex-shrink:0">${SX.num ? escapeHtml(SX.num) : '数字を入れる'}</div><button class="sx-btn sx-btn-go" style="flex-shrink:0" onclick="sxAddrGo()">検索</button><button class="sx-btn" style="flex-shrink:0" onclick="sxNumKey('C')">クリア</button><button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">番地なしで町の中心へ</button></div>`
+          + `<div class="sx-pad" id="sxPad" style="flex:0 0 210px"></div></div>`;
         sxPadFill(sx$('sxPad'), ['1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '0', '⌫'], sxNumKey);
       }
     }

@@ -41,8 +41,8 @@
     #sidePanel.panel-fs #sideWidgetMusic #musicMidRow { display: flex; flex: 1; min-height: 0; gap: 18px; align-items: stretch; margin: 8px 0; }
     #sidePanel.panel-fs #sideWidgetMusic #musicTitleBlock { width: 24%; flex-shrink: 0; margin: 0; }
     #sidePanel.panel-fs #sideWidgetMusic #musicMapBox { display: block; flex: 1; min-width: 0; border-radius: 16px; overflow: hidden; border: 1px solid #334155; background: #0f172a; position: relative; }
-    #musicMapBox.map-color-invert { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); background: #0f172a; }
-    #musicMapBox.map-color-invert .leaflet-marker-icon { filter: invert(1) hue-rotate(180deg); }
+    #musicMapBox.map-color-invert { background: #0f172a; }
+    #musicMapBox.map-color-invert .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); }
     /* オートパーキングのスタート文字: 青 → うすい紫がふわっと流れる */
     @keyframes apGradMove { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
     .ap-start { background: transparent; }
@@ -63,12 +63,13 @@
   </style>
   <style>
     /* 本物地図(Leaflet)をダークテーマの車載機っぽく見せる(設定でON/OFF切替可能) */
-    #realMap.map-color-invert { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); background:#0f172a; }
-    #realMap.map-color-invert .leaflet-marker-icon, #realMap.map-color-invert .leaflet-popup { filter: invert(1) hue-rotate(180deg); }
-    /* 現在地マーカーは色反転の影響を受けず、設定した色がそのまま見えるようにする */
-    #realMap.map-color-invert .nav-current-location-marker { filter: none !important; }
-    /* 登録地点の★マーカーも色反転の影響を受けず、黄色い星のまま見えるようにする */
-    #realMap.map-color-invert .nav-saved-place-marker { filter: none !important; }
+    /* 色反転は「地図のタイル(背景の絵)」だけに掛ける。現在地マーク・★・ルート線・ポップアップは反転せず、設定した色のまま見える */
+    #realMap.map-color-invert .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); }
+    #realMap.map-color-invert, #mapContainer.map-dark-bg #realMap { background:#0f172a; }
+    /* 3D表示: 地図を斜めに倒して遠くまで見せるので、地図の板を大きくする(回転の中心は現在地マークの位置) */
+    #realMap.map-3d { width: 260% !important; height: 340% !important; left: -80% !important; top: -120% !important; }
+    .mset-btn { padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; }
+    .mset-btn.mset-on { background: #06b6d4; color: #020617; border-color: #67e8f9; }
     /* ヘディングアップ(進行方向を上に)用: #realMapを一回り大きくして中央基準で回転させる。
        親の#mapContainerは overflow:hidden 済みなので、はみ出た部分は自動的に隠れる。 */
     #realMap {
@@ -384,12 +385,24 @@ body{animation:shoFade .6s ease-out}
       <!-- LEFT / MAIN MAP AREA -->
       <div id="mapContainer" class="relative flex-1 h-full bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-500 min-w-0 overflow-hidden">
         <div id="realMap" class="absolute inset-0 w-full h-full z-0"></div>
-        <div class="absolute bottom-1 left-2 z-10 text-[9px] text-slate-500 font-mono pointer-events-none">© OpenStreetMap contributors</div>
+        <div id="mapCreditText" class="absolute bottom-1 left-2 z-10 text-[9px] text-slate-500 font-mono pointer-events-none">© OpenStreetMap contributors</div>
 
         <!-- 地図を手動でドラッグした時に出る十字マーク(中心=選択中の地点) -->
         <div id="mapCrosshair" class="hidden absolute top-1/2 left-1/2 z-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <i class="fa-solid fa-plus text-cyan-300 text-2xl" style="filter: drop-shadow(0 0 3px rgba(0,0,0,0.9)) drop-shadow(0 0 3px rgba(0,0,0,0.9));"></i>
         </div>
+
+        <!-- コンパス(北の向き)。タッチすると地図の表示(進行方向/北基準/3D)が切り替わる。設定で表示(初期はオフ) -->
+        <button id="mapCompass" type="button" onclick="cycleMapViewMode()" class="hidden absolute right-3 z-30" style="top:80px;width:54px;height:54px;border-radius:50%;background:rgba(2,6,23,.88);border:2px solid #22d3ee;box-shadow:0 4px 14px rgba(0,0,0,.6);padding:0">
+          <svg id="mapCompassDial" viewBox="0 0 48 48" width="46" height="46" style="display:block;margin:0 auto;transition:transform .35s linear">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="#334155" stroke-width="1.5"/>
+            <path d="M24 6 L30 24 L18 24 Z" fill="#ef4444"/>
+            <path d="M24 42 L30 24 L18 24 Z" fill="#e2e8f0"/>
+            <circle cx="24" cy="24" r="2.2" fill="#0f172a"/>
+            <text x="24" y="5.5" text-anchor="middle" font-size="7" font-weight="900" fill="#fca5a5" font-family="sans-serif">N</text>
+          </svg>
+          <span id="mapCompassLbl" style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font-size:9px;font-weight:800;color:#e2e8f0;background:rgba(2,6,23,.85);border:1px solid #334155;border-radius:8px;padding:0 6px"></span>
+        </button>
 
         <!-- 十字で選んだ地点に対する操作メニュー -->
         <div id="mapPinPanel" class="hidden absolute top-3 right-3 z-30 bg-slate-950/95 border-2 border-cyan-400 backdrop-blur-md rounded-2xl p-2 shadow-2xl flex flex-col gap-1.5 w-40 text-xs">
@@ -1248,11 +1261,11 @@ body{animation:shoFade .6s ease-out}
       </div>
 
       <!-- RICH SYSTEM SETTINGS MODAL -->
-      <div id="settingsModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-slate-900 border-2 border-cyan-500 rounded-2xl p-6 max-w-xl w-full shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div id="settingsModal" class="hidden absolute inset-0 z-50 bg-slate-950 flex items-stretch justify-center p-0">
+        <div class="bg-slate-900 p-4 sm:p-5 w-full h-full space-y-3 flex flex-col">
           
           <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
-            <div class="flex items-center gap-2 text-cyan-400 font-black text-2xl">
+            <div id="setBreadcrumb" class="flex items-center flex-wrap gap-x-1.5 gap-y-1 text-cyan-400 font-black text-lg min-w-0">
               <i class="fa-solid fa-gear"></i> システム設定 (Sho OS 2.0)
             </div>
             <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-bold border border-slate-700">
@@ -1260,7 +1273,7 @@ body{animation:shoFade .6s ease-out}
             </button>
           </div>
 
-          <div class="space-y-4 text-sm scrollable-panel overflow-y-auto pr-2 flex-1">
+          <div id="settingsScroll" class="space-y-4 text-sm scrollable-panel overflow-y-auto pr-1 flex-1 w-full max-w-3xl mx-auto">
             <div>
               <div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
                 <i class="fa-solid fa-sliders"></i> システム動作モード切替
@@ -1425,16 +1438,37 @@ body{animation:shoFade .6s ease-out}
               <div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
                 <i class="fa-solid fa-map"></i> 地図表示設定
               </div>
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div class="font-bold text-white">地図の色</div>
+                <div class="text-xs text-slate-400 mt-0.5 mb-2">夜は「ダーク」(暗い地図データに切り替え。色は反転しないので、現在地マークの色もそのまま)。「色反転」は今までの暗い配色(マークは反転しません)。「自動」は18時〜6時にダークになります</div>
+                <div class="grid grid-cols-4 gap-1.5"><button type="button" data-mc="normal" onclick="setMapColorMode('normal')" class="mset-btn">通常</button><button type="button" data-mc="dark" onclick="setMapColorMode('dark')" class="mset-btn">ダーク</button><button type="button" data-mc="invert" onclick="setMapColorMode('invert')" class="mset-btn">色反転</button><button type="button" data-mc="auto" onclick="setMapColorMode('auto')" class="mset-btn">自動</button></div>
+              </div>
+
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="font-bold text-white">ダーク地図のAPIキー(CARTO・無料)</div>
+                <div class="text-xs text-slate-400 mt-0.5 mb-2">「ダーク」には、CARTOの無料キーが必要です(個人利用は月500万枚まで無料・アカウント不要・メールでキーが届きます)。キーが空の間は、「ダーク」を選んでも色反転で代用します。<a href="https://carto.com/basemaps/apikey/" target="_blank" rel="noopener" class="text-cyan-400 underline">キーをもらうページ</a></div>
+                <div class="flex gap-1.5"><input id="mapCartoKey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ここにキーを貼り付け" class="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white"><button type="button" onclick="saveCartoKey()" class="mset-btn" style="padding:6px 14px">保存</button></div>
+                <div id="mapCartoKeyStatus" class="text-[11px] mt-1.5"></div>
+              </div>
+
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="font-bold text-white">地図の切り替え(向き)</div>
+                <div class="text-xs text-slate-400 mt-0.5 mb-2">進行方向=車の向きに合わせて地図が回る / 北基準=地図は北が上のまま / 3D=進行方向に合わせて地図を斜めに立体表示</div>
+                <div class="grid grid-cols-3 gap-1.5"><button type="button" data-mv="heading" onclick="setMapViewMode('heading')" class="mset-btn">進行方向</button><button type="button" data-mv="north" onclick="setMapViewMode('north')" class="mset-btn">北基準</button><button type="button" data-mv="3d" onclick="setMapViewMode('3d')" class="mset-btn">3D</button></div>
+              </div>
+
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between mt-2.5">
                 <div>
-                  <div class="font-bold text-white">地図の色反転モード</div>
-                  <div class="text-xs text-slate-400 mt-0.5">車載機風のダーク配色にするかを切り替えます</div>
+                  <div class="font-bold text-white">コンパスを表示</div>
+                  <div class="text-xs text-slate-400 mt-0.5">北がどちらかを地図の右側に表示します。タッチすると、進行方向 → 北基準 → 3D の順に切り替わります(初期はオフ)</div>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="toggleMapInvert" onchange="toggleMapInvertSetting(this)" class="sr-only peer">
+                  <input type="checkbox" id="toggleMapCompass" onchange="setMapCompass(this.checked)" class="sr-only peer">
                   <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                 </label>
               </div>
+
+              <button type="button" onclick="openMapLiveSettings()" class="w-full mt-2.5 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-black py-2.5 rounded-xl border border-cyan-300 text-sm"><i class="fa-solid fa-map-location-dot mr-1.5"></i>地図を見ながら設定する</button>
 
               <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between mt-2.5">
                 <div>
@@ -4942,7 +4976,7 @@ body{animation:shoFade .6s ease-out}
       }
 
       // エアコン・窓の音声コマンド(目的地の名前を待っている最中は、場所の名前として扱う)
-      if (!waitingForDestinationName && handleVehicleVoiceCommand(command)) return;
+      if (!waitingForDestinationName && (handleVehicleVoiceCommand(command) || (typeof handleNaviVoiceCommand === 'function' && handleNaviVoiceCommand(command)))) return;
 
       if (waitingForDestinationName) {
         let dest = command.replace(/にして|へ行って|行きたい|お願い|登録して|目的地/g, "").trim();
@@ -5453,6 +5487,7 @@ body{animation:shoFade .6s ease-out}
 
     function openSettingsModal() {
       initAudio();
+      if (typeof setSettingsPage === 'function') setSettingsPage('home');   // 開くたびに、分類の一覧から始める
       document.getElementById('settingsModal').classList.add('hidden');
       document.getElementById('settingsModal').classList.remove('hidden');
       updateFullscreenButton();
@@ -5735,11 +5770,9 @@ body{animation:shoFade .6s ease-out}
       turnChimeEnabled = el.checked;
     }
 
-    function toggleMapInvertSetting(el) {
+    function toggleMapInvertSetting(el) {   // 旧スイッチ(いまは「地図の色」の4択に置き換え)
       initAudio();
-      const mapDiv = document.getElementById('realMap');
-      if (!mapDiv) return;
-      mapDiv.classList.toggle('map-color-invert', el.checked);
+      if (typeof setMapColorMode === 'function') setMapColorMode(el.checked ? 'invert' : 'normal');
     }
 
     // 施錠/解錠トグル。このボタンはパーキング(P)画面にしか存在しないため、
@@ -7211,7 +7244,7 @@ body{animation:shoFade .6s ease-out}
       const z = zoom != null ? zoom : map.getZoom();
       let targetPoint = map.project(latlng, z).subtract([offsetXPx, offsetPx]);
       if (window.signMapShift) {                                          // 標識を右に出すとき: 現在地を左寄せ(中心を、現在地の右へずらす)
-        const dx = ((container && container.clientWidth) || 0) * 0.22, ph = (typeof currentHeadingDeg === 'number' ? currentHeadingDeg : 0) * Math.PI / 180;
+        const dx = ((container && container.clientWidth) || 0) * 0.22, ph = (typeof mapRotationDeg === 'function' ? mapRotationDeg() : (typeof currentHeadingDeg === 'number' ? currentHeadingDeg : 0)) * Math.PI / 180;
         targetPoint = targetPoint.add([dx * Math.cos(ph), dx * Math.sin(ph)]);
       }
       return map.unproject(targetPoint, z);
@@ -7238,10 +7271,11 @@ body{animation:shoFade .6s ease-out}
       map = L.map('realMap', { zoomControl: false, attributionControl: false, dragging: false })
         .setView([DEFAULT_POS.lat, DEFAULT_POS.lon], 14);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      mapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
+      mapTileLayer._shoUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
       // 地図のライセンス表示(規約違反防止のため必須)。右下・ボトムバーと被らない位置に配置。
       L.control.attribution({ position: 'bottomright', prefix: 'Leaflet' }).addTo(map);
@@ -7279,6 +7313,7 @@ body{animation:shoFade .6s ease-out}
       const gpsRealtimeToggle = document.getElementById('toggleGpsRealtime');
       if (gpsRealtimeToggle) gpsRealtimeToggle.checked = true;
       startGpsRealtimeTracking();
+      if (typeof applyMapSettingsAfterInit === 'function') applyMapSettingsAfterInit();   // 保存してある地図の色・向き・コンパスを反映
     }
 
     /* ============ 回転補正付き・手動ドラッグ操作 ============
@@ -7304,7 +7339,8 @@ body{animation:shoFade .6s ease-out}
     // 回転補正した移動量ぶん、実際に地図をパンする
     function applyRotationAwarePan(dx, dy) {
       if (!map) return;
-      const v = rotateScreenDelta(dx, dy, currentHeadingDeg);
+      const k3 = (typeof mapTiltOn === 'function' && mapTiltOn()) ? 1 / Math.cos(MAP_TILT_DEG * Math.PI / 180) : 1;   // 3Dのときは、縦の動きが縮んで見えるぶんを戻す
+      const v = rotateScreenDelta(dx, dy * k3, (typeof mapRotationDeg === 'function') ? mapRotationDeg() : currentHeadingDeg);
       // panByは「地図の中心をoffsetぶん動かす」動作のため、
       // 「中身がその場でついてくる(指で押した方向にそのまま動く)」ようにするには符号を反転させる
       map.panBy([-v.x, -v.y], { animate: false });
@@ -11066,7 +11102,10 @@ body{animation:shoFade .6s ease-out}
     function setMapHeading(headingDeg) {
       currentHeadingDeg = headingDeg;
       const mapEl = document.getElementById('realMap');
-      if (mapEl) mapEl.style.transform = `rotate(${-headingDeg}deg)`;
+      if (typeof mapTiltOn === 'function' && mapEl && mapTiltOn() !== mapEl.classList.contains('map-3d')) { applyMapViewMode(); return; }   // 3D表示の入り切りで地図の板の大きさが変わる
+      const rot = (typeof mapRotationDeg === 'function') ? mapRotationDeg() : headingDeg;   // 北基準のときは地図を回さない
+      if (mapEl) mapEl.style.transform = (mapEl.classList.contains('map-3d') ? `perspective(${MAP_PERSP}px) rotateX(${MAP_TILT_DEG}deg) ` : '') + `rotate(${-rot}deg)`;
+      if (typeof updateCompassUI === 'function') updateCompassUI(rot);
       if (userMarker) {
         const el = userMarker.getElement();
         const rotor = el && el.querySelector('.user-marker-rotor');
@@ -11077,7 +11116,7 @@ body{animation:shoFade .6s ease-out}
       if (mainTurnMarker) {
         const tEl = mainTurnMarker.getElement();
         const tDot = tEl && tEl.querySelector('.main-turn-dot');
-        if (tDot) tDot.style.transform = `rotate(${headingDeg}deg)`;
+        if (tDot) tDot.style.transform = `rotate(${rot}deg)`;
       }
 
       // 3Dビュー案内モード内の小さい本物地図も、本物地図と同じヘディングアップで追従させる
@@ -12312,8 +12351,12 @@ body{animation:shoFade .6s ease-out}
     (function () {
       function applyOrigin() {
         const m = document.getElementById('realMap');
-        if (m) m.style.transformOrigin = ((MAP_FOCUS_X_RATIO + 0.6) / 2.2 * 100) + '% ' + ((MAP_FOCUS_Y_RATIO + 0.6) / 2.2 * 100) + '%';
+        if (!m) return;
+        const is3 = m.classList.contains('map-3d');                    // 3D表示のときは地図の板が 260%×340%(左上は -80% / -120%)
+        const sx = is3 ? 2.6 : 2.2, ox = is3 ? 0.8 : 0.6, sy = is3 ? 3.4 : 2.2, oy = is3 ? 1.2 : 0.6;
+        m.style.transformOrigin = ((MAP_FOCUS_X_RATIO + ox) / sx * 100) + '% ' + ((MAP_FOCUS_Y_RATIO + oy) / sy * 100) + '%';
       }
+      window.applyMapOrigin = applyOrigin;
       function markGrid() {
         document.querySelectorAll('#mapFocusGrid .map-focus-btn').forEach((b) => {
           const on = Math.abs(parseFloat(b.dataset.fx) - MAP_FOCUS_X_RATIO) < 0.001 && Math.abs(parseFloat(b.dataset.fy) - MAP_FOCUS_Y_RATIO) < 0.001;
@@ -12891,10 +12934,11 @@ body{animation:shoFade .6s ease-out}
         try {
           if (!mm) {
             mm = L.map(box, { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, touchZoom: false, keyboard: false, tap: false }).setView([userPos.lat, userPos.lon], 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mm);
+            mm._tl = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mm); mm._tlUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
           }
           const rm = document.getElementById('realMap');
           box.classList.toggle('map-color-invert', !!(rm && rm.classList.contains('map-color-invert')));
+          if (mm._tl && typeof effectiveMapColor === 'function') { const u = mapDarkTilesActive() ? mapDarkUrl() : MAP_TILE_LIGHT; if (mm._tlUrl !== u) { mm._tlUrl = u; mm._tl.setUrl(u); } }
           mm.invalidateSize();
           mm.setView([userPos.lat, userPos.lon], mm.getZoom(), { animate: false });
           if (mk) mk.remove();
@@ -13341,6 +13385,297 @@ body{animation:shoFade .6s ease-out}
       });
       sx$('sxMap').innerHTML = h + labels + '</svg>';
     };
+</script>
+<div id="mapLiveSettings" class="hidden" style="position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:9400;width:min(520px,calc(100vw - 24px));background:rgba(2,6,23,.93);border:1px solid #22d3ee;border-radius:16px;padding:8px 10px;box-shadow:0 8px 28px rgba(0,0,0,.6)">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:#22d3ee;flex:1"><i class="fa-solid fa-map"></i> 地図を見ながら設定</span><button type="button" onclick="closeMapLiveSettings()" style="background:#06b6d4;color:#020617;font-weight:900;font-size:12px;border-radius:10px;padding:5px 14px">完了</button></div>
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">色</span><div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:5px"><button type="button" data-mc="normal" onclick="setMapColorMode('normal')" class="mset-btn">通常</button><button type="button" data-mc="dark" onclick="setMapColorMode('dark')" class="mset-btn">ダーク</button><button type="button" data-mc="invert" onclick="setMapColorMode('invert')" class="mset-btn">色反転</button><button type="button" data-mc="auto" onclick="setMapColorMode('auto')" class="mset-btn">自動</button></div></div>
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">向き</span><div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button type="button" data-mv="heading" onclick="setMapViewMode('heading')" class="mset-btn">進行方向</button><button type="button" data-mv="north" onclick="setMapViewMode('north')" class="mset-btn">北基準</button><button type="button" data-mv="3d" onclick="setMapViewMode('3d')" class="mset-btn">3D</button></div></div>
+  <div style="display:flex;align-items:center;gap:6px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">北</span><div style="flex:1"><button type="button" id="mapLiveCompassBtn" onclick="setMapCompass(!mapCompassOn)" class="mset-btn" style="width:100%">コンパス表示</button></div></div>
+</div>
+<script>
+/* ============ 地図の表示設定: 色(通常/ダーク/色反転/自動)・向き(進行方向/北基準/3D)・コンパス ============ */
+var MAP_TILE_LIGHT = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var mapCartoKey = '';
+try { mapCartoKey = localStorage.getItem('cartoApiKey') || ''; } catch (e) { /* 無視 */ }
+// 色を反転せず、最初から暗い配色の地図データ(CARTO Dark Matter。無料のAPIキーが必要)
+function mapDarkUrl() { return 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=' + encodeURIComponent(mapCartoKey); }
+function mapDarkTilesActive() { return effectiveMapColor() === 'dark' && !!mapCartoKey; }
+var MAP_TILT_DEG = 52, MAP_PERSP = 800;
+var mapTileLayer = null;
+var mapColorMode = 'normal', mapViewMode = 'heading', mapCompassOn = false;
+try {
+  const c = localStorage.getItem('mapColorMode'); if (['normal', 'dark', 'invert', 'auto'].indexOf(c) >= 0) mapColorMode = c;
+  const v = localStorage.getItem('mapViewMode'); if (['heading', 'north', '3d'].indexOf(v) >= 0) mapViewMode = v;
+  mapCompassOn = localStorage.getItem('mapCompass') === '1';
+} catch (e) { /* 無視 */ }
+
+function mapNightNow() { const h = new Date().getHours(); return h >= 18 || h < 6; }
+function effectiveMapColor() { return mapColorMode === 'auto' ? (mapNightNow() ? 'dark' : 'normal') : mapColorMode; }
+// 地図を回す角度: 北基準のときは0(回さない)、それ以外は進行方向が上になる角度
+function mapRotationDeg() { return mapViewMode === 'north' ? 0 : (typeof currentHeadingDeg === 'number' ? currentHeadingDeg : 0); }
+// 3D表示にするか(ルートを選ぶ画面は、全体を見渡すため平らに戻す)
+function mapTiltOn() { return mapViewMode === '3d' && !(typeof isRouteOverview === 'function' && isRouteOverview()); }
+
+function syncMapSettingUI() {
+  document.querySelectorAll('[data-mc]').forEach(b => b.classList.toggle('mset-on', b.dataset.mc === mapColorMode));
+  document.querySelectorAll('[data-mv]').forEach(b => b.classList.toggle('mset-on', b.dataset.mv === mapViewMode));
+  const sw = document.getElementById('toggleMapCompass'); if (sw) sw.checked = mapCompassOn;
+  const lb = document.getElementById('mapLiveCompassBtn');
+  if (lb) { lb.classList.toggle('mset-on', mapCompassOn); lb.textContent = mapCompassOn ? 'コンパス表示中(タップでオフ)' : 'コンパスを表示する'; }
+}
+
+var mapCartoErrors = 0;
+function applyMapColorMode() {
+  const eff = effectiveMapColor();
+  const carto = mapDarkTilesActive();
+  const el = document.getElementById('realMap');
+  if (el) el.classList.toggle('map-color-invert', eff === 'invert' || (eff === 'dark' && !carto));   // キーが無いときのダークは、色反転で代用
+  const mc = document.getElementById('mapContainer');
+  if (mc) mc.classList.toggle('map-dark-bg', eff !== 'normal');
+  if (mapTileLayer) {
+    if (!mapTileLayer._shoErrHook) {
+      mapTileLayer._shoErrHook = true;
+      mapTileLayer.on('tileerror', () => { if (mapDarkTilesActive() && ++mapCartoErrors === 6) updateCartoKeyStatus(true); });
+    }
+    const u = carto ? mapDarkUrl() : MAP_TILE_LIGHT;
+    if (mapTileLayer._shoUrl !== u) { mapTileLayer._shoUrl = u; mapCartoErrors = 0; mapTileLayer.setUrl(u); }
+  }
+  const cr = document.getElementById('mapCreditText');
+  if (cr) cr.textContent = carto ? '© OpenStreetMap contributors © CARTO' : '© OpenStreetMap contributors';
+  updateCartoKeyStatus(false);
+  syncMapSettingUI();
+}
+function updateCartoKeyStatus(failed) {
+  const inp = document.getElementById('mapCartoKey'); if (inp && document.activeElement !== inp && inp.value !== mapCartoKey) inp.value = mapCartoKey;
+  const st = document.getElementById('mapCartoKeyStatus'); if (!st) return;
+  if (failed) { st.style.color = '#f87171'; st.textContent = 'ダーク地図を読み込めません。キーが間違っているか、通信できていない可能性があります'; }
+  else if (mapCartoKey) { st.style.color = '#4ade80'; st.textContent = 'キーを保存済み(「ダーク」を選ぶと暗い地図データを使います)'; }
+  else { st.style.color = '#fbbf24'; st.textContent = 'キー未設定(「ダーク」は色反転で代用中)'; }
+}
+function saveCartoKey() {
+  try { initAudio(); } catch (e) { /* 無視 */ }
+  const inp = document.getElementById('mapCartoKey'); if (!inp) return;
+  mapCartoKey = inp.value.replace(/["'\s]/g, '');
+  inp.value = mapCartoKey;
+  try { localStorage.setItem('cartoApiKey', mapCartoKey); } catch (e) { /* 無視 */ }
+  mapCartoErrors = 0;
+  applyMapColorMode();
+}
+function setMapColorMode(m) {
+  try { initAudio(); } catch (e) { /* 無視 */ }
+  if (['normal', 'dark', 'invert', 'auto'].indexOf(m) < 0) return;
+  mapColorMode = m;
+  try { localStorage.setItem('mapColorMode', m); } catch (e) { /* 無視 */ }
+  applyMapColorMode();
+}
+setInterval(() => { if (mapColorMode === 'auto') applyMapColorMode(); }, 60000);   // 自動: 時刻が変わったら切り替える
+
+function updateCompassUI(rot) {
+  if (rot === undefined) rot = mapRotationDeg();
+  const d = document.getElementById('mapCompassDial');
+  if (d) d.style.transform = `rotate(${-rot}deg)`;   // 北の向き = 地図の回転の逆
+  const l = document.getElementById('mapCompassLbl');
+  if (l) l.textContent = mapViewMode === 'north' ? '北基準' : (mapViewMode === '3d' ? '3D' : '進行方向');
+}
+function setMapCompass(on) {
+  try { initAudio(); } catch (e) { /* 無視 */ }
+  mapCompassOn = !!on;
+  try { localStorage.setItem('mapCompass', mapCompassOn ? '1' : '0'); } catch (e) { /* 無視 */ }
+  const b = document.getElementById('mapCompass'); if (b) b.classList.toggle('hidden', !mapCompassOn);
+  updateCompassUI(); syncMapSettingUI();
+}
+
+// 地図の向きの切り替え。3Dは地図の板の大きさが変わるので、そのあと現在地を決めた位置へ置き直す
+function applyMapViewMode() {
+  const el = document.getElementById('realMap');
+  if (!el || typeof map === 'undefined' || !map) { syncMapSettingUI(); return; }
+  const want = mapTiltOn();
+  if (want !== el.classList.contains('map-3d')) {
+    el.classList.toggle('map-3d', want);
+    if (window.applyMapOrigin) window.applyMapOrigin();
+    map.invalidateSize();
+    try { if (userPos && !crosshairActive && !isRouteOverview()) setViewOnUser([userPos.lat, userPos.lon], map.getZoom(), { animate: false }); } catch (e) { /* 無視 */ }
+  }
+  setMapHeading(currentHeadingDeg);
+  updateCompassUI(); syncMapSettingUI();
+}
+function setMapViewMode(m) {
+  try { initAudio(); } catch (e) { /* 無視 */ }
+  if (['heading', 'north', '3d'].indexOf(m) < 0) return;
+  mapViewMode = m;
+  try { localStorage.setItem('mapViewMode', m); } catch (e) { /* 無視 */ }
+  applyMapViewMode();
+}
+function cycleMapViewMode() { setMapViewMode(mapViewMode === 'heading' ? 'north' : (mapViewMode === 'north' ? '3d' : 'heading')); }
+
+function applyMapSettingsAfterInit() {
+  applyMapColorMode();
+  applyMapViewMode();
+  const b = document.getElementById('mapCompass'); if (b) b.classList.toggle('hidden', !mapCompassOn);
+  updateCompassUI(); syncMapSettingUI();
+}
+// 設定を、実際の地図を見ながら変える(設定の画面をいったん閉じて、小さな操作パネルを出す)
+function openMapLiveSettings() {
+  try { closeSettingsModal(); } catch (e) { /* 無視 */ }
+  const p = document.getElementById('mapLiveSettings'); if (p) p.classList.remove('hidden');
+  syncMapSettingUI();
+}
+function closeMapLiveSettings() {
+  const p = document.getElementById('mapLiveSettings'); if (p) p.classList.add('hidden');
+  try { openSettingsModal(); if (typeof setSettingsPage === 'function') setSettingsPage('map'); } catch (e) { /* 無視 */ }   // 地図の設定のページに戻る
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncMapSettingUI); else syncMapSettingUI();
+
+
+/* ============ 設定を全画面にして、分類ごとのページに分ける(上のパンくずで戻れる) ============
+   中身(スイッチやボタン)は作り直さず、元の要素をそのまま分類ページへ移すだけなので、今までの動作は変わらない */
+var SET_PAGES = [
+  { id: 'map',    icon: 'fa-map',          title: '地図',       sub: '色・向き(3D)・コンパス・現在地マーク' },
+  { id: 'screen', icon: 'fa-expand',       title: '画面表示',   sub: '全画面・下のバーの透明度' },
+  { id: 'sound',  icon: 'fa-volume-high',  title: '音・振動',   sub: '操作音・バイブ・曲がる合図音' },
+  { id: 'sign',   icon: 'fa-camera',       title: '標識認識',   sub: 'カメラ・ズーム・音声案内' },
+  { id: 'gps',    icon: 'fa-location-crosshairs', title: 'GPS',  sub: '現在地の取得・リアルタイム追跡' },
+  { id: 'demo',   icon: 'fa-road',         title: 'デモ走行',   sub: 'デモ走行の速度など' },
+  { id: 'comm',   icon: 'fa-bluetooth-b',  title: '通信・接続', sub: 'スマホの電池・通信・GPS状態' },
+  { id: 'system', icon: 'fa-sliders',      title: 'システム',   sub: 'メイン動作モード・システム情報' }
+];
+function setupSettingsPages() {
+  const root = document.getElementById('settingsScroll');
+  if (!root || root.dataset.paged) return;
+  root.dataset.paged = '1';
+  const secs = Array.from(root.children);
+  const secBy = (txt) => secs.find(s => { const h = s.querySelector(':scope > .tracking-wider'); return h && h.textContent.includes(txt); });
+  const blocks = Array.from(root.querySelectorAll('.bg-slate-950')).filter(e => !e.parentElement.closest('.bg-slate-950'));
+  const blk = (txt) => blocks.find(b => { const f = b.querySelector('.font-bold'); return f && f.textContent.trim().indexOf(txt) === 0; });
+  const plan = {
+    map: [secBy('地図表示設定'), blk('現在地を表示する場所'), secBy('現在地マーカー設定')],
+    screen: [blk('全画面表示'), blk('最初のタップ'), blk('下のバーの透明度')],
+    sound: [blk('操作音'), blk('触覚フィードバック'), blk('曲がる瞬間の合図音')],
+    sign: [blk('標識認識(カメラ)'), blk('カメラ映像を右上'), blk('標識の音声案内'), blk('標識認識のズーム')],
+    gps: [secBy('GPS設定')],
+    demo: [secBy('デモ走行設定')],
+    comm: [secBy('通信・接続設定')],
+    system: [secBy('システム動作モード切替'), blk('システム情報')]
+  };
+  const leftover = secBy('画面表示設定');
+  const mk = (cls, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; return d; };
+  const home = mk('grid grid-cols-2 gap-2.5 set-home');
+  home.id = 'setHome';
+  SET_PAGES.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('onclick', "setSettingsPage('" + p.id + "')");
+    b.className = 'bg-slate-950 hover:bg-slate-800 active:scale-95 transition border border-slate-700 rounded-2xl p-4 text-left flex flex-col gap-2';
+    b.innerHTML = '<div class="w-10 h-10 rounded-xl bg-cyan-950 border border-cyan-500/70 text-cyan-300 flex items-center justify-center text-lg"><i class="fa-solid ' + p.icon + '"></i></div>' +
+      '<div class="font-black text-white text-base leading-tight">' + p.title + '</div><div class="text-[11px] text-slate-400 leading-snug">' + p.sub + '</div>';
+    home.appendChild(b);
+  });
+  const pageEls = {};
+  SET_PAGES.forEach(p => {
+    const pg = mk('set-page hidden space-y-2.5'); pg.dataset.setPage = p.id; pageEls[p.id] = pg;
+    (plan[p.id] || []).filter(Boolean).forEach(el => pg.appendChild(el));
+  });
+  if (leftover) {   // 分類から漏れた項目があれば「画面表示」に入れる(消さない)
+    Array.from(leftover.children).filter(c => !c.classList.contains('tracking-wider')).forEach(c => pageEls.screen.appendChild(c));
+    leftover.remove();
+  }
+  Array.from(root.children).forEach(c => { if (!c.classList.contains('set-home')) { pageEls.system.appendChild(c); } });   // 万一残った項目も、消さずにシステムへ
+  root.appendChild(home);
+  SET_PAGES.forEach(p => root.appendChild(pageEls[p.id]));
+  setSettingsPage('home');
+}
+function setSettingsPage(id) {
+  setupSettingsPages();
+  const home = document.getElementById('setHome');
+  const pages = document.querySelectorAll('#settingsScroll .set-page');
+  if (!home) return;
+  const cat = SET_PAGES.find(p => p.id === id);
+  home.classList.toggle('hidden', !!cat);
+  pages.forEach(pg => pg.classList.toggle('hidden', !cat || pg.dataset.setPage !== id));
+  const bc = document.getElementById('setBreadcrumb');
+  if (bc) {
+    bc.innerHTML = cat
+      ? '<button type="button" onclick="setSettingsPage(\'home\')" class="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-200 underline decoration-cyan-700"><i class="fa-solid fa-gear"></i> システム設定</button>' +
+        '<i class="fa-solid fa-chevron-right text-slate-500 text-xs"></i><span class="text-white"><i class="fa-solid ' + cat.icon + ' text-cyan-400 mr-1"></i>' + cat.title + '</span>'
+      : '<i class="fa-solid fa-gear"></i> システム設定 (Sho OS 2.0)';
+  }
+  const sc = document.getElementById('settingsScroll'); if (sc) sc.scrollTop = 0;
+  if (id === 'map') { try { updateCartoKeyStatus(false); syncMapSettingUI(); } catch (e) { /* 無視 */ } }
+}
+setupSettingsPages();
+
+/* ============ 音声アシスタントの操作コマンド(目的地以外) ============
+   シフト変更・カメラ・標識認識・地図の表示・ズーム・自宅・再探索・案内音声・設定 など */
+function handleNaviVoiceCommand(command) {
+  const c = String(command).replace(/[\s、。,]+/g, '');
+  const say = (s) => { try { voiceAnnounce(s); } catch (e) { /* 無視 */ } };
+  const off = /閉じ|消し|オフ|止め|やめ|終了|切って|切る|解除/.test(c);
+
+  // --- シフト(パーキング/リバース/ニュートラル/ドライブ/スポーツ) ---
+  const hasShift = /シフト|ギア/.test(c);
+  const gearWords = { 'パーキング': 'P', 'リバース': 'R', 'バック': 'R', 'ニュートラル': 'N', 'ドライブ': 'D', 'スポーツ': 'S' };
+  const gearNames = { P: 'パーキング', R: 'リバース', N: 'ニュートラル', D: 'ドライブ', S: 'スポーツ' };
+  let gear = null;
+  const gm = c.match(/(パーキング|リバース|ニュートラル|ドライブ|スポーツ|バック)(?:レンジ|モード)?(?:に|へ)?(?:変更|入れ|チェンジ|切り替|切替|して|する)/);
+  if (gm && (hasShift || /入れ/.test(c))) gear = gearWords[gm[1]];
+  else if (hasShift) { const m2 = c.match(/(?:シフト|ギア)(?:を)?([PRNDS])(?:に|へ)/i); if (m2) gear = m2[1].toUpperCase(); }
+  if (gear && typeof changeGear === 'function') {
+    changeGear(gear);
+    say('シフトを' + gearNames[gear] + 'に変更しました');
+    return true;
+  }
+
+  // --- カメラ ---
+  if (/標識認識|標識/.test(c) && /認識|カメラ/.test(c)) {
+    const on = !off;
+    try { setSignRecog(on); const sw = document.getElementById('toggleSignRecogSetting'); if (sw) sw.checked = on; } catch (e) { /* 無視 */ }
+    say('標識認識を' + (on ? 'オンにします' : 'オフにします'));
+    return true;
+  }
+  if (/アラウンドビュー|アラウンド/.test(c) && !off) { toggleCameraMode(true); say('アラウンドビューを起動します'); return true; }
+  if (/カメラ/.test(c)) {
+    if (off) { toggleCameraMode(false); say('カメラを閉じます'); return true; }
+    if (/起動|開い|開け|つけ|付け|表示|オン|映し|見せ|見たい|出し|スタート|バックカメラ|後方|リア|前方|フロント/.test(c)) {
+      toggleCameraMode(true);
+      if (/バックカメラ|後方|リア|左カメラ|インカメ/.test(c)) { switchCameraView('rear'); say('バックカメラを起動します'); }
+      else if (/前方|フロント|右カメラ|外カメ/.test(c)) { switchCameraView('front'); say('前方カメラを起動します'); }
+      else say('カメラを起動します');
+      return true;
+    }
+  }
+
+  // --- 地図の表示 ---
+  if (/コンパス/.test(c)) { const on = !off; setMapCompass(on); say('コンパスを' + (on ? '表示します' : '消します')); return true; }
+  if (/北基準|北を上|ノースアップ|北向き|北固定/.test(c)) { setMapViewMode('north'); say('地図を北基準にします'); return true; }
+  if (/進行方向|ヘディングアップ|車の向き/.test(c) && /地図|表示|にして|基準|アップ/.test(c)) { setMapViewMode('heading'); say('地図を進行方向基準にします'); return true; }
+  if (/(?:地図|マップ|表示).*(?:3D|３D|スリーD|立体)|(?:3D|３D|スリーD|立体)(?:表示|ビュー|マップ|地図|に)/i.test(c)) { setMapViewMode('3d'); say('地図を3D表示にします'); return true; }
+  if (/(?:地図|マップ|画面).*(?:暗く|ダーク|夜)|ナイトモード|夜モード|ダークモード/.test(c)) { setMapColorMode('dark'); say('地図をダークにします'); return true; }
+  if (/(?:地図|マップ|画面).*(?:明るく|昼|通常|ライト)|昼モード|ライトモード/.test(c)) { setMapColorMode('normal'); say('地図を通常の明るさにします'); return true; }
+  if (/(?:地図|マップ).*(?:色反転|反転)|色反転/.test(c)) { setMapColorMode('invert'); say('地図を色反転にします'); return true; }
+  if (/(?:地図|マップ).*自動/.test(c) && /色|明るさ|夜|暗/.test(c)) { setMapColorMode('auto'); say('地図の明るさを、時間で自動に切り替えます'); return true; }
+  if (/(?:地図|マップ|画面)?(?:の)?(?:ズームイン|拡大|詳しく|大きく)/.test(c) && /地図|マップ|ズーム|拡大/.test(c)) { quickMapZoomBy(1); say('地図を拡大します'); return true; }
+  if (/(?:地図|マップ|画面)?(?:の)?(?:ズームアウト|縮小|広く|小さく)/.test(c) && /地図|マップ|ズーム|縮小/.test(c)) { quickMapZoomBy(-1); say('地図を縮小します'); return true; }
+  if (/現在地/.test(c) && /戻|表示|映|見せ|中心|もどる|移動/.test(c)) { recenterToCurrentLocation(); say('現在地に戻します'); return true; }
+
+  // --- ナビの操作 ---
+  if (/自宅/.test(c) && /帰|行き|行く|向か|案内|ナビ/.test(c)) { say('自宅へ案内します'); quickGoHome(); return true; }
+  if (/全ルート|ルート全体|全体を?表示/.test(c)) { quickShowFullRoute(); say('ルート全体を表示します'); return true; }
+  if (/再探索|再検索|ルートを?探し直|リルート/.test(c)) { quickReroute(); return true; }
+  if (/高速.*(?:この先|案内|次)|この先.*高速|次のSA|次のPA|サービスエリア.*(?:どこ|次)/.test(c)) { quickHighwayAhead(); return true; }
+
+  // --- 音声案内・画面 ---
+  if (/音声案内|ナビの声|案内音声|案内の声/.test(c)) {
+    if (/ポンポン|合図|チャイム/.test(c)) { setVoiceMode('chime'); say('音声案内を、合図音だけにします'); return true; }
+    if (off) { setVoiceMode('off'); return true; }
+    setVoiceMode('voice'); return true;
+  }
+  if (/全画面/.test(c)) { toggleFullscreenMode(); return true; }
+  if (/設定/.test(c) && /開い|開け|表示|見せ|出し/.test(c)) { openSettingsModal(); say('設定を開きます'); return true; }
+  if (/設定/.test(c) && off) { closeSettingsModal(); say('設定を閉じます'); return true; }
+  if (/メニュー/.test(c) && /開い|開け|表示|見せ|出し|戻/.test(c)) { toggleSidePanel('menu'); say('メニューを開きます'); return true; }
+  if (/ルート探索|ルート検索/.test(c) && /開い|開け|表示|見せ|出し/.test(c)) { toggleSidePanel('search'); say('ルート探索を開きます'); return true; }
+  return false;
+}
+
 </script>
 </body>
 </html>

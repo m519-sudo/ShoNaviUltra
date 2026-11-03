@@ -7985,7 +7985,7 @@ body{animation:shoFade .6s ease-out}
       waypointsList.push({ lat: c.lat, lon: c.lng });
       closePinPanel();
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance('この地点を経由地として設定したで。');
+        const u = new SpeechSynthesisUtterance('この地点を経由地として設定しました。');
         u.lang = 'ja-JP';
         window.speechSynthesis.speak(u);
       }
@@ -7998,7 +7998,7 @@ body{animation:shoFade .6s ease-out}
       placeUserMarker();
       closePinPanel();
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance('この地点を現在地として設定したで。');
+        const u = new SpeechSynthesisUtterance('この地点を現在地として設定しました。');
         u.lang = 'ja-JP';
         window.speechSynthesis.speak(u);
       }
@@ -8093,7 +8093,7 @@ body{animation:shoFade .6s ease-out}
       refreshSavedPlacesUI();
       renderSavedPlaceMarkers();
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance(`${name}を登録したで。`);
+        const u = new SpeechSynthesisUtterance(`${name}を登録しました。`);
         u.lang = 'ja-JP';
         window.speechSynthesis.speak(u);
       }
@@ -13545,7 +13545,7 @@ function setupSettingsPages() {
   root.dataset.paged = '1';
   const secs = Array.from(root.children);
   const secBy = (txt) => secs.find(s => { const h = s.querySelector(':scope > .tracking-wider'); return h && h.textContent.includes(txt); });
-  const blocks = Array.from(root.querySelectorAll('.bg-slate-950')).filter(e => !e.parentElement.closest('.bg-slate-950'));
+  const blocks = Array.from(root.querySelectorAll('.bg-slate-950')).filter(e => { const c = e.parentElement.closest('.bg-slate-950'); return !c || !root.contains(c); });   // 設定画面の外枠(背景色が同じ)を入れ子と間違えない
   const blk = (txt) => blocks.find(b => { const f = b.querySelector('.font-bold'); return f && f.textContent.trim().indexOf(txt) === 0; });
   const plan = {
     map: [secBy('地図表示設定'), blk('現在地を表示する場所'), secBy('現在地マーカー設定')],

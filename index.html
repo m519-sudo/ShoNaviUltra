@@ -191,6 +191,24 @@
   
     /* 視覚情報の表示中は、地図の案内(曲がり角バナー)を一番上へ寄せて小さくする */
     body.visual-mode #topNavGuidance { top: 0.25rem !important; left: 0.25rem !important; padding: 0.35rem 0.6rem !important; transform: scale(0.82); transform-origin: top left; }
+
+/* ===== 縦画面スマホ(歩行者)モード: 車用の表示を消して、縦長の画面に組み替える ===== */
+.walk-portrait-mode { width: 100vw !important; height: 100dvh !important; max-width: none !important; border-radius: 0px !important; border: none !important; margin: 0 !important; }
+body.walk-mode .walk-hide,
+body.walk-mode #signRecogCard,
+body.walk-mode #topBanner,
+body.walk-mode #parking3dOverlay,
+body.walk-mode #driveGuide,
+body.walk-mode #fullMeterOverlay,
+body.walk-mode #parkingCameraOverlay,
+body.walk-mode button[onclick="setSettingsPage('sign')"],
+body.walk-mode [data-set-page="sign"] { display: none !important; }
+body.walk-mode #screenView { flex-direction: column !important; }
+body.walk-mode #mapContainer { border-right: none !important; min-height: 0; }
+body.walk-mode #sidePanel { width: 100% !important; max-height: 46%; border-left: none !important; border-top: 1px solid #1e293b; }
+body.walk-mode #sideWidgetMenu .space-y-1 > button { padding: 0.65rem 0.75rem !important; }
+body.walk-mode #mapFloatingInfo { left: 0.5rem !important; right: 0.5rem !important; bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important; padding: 0.4rem 0.6rem !important; }
+body.walk-mode #mapFloatingInfo button.w-7 { width: 2.25rem !important; height: 2.25rem !important; }
 </style>
 <style id="shoMotion">
 /* ===== Sho Motion: 動き(アニメーション)まとめ。transform を奪わないよう translate / scale を使う ===== */
@@ -456,7 +474,7 @@ body{animation:shoFade .6s ease-out}
         <!-- Master Floating Control Bar -->
         <div id="mapFloatingInfo" class="absolute bottom-3 left-3 right-3 z-20 bg-black/90 backdrop-blur border-2 border-slate-700 rounded-2xl px-3 py-1.5 flex items-center justify-between gap-1.5 shadow-2xl">
           
-          <div class="relative flex items-center gap-1.5">
+          <div class="walk-hide relative flex items-center gap-1.5">
             <button onclick="toggleGearMenu()" id="gearBadge" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 active:scale-95 border-2 border-amber-500 rounded-xl flex items-center justify-center font-black text-lg text-amber-400 shadow-md transition cursor-pointer" title="タップしてギア切替">
               P
             </button>
@@ -471,7 +489,7 @@ body{animation:shoFade .6s ease-out}
             </div>
           </div>
 
-          <div class="h-5 w-0.5 bg-slate-700"></div>
+          <div class="walk-hide h-5 w-0.5 bg-slate-700"></div>
 
           <!-- Realtime Master Clock (+ 目的地までの残り時間/距離) -->
           <div class="flex flex-col items-center leading-tight">
@@ -486,8 +504,8 @@ body{animation:shoFade .6s ease-out}
               <i class="fa-solid fa-mobile-screen-button"></i>
               <span id="phoneBatteryText" class="text-[9px] font-mono text-slate-400"></span>
             </div>
-            <div class="border border-purple-500 text-purple-400 font-bold px-1.5 py-0.5 rounded text-[9px] bg-purple-950/40">
-              ETC
+            <div class="walk-hide border border-purple-500 text-purple-400 font-bold px-1.5 py-0.5 rounded text-[9px] bg-purple-950/40">
+ETC
             </div>
           </div>
 
@@ -557,7 +575,7 @@ body{animation:shoFade .6s ease-out}
               </div>
             </button>
 
-            <button onclick="toggleSidePanel('dashboard')" class="w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left">
+            <button onclick="toggleSidePanel('dashboard')" class="walk-hide w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left">
               <i class="fa-solid fa-car-side text-cyan-400 text-xs"></i>
               <div>
                 <div class="font-bold text-slate-200">車両ステータス</div>
@@ -565,7 +583,7 @@ body{animation:shoFade .6s ease-out}
               </div>
             </button>
 
-            <button onclick="toggleSidePanel('visual')" class="w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-orange-500/40 flex items-center gap-1.5 text-left">
+            <button onclick="toggleSidePanel('visual')" class="walk-hide w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-orange-500/40 flex items-center gap-1.5 text-left">
               <i class="fa-solid fa-eye text-orange-400 text-xs"></i>
               <div>
                 <div class="font-bold text-orange-300">視覚情報</div>
@@ -589,7 +607,7 @@ body{animation:shoFade .6s ease-out}
               </div>
             </button>
 
-            <button onclick="toggleCameraMode(true)" class="w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left">
+            <button onclick="toggleCameraMode(true)" class="walk-hide w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left">
               <i class="fa-solid fa-video text-indigo-400 text-xs"></i>
               <div>
                 <div class="font-bold text-slate-200">カメラ（左・右）</div>
@@ -597,7 +615,7 @@ body{animation:shoFade .6s ease-out}
               </div>
             </button>
 
-            <button onclick="toggleSidePanel('sonar')" class="w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left cursor-pointer">
+            <button onclick="toggleSidePanel('sonar')" class="walk-hide w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left cursor-pointer">
               <i class="fa-solid fa-wifi text-amber-400 text-xs"></i>
               <div>
                 <div class="font-bold text-slate-200">ソナーモニター</div>
@@ -605,7 +623,7 @@ body{animation:shoFade .6s ease-out}
               </div>
             </button>
 
-            <button onclick="toggleSidePanel('ac')" class="w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left cursor-pointer">
+            <button onclick="toggleSidePanel('ac')" class="walk-hide w-full bg-slate-900 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-left cursor-pointer">
               <i class="fa-solid fa-fan text-sky-400 text-xs"></i>
               <div>
                 <div class="font-bold text-slate-200">エアコン</div>
@@ -1274,9 +1292,9 @@ body{animation:shoFade .6s ease-out}
           </div>
 
           <div id="settingsScroll" class="space-y-4 text-sm scrollable-panel overflow-y-auto pr-1 flex-1 w-full max-w-3xl mx-auto">
-            <div>
-              <div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-sliders"></i> システム動作モード切替
+            <div class="walk-hide">
+<div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
+<i class="fa-solid fa-sliders"></i> システム動作モード切替
               </div>
               <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
                 <div>
@@ -1290,9 +1308,20 @@ body{animation:shoFade .6s ease-out}
               </div>
             </div>
 
-            <div>
-              <div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-wifi"></i> 通信・接続設定
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+<div>
+<div class="font-bold text-white">縦画面スマートフォンモード(歩行者)</div>
+<div class="text-xs text-slate-400 mt-0.5">縦画面で歩く人向けの表示にします。シフト・ETC・カメラ・車両情報など、車用の表示は出しません(今までの車用の表示は、オフにすると戻ります)</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-3">
+<input type="checkbox" id="toggleWalkMode" onchange="setWalkMode(this.checked)" class="sr-only peer">
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+</label>
+</div>
+
+<div>
+<div class="text-xs font-bold text-cyan-400 tracking-wider mb-2 flex items-center gap-1.5">
+<i class="fa-solid fa-wifi"></i> 通信・接続設定
               </div>
               <div class="space-y-2">
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
@@ -5459,7 +5488,39 @@ body{animation:shoFade .6s ease-out}
       document.getElementById('bootStepDeviceSelect').classList.remove('hidden');
     }
 
-    function selectDeviceMode(mode) {
+    
+// ============ 縦画面スマートフォン(歩行者)モード ============
+// 車用の表示(シフト・ETC・カメラ・車両情報・ソナー・エアコン・標識認識)を隠して、縦長の画面に組み替える。車用の表示はオフにすれば元に戻る
+function walkModeOn() { return document.body.classList.contains('walk-mode'); }
+function setWalkMode(on) {
+on = !!on;
+const was = walkModeOn();
+document.body.classList.toggle('walk-mode', on);
+const c = document.getElementById('mainDisplayContainer');
+if (c) c.classList.toggle('walk-portrait-mode', on);
+const cb = document.getElementById('toggleWalkMode'); if (cb) cb.checked = on;
+if (on) {
+try { if (typeof SR !== 'undefined' && SR.on) srStop(); } catch (e) { /* 無視 */ }   // 歩行者モードではカメラを使わない
+try { clearTimeout(driveWatchTimer); clearTimeout(driveChimeStartTimer); stopDriveChime(); hideDriveGuide(); } catch (e) { /* 無視 */ }
+try { if (currentGear !== 'D') changeGear('D'); } catch (e) { /* 無視 */ }   // 最初から地図の画面にする(シフトは使わない)
+['parkingCameraOverlay', 'fullMeterOverlay', 'keyIgnitionOverlay'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+try { const m = document.getElementById('mainSystemMode'); if (m) m.value = 'navi'; } catch (e) { /* 無視 */ }
+}
+if (was !== on && typeof map !== 'undefined' && map) {
+setTimeout(() => { try { map.invalidateSize(); refocusOnUserAfterResize(); } catch (e) { /* 無視 */ } }, 250);
+}
+}
+
+// 道の名前から、ローマ字・英語の併記を取り除く(日本語の名前だけ残す)
+function jpOnlyName(n) {
+n = String(n == null ? '' : n);
+const JP = /[\u3040-\u30ff\u3400-\u9fff]/;
+if (!JP.test(n)) return n.trim();   // 日本語がまったくない名前(英語だけの道)は、そのまま
+const parts = n.split(/[;；\/／|]/).map(x => x.trim()).filter(x => x && JP.test(x));
+return parts.map(x => x.replace(/[(（][^)）]*[A-Za-z]{3,}[^)）]*[)）]/g, '').replace(/(^|[\s\u3000])[A-Za-z][A-Za-z'’.\-]{2,}(?:[\s\u3000]+[A-Za-z0-9][A-Za-z0-9'’.\-]*)*/g, '$1').replace(/[\s\u3000]{2,}/g, ' ').trim()).filter(Boolean).join('・');
+}
+
+function selectDeviceMode(mode) {
       initAudio();
       const container = document.getElementById('mainDisplayContainer');
       
@@ -5467,7 +5528,8 @@ body{animation:shoFade .6s ease-out}
         container.classList.add('phone-landscape-mode');
       } else {
         container.classList.remove('phone-landscape-mode');
-      }
+}
+setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
       document.getElementById('bootStepDeviceSelect').classList.add('hidden');
       document.getElementById('bootGlowEffect').classList.remove('hidden');
@@ -5480,7 +5542,7 @@ body{animation:shoFade .6s ease-out}
           screen.classList.add('hidden');
           if (map) { map.invalidateSize(); refocusOnUserAfterResize(); setTimeout(refocusOnUserAfterResize, 600); }
           initThreeJS();
-          startDriveWatch();                                       // 3Dビューが出た。30秒の見張りを始める
+          if (!document.body.classList.contains('walk-mode')) startDriveWatch();   // 3Dビューが出た。30秒の見張りを始める(歩行者モードでは不要)
         }, 700);
       }, 1800);
     }
@@ -6244,6 +6306,8 @@ body{animation:shoFade .6s ease-out}
     }
     VIS.panel = false; VIS.hud = false;
     // ============ 音声案内の設定: 'voice'=音声で案内 / 'chime'=効果音(ポンポン)のみ / 'off'=消音 ============
+    // 音声案内の話す速さ(1.0が標準。速すぎたら 1.15 くらい、もっと速くしたければ 1.4 くらいに変える)
+    const SPEECH_RATE = 1.25;
     let VOICE_MODE = 'voice';
     try { const vm = localStorage.getItem('voiceMode'); if (vm === 'chime' || vm === 'off' || vm === 'voice') VOICE_MODE = vm; } catch (e) {}
     // 音声で喋らせる処理をまとめて見張る。音声モード以外では、ルート案内の読み上げを止める。
@@ -6253,6 +6317,7 @@ body{animation:shoFade .6s ease-out}
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis);
       let lastPon = 0;
       window.speechSynthesis.speak = function (u) {
+        try { if (u && (!u.rate || u.rate < SPEECH_RATE)) u.rate = SPEECH_RATE; } catch (e) {}   // 話す速さ(すべての読み上げに共通)
         if (VOICE_MODE === 'voice') return orig(u);
         // 効果音のみ: 声は一切出さず、音声アシスタントの返事やボタン操作の返事は「ポンポン」だけ鳴らす
         // 消音: 何も鳴らさない
@@ -8391,7 +8456,7 @@ body{animation:shoFade .6s ease-out}
           const from = (m.begin_shape_index || 0), to = (m.end_shape_index !== undefined ? m.end_shape_index : from);
           const coords = shape.slice(from, to + 1);
           const meters = (m.length || 0) * 1000;
-          const nameStr = (m.street_names || []).slice(0, 2).join(' ');
+          const nameStr = jpOnlyName((m.street_names || []).slice(0, 2).join(' '));
           const hw = !!(m.highway || m.toll) || HIGHWAY_NAME_RE.test(nameStr);
           const classes = hw ? ['motorway'].concat(m.toll ? ['toll'] : []) : [];
           // 一般道の交差点の数は情報が無いので、距離から見積もる(渋滞見込みの概算にだけ使う)
@@ -8867,7 +8932,7 @@ body{animation:shoFade .6s ease-out}
         if (flags[i]) {
           coords.forEach((c, j) => pts.push({ lat: c[1], lon: c[0], m: m + (glen > 0 ? cum[j] / glen * d : 0) }));
         }
-        info.push({ m0: m, m1: m + d, t0: t, t1: t + dur, hw: flags[i], name: (s.name || '').trim(), d });
+        info.push({ m0: m, m1: m + d, t0: t, t1: t + dur, hw: flags[i], name: jpOnlyName(s.name || ''), d });
         m += d; t += dur;
       });
       const ranges = [];
@@ -10135,7 +10200,7 @@ body{animation:shoFade .6s ease-out}
         pts.push({
           distance: steps[i].distance,
           maneuver: steps[i + 1].maneuver,
-          roadName: steps[i + 1].name,
+          roadName: jpOnlyName(steps[i + 1].name),
           stepIndex: i     // 曲がり角の拡大表示で、手前・先のstepの形を取り出すのに使う
         });
       }
@@ -10236,7 +10301,7 @@ body{animation:shoFade .6s ease-out}
         if (!loc || !Number.isFinite(+loc[0]) || !Number.isFinite(+loc[1])) return;
         const point = {
           lat: +loc[1], lon: +loc[0],
-          roadName: step.name || '',
+          roadName: jpOnlyName(step.name || ''),
           roadRef: step.ref || '',
           maneuver: step.maneuver || null
         };
@@ -11760,6 +11825,7 @@ body{animation:shoFade .6s ease-out}
     window.addEventListener('resize', () => { if (SR.on) srPreviewApply(); });
 
     async function srStart() {
+if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
       if (SR.on || SR.starting) return;
       SR.starting = true;
       try { await srStartInner(); } finally { SR.starting = false; }
@@ -13537,7 +13603,7 @@ var SET_PAGES = [
   { id: 'gps',    icon: 'fa-location-crosshairs', title: 'GPS',  sub: '現在地の取得・リアルタイム追跡' },
   { id: 'demo',   icon: 'fa-road',         title: 'デモ走行',   sub: 'デモ走行の速度など' },
   { id: 'comm',   icon: 'fa-bluetooth-b',  title: '通信・接続', sub: 'スマホの電池・通信・GPS状態' },
-  { id: 'system', icon: 'fa-sliders',      title: 'システム',   sub: 'メイン動作モード・システム情報' }
+  { id: 'system', icon: 'fa-sliders',      title: 'システム',   sub: '縦画面(歩行者)モード・メイン動作モード・システム情報' }
 ];
 function setupSettingsPages() {
   const root = document.getElementById('settingsScroll');
@@ -13555,7 +13621,7 @@ function setupSettingsPages() {
     gps: [secBy('GPS設定')],
     demo: [secBy('デモ走行設定')],
     comm: [secBy('通信・接続設定')],
-    system: [secBy('システム動作モード切替'), blk('システム情報')]
+    system: [blk('縦画面スマートフォンモード'), secBy('システム動作モード切替'), blk('システム情報')]
   };
   const leftover = secBy('画面表示設定');
   const mk = (cls, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; return d; };

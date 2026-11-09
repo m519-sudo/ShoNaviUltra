@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>try { if (localStorage.getItem("uiSkinV2") !== "1") { localStorage.setItem("uiSkin", "midnight"); localStorage.setItem("uiSkinV2", "1"); } var _k = "midnight"; try{localStorage.setItem("uiSkin","midnight");}catch(_e){} if (_k === "navi") document.documentElement.classList.add("navi-skin"); else if (_k === "midnight") document.documentElement.classList.add("mc"); } catch (e) { document.documentElement.classList.add("mc"); }</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
@@ -8,6 +9,7 @@
 <meta name="theme-color" content="#000000">
   <title>車載インフォテインメント＆運転支援システム</title>
   <script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{slate:{50:'rgb(var(--c-slate-50) / <alpha-value>)',100:'rgb(var(--c-slate-100) / <alpha-value>)',200:'rgb(var(--c-slate-200) / <alpha-value>)',300:'rgb(var(--c-slate-300) / <alpha-value>)',400:'rgb(var(--c-slate-400) / <alpha-value>)',500:'rgb(var(--c-slate-500) / <alpha-value>)',600:'rgb(var(--c-slate-600) / <alpha-value>)',700:'rgb(var(--c-slate-700) / <alpha-value>)',800:'rgb(var(--c-slate-800) / <alpha-value>)',900:'rgb(var(--c-slate-900) / <alpha-value>)',950:'rgb(var(--c-slate-950) / <alpha-value>)'},cyan:{300:'rgb(var(--c-cyan-300) / <alpha-value>)',400:'rgb(var(--c-cyan-400) / <alpha-value>)',500:'rgb(var(--c-cyan-500) / <alpha-value>)',600:'rgb(var(--c-cyan-600) / <alpha-value>)',700:'rgb(var(--c-cyan-700) / <alpha-value>)',800:'rgb(var(--c-cyan-800) / <alpha-value>)',900:'rgb(var(--c-cyan-900) / <alpha-value>)',950:'rgb(var(--c-cyan-950) / <alpha-value>)'},sky:{200:'rgb(var(--c-sky-200) / <alpha-value>)',300:'rgb(var(--c-sky-300) / <alpha-value>)',400:'rgb(var(--c-sky-400) / <alpha-value>)',500:'rgb(var(--c-sky-500) / <alpha-value>)',600:'rgb(var(--c-sky-600) / <alpha-value>)',900:'rgb(var(--c-sky-900) / <alpha-value>)'},emerald:{300:'rgb(var(--c-emerald-300) / <alpha-value>)',400:'rgb(var(--c-emerald-400) / <alpha-value>)',500:'rgb(var(--c-emerald-500) / <alpha-value>)',950:'rgb(var(--c-emerald-950) / <alpha-value>)'},green:{400:'rgb(var(--c-green-400) / <alpha-value>)',500:'rgb(var(--c-green-500) / <alpha-value>)',600:'rgb(var(--c-green-600) / <alpha-value>)',700:'rgb(var(--c-green-700) / <alpha-value>)',800:'rgb(var(--c-green-800) / <alpha-value>)',900:'rgb(var(--c-green-900) / <alpha-value>)'},red:{100:'rgb(var(--c-red-100) / <alpha-value>)',200:'rgb(var(--c-red-200) / <alpha-value>)',300:'rgb(var(--c-red-300) / <alpha-value>)',400:'rgb(var(--c-red-400) / <alpha-value>)',500:'rgb(var(--c-red-500) / <alpha-value>)',600:'rgb(var(--c-red-600) / <alpha-value>)',900:'rgb(var(--c-red-900) / <alpha-value>)',950:'rgb(var(--c-red-950) / <alpha-value>)'},amber:{300:'rgb(var(--c-amber-300) / <alpha-value>)',400:'rgb(var(--c-amber-400) / <alpha-value>)',500:'rgb(var(--c-amber-500) / <alpha-value>)',950:'rgb(var(--c-amber-950) / <alpha-value>)'},yellow:{300:'rgb(var(--c-yellow-300) / <alpha-value>)',400:'rgb(var(--c-yellow-400) / <alpha-value>)',500:'rgb(var(--c-yellow-500) / <alpha-value>)'},orange:{300:'rgb(var(--c-orange-300) / <alpha-value>)',400:'rgb(var(--c-orange-400) / <alpha-value>)',500:'rgb(var(--c-orange-500) / <alpha-value>)'},purple:{200:'rgb(var(--c-purple-200) / <alpha-value>)',300:'rgb(var(--c-purple-300) / <alpha-value>)',400:'rgb(var(--c-purple-400) / <alpha-value>)',500:'rgb(var(--c-purple-500) / <alpha-value>)',600:'rgb(var(--c-purple-600) / <alpha-value>)',900:'rgb(var(--c-purple-900) / <alpha-value>)',950:'rgb(var(--c-purple-950) / <alpha-value>)'},indigo:{400:'rgb(var(--c-indigo-400) / <alpha-value>)',500:'rgb(var(--c-indigo-500) / <alpha-value>)'},pink:{500:'rgb(var(--c-pink-500) / <alpha-value>)'}}}}};</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -15,20 +17,20 @@
   <style>
     /* 検索画面: 住所(日本地図)・電話番号・マップコード */
     .sx-tabs { display: flex; gap: 6px; overflow-x: auto; flex-shrink: 0; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
-    .sx-tab { flex: 0 0 auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #cbd5e1; background: #0f172a; border: 1.5px solid #334155; white-space: nowrap; }
-    .sx-tab.on { color: #020617; background: #22d3ee; border-color: #22d3ee; }
-    .sx-btn { padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 800; color: #e2e8f0; background: #1e293b; border: 1.5px solid #475569; }
+    .sx-tab { flex: 0 0 auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: var(--tx2,#cbd5e1); background: var(--bg2,#0f172a); border: 1.5px solid var(--ln,#334155); white-space: nowrap; }
+    .sx-tab.on { color: var(--bg0,#020617); background: var(--ac,#22d3ee); border-color: var(--ac,#22d3ee); }
+    .sx-btn { padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 800; color: var(--tx1,#e2e8f0); background: var(--bg3,#1e293b); border: 1.5px solid var(--ln2,#475569); }
     .sx-btn:active { transform: scale(.96); }
-    .sx-btn-go { color: #020617; background: #22d3ee; border-color: #22d3ee; font-size: 16px; }
-    .sx-crumbs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex-shrink: 0; font-size: 12px; color: #94a3b8; }
-    .sx-crumb { padding: 5px 10px; border-radius: 8px; font-weight: 800; font-size: 13px; color: #67e8f9; background: #0f172a; border: 1px solid #155e75; }
+    .sx-btn-go { color: var(--bg0,#020617); background: var(--ac,#22d3ee); border-color: var(--ac,#22d3ee); font-size: 16px; }
+    .sx-crumbs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex-shrink: 0; font-size: 12px; color: var(--tx3,#94a3b8); }
+    .sx-crumb { padding: 5px 10px; border-radius: 8px; font-weight: 800; font-size: 13px; color: var(--ac-t,#67e8f9); background: var(--bg2,#0f172a); border: 1px solid var(--ac-ln,#155e75); }
     .sx-list { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; align-content: start; padding-right: 2px; -webkit-overflow-scrolling: touch; }
-    .sx-item { padding: 11px 8px; border-radius: 12px; font-size: 14px; font-weight: 800; color: #e2e8f0; background: #0f172a; border: 1.5px solid #334155; text-align: center; }
-    .sx-item:active { background: #155e75; }
-    .sx-display { min-height: 56px; padding: 8px 14px; border-radius: 14px; border: 2px solid #22d3ee; background: #020617; color: #fff; font-size: 30px; font-weight: 900; letter-spacing: .06em; font-variant-numeric: tabular-nums; display: flex; align-items: center; word-break: break-all; }
-    .sx-display.dim { color: #475569; font-size: 18px; font-weight: 700; letter-spacing: 0; }
+    .sx-item { padding: 11px 8px; border-radius: 12px; font-size: 14px; font-weight: 800; color: var(--tx1,#e2e8f0); background: var(--bg2,#0f172a); border: 1.5px solid var(--ln,#334155); text-align: center; }
+    .sx-item:active { background: var(--ac-ln,#155e75); }
+    .sx-display { min-height: 56px; padding: 8px 14px; border-radius: 14px; border: 2px solid var(--ac,#22d3ee); background: var(--bg0,#020617); color: #fff; font-size: 30px; font-weight: 900; letter-spacing: .06em; font-variant-numeric: tabular-nums; display: flex; align-items: center; word-break: break-all; }
+    .sx-display.dim { color: var(--ln2,#475569); font-size: 18px; font-weight: 700; letter-spacing: 0; }
     .sx-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .sx-key { height: 52px; border-radius: 12px; font-size: 24px; font-weight: 900; color: #f1f5f9; background: #1e293b; border: 1.5px solid #475569; }
+    .sx-key { height: 52px; border-radius: 12px; font-size: 24px; font-weight: 900; color: #f1f5f9; background: var(--bg3,#1e293b); border: 1.5px solid var(--ln2,#475569); }
     .sx-key:active { background: #0e7490; transform: scale(.95); }
     .sx-key.fn { font-size: 18px; color: #fca5a5; }
     #sxMap svg { width: 100%; height: 100%; max-height: 100%; }
@@ -40,8 +42,8 @@
     #musicMapBox { display: none; }
     #sidePanel.panel-fs #sideWidgetMusic #musicMidRow { display: flex; flex: 1; min-height: 0; gap: 18px; align-items: stretch; margin: 8px 0; }
     #sidePanel.panel-fs #sideWidgetMusic #musicTitleBlock { width: 24%; flex-shrink: 0; margin: 0; }
-    #sidePanel.panel-fs #sideWidgetMusic #musicMapBox { display: block; flex: 1; min-width: 0; border-radius: 16px; overflow: hidden; border: 1px solid #334155; background: #0f172a; position: relative; }
-    #musicMapBox.map-color-invert { background: #0f172a; }
+    #sidePanel.panel-fs #sideWidgetMusic #musicMapBox { display: block; flex: 1; min-width: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--ln,#334155); background: var(--bg2,#0f172a); position: relative; }
+    #musicMapBox.map-color-invert { background: var(--bg2,#0f172a); }
     #musicMapBox.map-color-invert .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); }
     /* オートパーキングのスタート文字: 青 → うすい紫がふわっと流れる */
     @keyframes apGradMove { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
@@ -65,11 +67,11 @@
     /* 本物地図(Leaflet)をダークテーマの車載機っぽく見せる(設定でON/OFF切替可能) */
     /* 色反転は「地図のタイル(背景の絵)」だけに掛ける。現在地マーク・★・ルート線・ポップアップは反転せず、設定した色のまま見える */
     #realMap.map-color-invert .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6); }
-    #realMap.map-color-invert, #mapContainer.map-dark-bg #realMap { background:#0f172a; }
+    #realMap.map-color-invert, #mapContainer.map-dark-bg #realMap { background:var(--bg2,#0f172a); }
     /* 3D表示: 地図を斜めに倒して遠くまで見せるので、地図の板を大きくする(回転の中心は現在地マークの位置) */
     #realMap.map-3d { width: 260% !important; height: 340% !important; left: -80% !important; top: -120% !important; }
-    .mset-btn { padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; }
-    .mset-btn.mset-on { background: #06b6d4; color: #020617; border-color: #67e8f9; }
+    .mset-btn { padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 1px solid var(--ln,#334155); background: var(--bg3,#1e293b); color: var(--tx2,#cbd5e1); }
+    .mset-btn.mset-on { background: var(--ac-d,#06b6d4); color: var(--bg0,#020617); border-color: var(--ac-t,#67e8f9); }
     /* ヘディングアップ(進行方向を上に)用: #realMapを一回り大きくして中央基準で回転させる。
        親の#mapContainerは overflow:hidden 済みなので、はみ出た部分は自動的に隠れる。 */
     #realMap {
@@ -98,8 +100,8 @@
     .user-marker-rotor { transform-origin: 50% 50%; transition: transform 0.35s linear; }
     /* 地図ライセンス表示: フローティングのボトムバーと被らないよう右下・少し上にずらす */
     .leaflet-control-attribution {
-      background: rgba(15,23,42,0.75) !important;
-      color: #cbd5e1 !important;
+      background: rgba(var(--bg2-rgb,15,23,42),0.75) !important;
+      color: var(--tx2,#cbd5e1) !important;
       font-size: 9px !important;
       padding: 1px 6px !important;
       border-radius: 6px !important;
@@ -110,7 +112,7 @@
     body {
       font-family: 'Noto Sans JP', sans-serif;
       user-select: none;
-      background-color: #020617;
+      background-color: var(--bg0,#020617);
       color: #f8fafc;
       overflow: hidden;
       margin: 0;
@@ -165,17 +167,17 @@
       width: 5px;
     }
     .scrollable-panel::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: var(--ln,#334155);
       border-radius: 4px;
     }
 
     .gray-connected-gauge-frame {
-      border: 5px solid #64748b;
+      border: 5px solid var(--ln3,#64748b);
       border-top-left-radius: 36px;
       border-top-right-radius: 36px;
       border-bottom-left-radius: 12px;
       border-bottom-right-radius: 12px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(var(--bg2-rgb,15,23,42), 0.85);
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
       transition: all 0.5s ease;
     }
@@ -205,22 +207,267 @@ body.walk-mode button[onclick="setSettingsPage('sign')"],
 body.walk-mode [data-set-page="sign"] { display: none !important; }
 body.walk-mode #screenView { flex-direction: column !important; }
 body.walk-mode #mapContainer { border-right: none !important; min-height: 0; }
-body.walk-mode #sidePanel { width: 100% !important; max-height: 46%; border-left: none !important; border-top: 1px solid #1e293b; }
+body.walk-mode #sidePanel { width: 100% !important; max-height: 46%; border-left: none !important; border-top: 1px solid var(--bg3,#1e293b); }
 body.walk-mode #sideWidgetMenu .space-y-1 > button { padding: 0.65rem 0.75rem !important; }
 body.walk-mode #mapFloatingInfo { left: 0.5rem !important; right: 0.5rem !important; bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important; padding: 0.4rem 0.6rem !important; }
 body.walk-mode #mapFloatingInfo button.w-7 { width: 2.25rem !important; height: 2.25rem !important; }
+
+/* ===== 国産カーナビ風の見た目(設定画面+ナビ画面)。設定の「ナビ風デザイン」をオフにすると、元の見た目に戻る(html に navi-skin が付いているときだけ効く) ===== */
+html.navi-skin #settingsModal { background: radial-gradient(130% 70% at 50% 0%, #15294a 0%, #0b1627 52%, #060b14 100%) !important; }
+html.navi-skin #settingsModal > div { background: transparent !important; padding: 0 !important; gap: 0 !important; }
+html.navi-skin #settingsModal > div > * + * { margin-top: 0 !important; }
+/* 上のタイトルバー */
+html.navi-skin #settingsModal > div > div:first-child { padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 10px !important; background: linear-gradient(180deg, #1f3a68 0%, #132643 100%) !important; border-bottom: 1px solid #4a7fd0 !important; box-shadow: 0 2px 14px rgba(0,0,0,.55), 0 1px 0 rgba(120,180,255,.35) inset; }
+html.navi-skin #settingsModal #setBreadcrumb { color: #fff !important; font-size: 1.05rem !important; font-weight: 800 !important; letter-spacing: .04em; gap: 8px !important; }
+html.navi-skin #settingsModal #setBreadcrumb i.fa-gear { color: #7fb6ff; }
+html.navi-skin #settingsModal #setBreadcrumb button { color: #8fc2ff !important; text-decoration: none !important; font-weight: 700; padding: 6px 12px 6px 8px; border-radius: 999px; background: rgba(75,130,215,.22); border: 1px solid rgba(130,185,255,.45); }
+html.navi-skin #settingsModal #setBreadcrumb button::before { content: "‹ "; font-size: 1.15em; font-weight: 900; }
+html.navi-skin #settingsModal #setBreadcrumb .text-white { color: #fff; }
+html.navi-skin #settingsModal #setBreadcrumb .text-cyan-400 { color: #8fc2ff !important; }
+html.navi-skin #settingsModal > div > div:first-child > button { background: linear-gradient(180deg, #2c4c7d, #1a3257) !important; border: 1px solid #6a9be0 !important; color: #fff !important; border-radius: 999px !important; padding: 9px 18px !important; font-size: 13px !important; font-weight: 800 !important; box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+/* 中身の領域 */
+html.navi-skin #settingsModal #settingsScroll { padding: 16px 14px calc(22px + env(safe-area-inset-bottom, 0px)) !important; max-width: 52rem !important; }
+html.navi-skin #settingsModal #settingsScroll::-webkit-scrollbar { width: 6px; }
+html.navi-skin #settingsModal #settingsScroll::-webkit-scrollbar-thumb { background: #35527f; border-radius: 6px; }
+/* トップのタイル(メニュー) */
+html.navi-skin #settingsModal .set-home { gap: 12px !important; }
+html.navi-skin #settingsModal .set-home > button { --acc: #2f8cff; background: linear-gradient(155deg, #213a66 0%, #14264a 58%, #0e1b35 100%) !important; border: 1px solid rgba(140,190,255,.32) !important; border-radius: 18px !important; padding: 16px 14px !important; min-height: 124px; gap: 10px !important; box-shadow: 0 8px 16px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14); position: relative; overflow: hidden; }
+html.navi-skin #settingsModal .set-home > button::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--acc); opacity: .9; }
+html.navi-skin #settingsModal .set-home > button:active { transform: scale(.96); filter: brightness(1.2); }
+html.navi-skin #settingsModal .set-home > button > div:first-child { width: 46px !important; height: 46px !important; border-radius: 14px !important; background: linear-gradient(145deg, var(--acc), rgba(0,0,0,.25)) !important; background-blend-mode: normal; border: 1px solid rgba(255,255,255,.35) !important; color: #fff !important; font-size: 20px !important; box-shadow: 0 4px 10px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35); }
+html.navi-skin #settingsModal .set-home > button > .font-black { color: #fff !important; font-size: 16px !important; letter-spacing: .03em; }
+html.navi-skin #settingsModal .set-home > button > div:last-child { color: #8fa9d4 !important; font-size: 11px !important; }
+html.navi-skin #settingsModal .set-home > button:nth-child(1) { --acc: #1fb574; }
+html.navi-skin #settingsModal .set-home > button:nth-child(2) { --acc: #2f8cff; }
+html.navi-skin #settingsModal .set-home > button:nth-child(3) { --acc: #ff8a3d; }
+html.navi-skin #settingsModal .set-home > button:nth-child(4) { --acc: #e8b10a; }
+html.navi-skin #settingsModal .set-home > button:nth-child(5) { --acc: #14b3c0; }
+html.navi-skin #settingsModal .set-home > button:nth-child(6) { --acc: #9a6bff; }
+html.navi-skin #settingsModal .set-home > button:nth-child(7) { --acc: #4bb8ff; }
+html.navi-skin #settingsModal .set-home > button:nth-child(8) { --acc: #7f93b5; }
+/* 各ページの項目(行パネル) */
+html.navi-skin #settingsModal .set-page { display: flex; flex-direction: column; gap: 10px; }
+html.navi-skin #settingsModal .set-page.hidden { display: none; }
+html.navi-skin #settingsModal .set-page > * { margin: 0 !important; }
+html.navi-skin #settingsModal .set-page .bg-slate-950 { background: linear-gradient(180deg, #1a2f54 0%, #11213f 100%) !important; border: 1px solid rgba(130,180,250,.26) !important; border-radius: 14px !important; padding: 14px 16px !important; min-height: 66px; box-shadow: 0 4px 10px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.1); }
+html.navi-skin #settingsModal .set-page .bg-slate-950 .bg-slate-950 { box-shadow: none; }
+html.navi-skin #settingsModal .set-page .font-bold.text-white { color: #f3f8ff !important; font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+html.navi-skin #settingsModal .text-slate-400 { color: #90a9d0 !important; line-height: 1.5; }
+html.navi-skin #settingsModal .text-slate-300 { color: #c8d9f5 !important; }
+html.navi-skin #settingsModal .text-cyan-300, html.navi-skin #settingsModal .text-cyan-400 { color: #7fbcff !important; }
+/* 見出し */
+html.navi-skin #settingsModal .tracking-wider { color: #8fc2ff !important; font-size: 13px !important; font-weight: 800 !important; letter-spacing: .08em !important; padding: 2px 0 2px 10px; border-left: 4px solid #3b8cff; margin: 4px 0 10px !important; }
+html.navi-skin #settingsModal .tracking-wider i { color: #6fb0ff; }
+html.navi-skin #settingsModal .set-page > div:not(.bg-slate-950) { display: flex; flex-direction: column; gap: 10px; }
+/* スイッチ */
+html.navi-skin #settingsModal label.relative { transform: scale(1.12); transform-origin: right center; }
+html.navi-skin #settingsModal input.peer + div { width: 3.1rem !important; height: 1.8rem !important; background: #26385a !important; border: 1px solid #4a6aa0 !important; box-shadow: inset 0 2px 5px rgba(0,0,0,.5); }
+html.navi-skin #settingsModal input.peer + div::after { width: 1.4rem !important; height: 1.4rem !important; top: 1px !important; left: 1px !important; border: none !important; background: #fff !important; box-shadow: 0 2px 5px rgba(0,0,0,.5); }
+html.navi-skin #settingsModal input.peer:checked + div { background: linear-gradient(180deg, #4aa6ff, #2478ea) !important; border-color: #9fd0ff !important; box-shadow: 0 0 12px rgba(59,155,255,.5), inset 0 1px 2px rgba(255,255,255,.3); }
+html.navi-skin #settingsModal input.peer:checked + div::after { transform: translateX(1.3rem) !important; }
+/* ボタン・入力 */
+html.navi-skin #settingsModal .set-page button.bg-slate-800 { background: linear-gradient(180deg, #213a63, #162a4b) !important; border: 1px solid #3f64a0 !important; color: #d4e4ff !important; border-radius: 12px !important; padding-top: 12px !important; padding-bottom: 12px !important; font-size: 13px !important; font-weight: 700; }
+html.navi-skin #settingsModal .set-page button.bg-cyan-500, html.navi-skin #settingsModal .set-page button.bg-cyan-600 { background: linear-gradient(180deg, #4aa6ff, #2478ea) !important; border: 1px solid #a9d6ff !important; color: #fff !important; border-radius: 12px !important; font-weight: 800; box-shadow: 0 0 12px rgba(59,155,255,.4), inset 0 1px 0 rgba(255,255,255,.3); }
+html.navi-skin #settingsModal .set-page button.text-slate-950 { color: #fff !important; }
+html.navi-skin #settingsModal .set-page button:active { transform: scale(.97); }
+html.navi-skin #settingsModal select { background: #0c1a33 !important; color: #d6e8ff !important; border: 1px solid #4a7ac8 !important; border-radius: 10px !important; padding: 8px 12px !important; font-size: 13px !important; font-weight: 700; }
+html.navi-skin #settingsModal input[type="text"], html.navi-skin #settingsModal input[type="password"] { background: #0a1630 !important; color: #fff !important; border: 1px solid #3f6bb0 !important; border-radius: 10px !important; padding: 8px 12px !important; }
+html.navi-skin #settingsModal select { max-width: 52%; min-width: 0; flex-shrink: 0; }
+html.navi-skin #settingsModal input[type="range"] { accent-color: #3b9bff; height: 28px; }
+/* 文字とスイッチが重ならないように / つまみが出ない不具合(一部のスイッチ)の対策 */
+html.navi-skin #settingsModal .set-page .bg-slate-950 > div:first-child { flex: 1 1 auto; min-width: 0; padding-right: 14px; }
+html.navi-skin #settingsModal label.relative { flex-shrink: 0; margin-left: 10px; }
+html.navi-skin #settingsModal input.peer + div { position: relative; flex-shrink: 0; }
+html.navi-skin #settingsModal input.peer + div::after { content: "" !important; position: absolute !important; display: block; border-radius: 9999px !important; transition: transform .18s ease; }
+/* 一番下の「設定を保存して閉じる」 */
+html.navi-skin #settingsModal > div > button { margin: 0 14px calc(14px + env(safe-area-inset-bottom, 0px)) !important; width: calc(100% - 28px) !important; background: linear-gradient(180deg, #4aa6ff, #2478ea) !important; border: 1px solid #a9d6ff !important; color: #fff !important; border-radius: 14px !important; padding: 15px 0 !important; font-size: 16px; font-weight: 800; letter-spacing: .05em; box-shadow: 0 6px 16px rgba(20,90,200,.5), inset 0 1px 0 rgba(255,255,255,.35); }
+html.navi-skin #settingsModal .mset-btn { background: linear-gradient(180deg, #213a63, #162a4b) !important; border: 1px solid #3f64a0 !important; color: #d4e4ff !important; border-radius: 12px !important; padding: 12px 4px !important; font-size: 13px !important; font-weight: 700; }
+html.navi-skin #settingsModal .mset-btn.mset-on { background: linear-gradient(180deg, #4aa6ff, #2478ea) !important; border-color: #a9d6ff !important; color: #fff !important; font-weight: 800; box-shadow: 0 0 12px rgba(59,155,255,.4), inset 0 1px 0 rgba(255,255,255,.3); }
+@media (min-width: 720px) { html.navi-skin #settingsModal .set-home { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; } }
+
+/* --- ナビ画面(地図の上の案内カード・下のバー・右のメニュー) --- */
+html.navi-skin #topNavGuidance { background: linear-gradient(180deg, rgba(26,48,88,.97), rgba(10,20,40,.97)) !important; border: 1px solid rgba(140,195,255,.55) !important; border-radius: 18px !important; padding: 10px 18px 10px 10px !important; gap: 14px !important; box-shadow: 0 8px 20px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+html.navi-skin #navTurnIcon { background: linear-gradient(145deg, #4aa6ff, #1f66d6) !important; color: #fff !important; width: 3.5rem !important; height: 3.5rem !important; border-radius: 15px !important; border: 1px solid rgba(255,255,255,.35); box-shadow: 0 4px 10px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35); }
+html.navi-skin #navDestinationTitle { color: #8fc2ff !important; font-size: 11px !important; letter-spacing: .06em; }
+html.navi-skin #navDistanceMeters { font-size: 2rem; font-weight: 900; line-height: 1; }
+html.navi-skin #signRecogCard { background: linear-gradient(180deg, rgba(26,48,88,.97), rgba(10,20,40,.97)) !important; border: 1px solid rgba(140,195,255,.5) !important; border-radius: 16px !important; }
+html.navi-skin #mapFloatingInfo { background: linear-gradient(180deg, rgba(34,58,102,.96), rgba(11,22,44,.97)) !important; border: 1px solid rgba(140,195,255,.42) !important; border-radius: 22px !important; padding: 8px 14px !important; box-shadow: 0 10px 22px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2); }
+html.navi-skin #mapFloatingInfo .bg-slate-700 { background: rgba(140,190,255,.28) !important; }
+html.navi-skin #mapFloatingInfo .masterClock { font-size: 1.2rem !important; color: #fff !important; }
+html.navi-skin #mapFloatingInfo .navClockInfo { color: #8fd0ff !important; }
+html.navi-skin #mapFloatingInfo .w-7.h-7 { width: 2.3rem !important; height: 2.3rem !important; border-radius: 13px !important; background: linear-gradient(180deg, rgba(70,120,205,.38), rgba(40,80,150,.3)) !important; border: 1px solid rgba(150,200,255,.4) !important; color: #e4f0ff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
+html.navi-skin #mapFloatingInfo .w-7.h-7:active { filter: brightness(1.35); }
+html.navi-skin #mapFloatingInfo .w-7.h-7 i { font-size: 15px !important; }
+html.navi-skin #mapFloatingInfo .gap-2.text-lg { gap: 8px !important; }
+html.navi-skin #btStatusIcon { color: #8fd0ff !important; }
+html.navi-skin #gearBadge { background: linear-gradient(180deg, #24406e, #152a4b) !important; border-radius: 13px !important; }
+html.navi-skin #gearPopup { background: linear-gradient(180deg, #1a3055, #0f1e3a) !important; border: 1px solid rgba(140,195,255,.5) !important; border-radius: 14px !important; }
+html.navi-skin #sidePanel { background: linear-gradient(180deg, #10203b, #08111f) !important; border-left: 1px solid rgba(120,175,250,.32) !important; }
+html.navi-skin #sidePanel .bg-slate-900, html.navi-skin #sidePanel .bg-slate-950 { background: linear-gradient(180deg, #1a3055, #112140) !important; border-color: rgba(130,180,250,.3) !important; }
+html.navi-skin #sideWidgetMenu > div:first-child { color: #dcebff !important; border-bottom: 1px solid rgba(120,175,250,.32) !important; padding-bottom: 8px !important; font-size: 13px !important; letter-spacing: .04em; }
+html.navi-skin #sideWidgetMenu .space-y-1 { display: flex; flex-direction: column; gap: 8px; }
+html.navi-skin #sideWidgetMenu .space-y-1 > * { margin: 0 !important; }
+html.navi-skin #sideWidgetMenu .space-y-1 > button { background: linear-gradient(180deg, #1c3358, #112140) !important; border: 1px solid rgba(130,180,250,.3) !important; border-radius: 13px !important; padding: 9px 10px !important; gap: 10px !important; box-shadow: 0 3px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1); }
+html.navi-skin #sideWidgetMenu .space-y-1 > button:active { filter: brightness(1.25); transform: scale(.98); }
+html.navi-skin #sideWidgetMenu .space-y-1 > button > i { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(80,145,235,.3); font-size: 14px !important; flex-shrink: 0; }
+html.navi-skin #sideWidgetMenu .space-y-1 > button .font-bold { font-size: 12px; color: #eaf3ff !important; }
+html.navi-skin #sideWidgetMenu .space-y-1 > button .text-slate-400, html.navi-skin #sideWidgetMenu .space-y-1 > button .text-slate-500 { color: #8fa9d4 !important; }
+html.navi-skin .toast-card { border-radius: 16px; }
+
+/* ===== ミッドナイト風の見た目: 黒い背景・大きな角丸のグループ・青のアクセント・やわらかい丸ボタン ===== */
+html.midnight-skin #settingsModal { background: #000 !important; }
+html.midnight-skin #settingsModal > div { background: transparent !important; padding: 0 !important; gap: 0 !important; }
+html.midnight-skin #settingsModal > div > div:first-child { padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 10px !important; background: #000 !important; border: none !important; align-items: flex-end !important; }
+html.midnight-skin #settingsModal #setBreadcrumb { color: #fff !important; font-size: 1.7rem !important; font-weight: 600 !important; letter-spacing: 0; flex-direction: column; align-items: flex-start !important; gap: 2px !important; line-height: 1.2; }
+html.midnight-skin #settingsModal #setBreadcrumb i { display: none; }
+html.midnight-skin #settingsModal #setBreadcrumb button { order: -1; color: #8ab4ff !important; text-decoration: none !important; font-size: 13px; font-weight: 500; background: none; border: none; padding: 0; }
+html.midnight-skin #settingsModal #setBreadcrumb button::before { content: "‹ "; font-size: 1.2em; }
+html.midnight-skin #settingsModal #setBreadcrumb .text-white { font-size: 1.7rem; font-weight: 600; }
+html.midnight-skin #settingsModal #setBreadcrumb .text-white i { display: none; }
+html.midnight-skin #settingsModal > div > div:first-child > button { background: #2a2a2d !important; border: none !important; color: #fff !important; border-radius: 999px !important; padding: 10px 20px !important; font-size: 13px !important; font-weight: 500 !important; }
+html.midnight-skin #settingsModal > div > div:first-child > button { white-space: nowrap; flex-shrink: 0; margin-left: 12px; }
+html.midnight-skin #settingsModal #setBreadcrumb { font-size: 1.5rem !important; }
+html.midnight-skin #settingsModal #settingsScroll { padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0px)) !important; max-width: 46rem !important; }
+html.midnight-skin #settingsModal .set-home.hidden { display: none !important; }
+html.midnight-skin #settingsModal .set-home { display: flex !important; flex-direction: column; gap: 3px !important; }
+html.midnight-skin #settingsModal .set-home > button { background: #1c1c1e !important; border: none !important; box-shadow: none !important; border-radius: 6px !important; padding: 16px 18px !important; display: grid !important; grid-template-columns: 46px 1fr; column-gap: 16px; row-gap: 2px; align-items: center; min-height: 0; }
+html.midnight-skin #settingsModal .set-home > button:first-child { border-radius: 26px 26px 6px 6px !important; }
+html.midnight-skin #settingsModal .set-home > button:last-child { border-radius: 6px 6px 26px 26px !important; }
+html.midnight-skin #settingsModal .set-home > button:active { background: #2a2a2d !important; transform: none; }
+html.midnight-skin #settingsModal .set-home > button > div:first-child { grid-row: 1 / span 2; width: 46px !important; height: 46px !important; border-radius: 50% !important; border: none !important; color: #fff !important; font-size: 19px !important; background: #3e91ff !important; box-shadow: none; }
+html.midnight-skin #settingsModal .set-home > button > .font-black { color: #fff !important; font-size: 16px !important; font-weight: 500 !important; align-self: end; }
+html.midnight-skin #settingsModal .set-home > button > div:last-child { color: #9a9aa0 !important; font-size: 12px !important; align-self: start; }
+html.midnight-skin #settingsModal .set-home > button:nth-child(1) { --c: #3dbb6b; } html.midnight-skin #settingsModal .set-home > button:nth-child(2) { --c: #3e91ff; }
+html.midnight-skin #settingsModal .set-home > button:nth-child(3) { --c: #ff8a3d; } html.midnight-skin #settingsModal .set-home > button:nth-child(4) { --c: #f2b705; }
+html.midnight-skin #settingsModal .set-home > button:nth-child(5) { --c: #1fb5c4; } html.midnight-skin #settingsModal .set-home > button:nth-child(6) { --c: #9a6bff; }
+html.midnight-skin #settingsModal .set-home > button:nth-child(7) { --c: #4aa8ff; } html.midnight-skin #settingsModal .set-home > button:nth-child(8) { --c: #8a8f9c; }
+html.midnight-skin #settingsModal .set-home > button > div:first-child { background: var(--c, #3e91ff) !important; }
+html.midnight-skin #settingsModal .set-page { display: flex; flex-direction: column; gap: 10px; }
+html.midnight-skin #settingsModal .set-page.hidden { display: none; }
+html.midnight-skin #settingsModal .set-page > * { margin: 0 !important; }
+html.midnight-skin #settingsModal .set-page .bg-slate-950 { background: #1c1c1e !important; border: none !important; border-radius: 26px !important; padding: 18px 20px !important; min-height: 64px; box-shadow: none; }
+html.midnight-skin #settingsModal .set-page .bg-slate-950 .bg-slate-950 { box-shadow: none; }
+html.midnight-skin #settingsModal .set-page .font-bold.text-white { color: #fff !important; font-size: 16px; font-weight: 500; }
+html.midnight-skin #settingsModal .text-slate-400 { color: #9a9aa0 !important; line-height: 1.5; }
+html.midnight-skin #settingsModal .text-slate-300 { color: #d0d0d5 !important; }
+html.midnight-skin #settingsModal .text-cyan-300, html.midnight-skin #settingsModal .text-cyan-400 { color: #8ab4ff !important; }
+html.midnight-skin #settingsModal .tracking-wider { color: #8ab4ff !important; font-size: 13px !important; font-weight: 600 !important; letter-spacing: 0 !important; padding: 0 6px; margin: 6px 0 8px !important; border: none; }
+html.midnight-skin #settingsModal .tracking-wider i { display: none; }
+html.midnight-skin #settingsModal .set-page > div:not(.bg-slate-950) { display: flex; flex-direction: column; gap: 10px; }
+html.midnight-skin #settingsModal .set-page .bg-slate-950 > div:first-child { flex: 1 1 auto; min-width: 0; padding-right: 14px; }
+html.midnight-skin #settingsModal label.relative { flex-shrink: 0; margin-left: 10px; }
+html.midnight-skin #settingsModal input.peer + div { position: relative; flex-shrink: 0; width: 3.1rem !important; height: 1.8rem !important; background: #4a4a4f !important; border: none !important; box-shadow: none; }
+html.midnight-skin #settingsModal input.peer + div::after { content: "" !important; position: absolute !important; display: block; border-radius: 9999px !important; width: 1.4rem !important; height: 1.4rem !important; top: .2rem !important; left: .22rem !important; border: none !important; background: #fff !important; transition: transform .18s ease; }
+html.midnight-skin #settingsModal input.peer:checked + div { background: #3e91ff !important; }
+html.midnight-skin #settingsModal input.peer:checked + div::after { transform: translateX(1.25rem) !important; }
+html.midnight-skin #settingsModal .set-page button.bg-slate-800, html.midnight-skin #settingsModal .mset-btn { background: #2a2a2d !important; border: none !important; color: #e8e8ec !important; border-radius: 999px !important; padding: 12px 6px !important; font-size: 13px !important; font-weight: 500; box-shadow: none !important; }
+html.midnight-skin #settingsModal .set-page button.bg-cyan-500, html.midnight-skin #settingsModal .set-page button.bg-cyan-600, html.midnight-skin #settingsModal .mset-btn.mset-on { background: #3e91ff !important; border: none !important; color: #fff !important; border-radius: 999px !important; font-weight: 600; box-shadow: none !important; }
+html.midnight-skin #settingsModal .set-page button.text-slate-950 { color: #fff !important; }
+html.midnight-skin #settingsModal .set-page button:active { opacity: .8; }
+html.midnight-skin #settingsModal select { background: #2a2a2d !important; color: #fff !important; border: none !important; border-radius: 14px !important; padding: 10px 14px !important; font-size: 13px !important; max-width: 52%; min-width: 0; flex-shrink: 0; }
+html.midnight-skin #settingsModal input[type="text"], html.midnight-skin #settingsModal input[type="password"] { background: #2a2a2d !important; color: #fff !important; border: none !important; border-radius: 14px !important; padding: 10px 14px !important; }
+html.midnight-skin #settingsModal input[type="range"] { accent-color: #3e91ff; height: 28px; }
+html.midnight-skin #settingsModal > div > button { margin: 0 20px calc(16px + env(safe-area-inset-bottom, 0px)) !important; width: calc(100% - 40px) !important; background: #3e91ff !important; border: none !important; color: #fff !important; border-radius: 999px !important; padding: 16px 0 !important; font-size: 16px; font-weight: 600; box-shadow: none !important; }
+/* --- ナビ画面 --- */
+html.midnight-skin #topNavGuidance { background: rgba(28,28,30,.96) !important; border: none !important; border-radius: 30px !important; padding: 10px 22px 10px 10px !important; gap: 14px !important; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+html.midnight-skin #navTurnIcon { background: #3e91ff !important; color: #fff !important; width: 3.4rem !important; height: 3.4rem !important; border-radius: 50% !important; box-shadow: none; }
+html.midnight-skin #navDestinationTitle { color: #9a9aa0 !important; font-size: 12px !important; letter-spacing: 0; }
+html.midnight-skin #navDistanceMeters { font-size: 2rem; font-weight: 600; line-height: 1; }
+html.midnight-skin #mapFloatingInfo { background: rgba(28,28,30,.96) !important; border: none !important; border-radius: 34px !important; padding: 8px 16px !important; box-shadow: 0 10px 26px rgba(0,0,0,.5); }
+html.midnight-skin #mapFloatingInfo .bg-slate-700 { background: rgba(255,255,255,.14) !important; }
+html.midnight-skin #mapFloatingInfo .masterClock { font-size: 1.2rem !important; color: #fff !important; }
+html.midnight-skin #mapFloatingInfo .navClockInfo { color: #8ab4ff !important; }
+html.midnight-skin #mapFloatingInfo .w-7.h-7 { width: 2.4rem !important; height: 2.4rem !important; border-radius: 50% !important; background: #2c2c2f !important; border: none !important; color: #f2f2f5 !important; }
+html.midnight-skin #mapFloatingInfo .w-7.h-7:active { background: #3a3a3e !important; }
+html.midnight-skin #mapFloatingInfo .w-7.h-7 i { font-size: 15px !important; }
+html.midnight-skin #mapFloatingInfo .gap-2.text-lg { gap: 8px !important; }
+html.midnight-skin #btStatusIcon { color: #8ab4ff !important; }
+html.midnight-skin #gearBadge { background: #2c2c2f !important; border-radius: 50% !important; }
+html.midnight-skin #gearPopup { background: #1c1c1e !important; border: none !important; border-radius: 22px !important; }
+html.midnight-skin #sidePanel { background: #000 !important; border-left: none !important; }
+html.midnight-skin #sidePanel .bg-slate-900, html.midnight-skin #sidePanel .bg-slate-950 { background: #1c1c1e !important; border-color: transparent !important; }
+html.midnight-skin #sideWidgetMenu > div:first-child { color: #fff !important; border-bottom: none !important; padding: 4px 4px 6px !important; font-size: 15px !important; font-weight: 600; }
+html.midnight-skin #sideWidgetMenu .space-y-1 { display: flex; flex-direction: column; gap: 3px; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > * { margin: 0 !important; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button { background: #1c1c1e !important; border: none !important; border-radius: 6px !important; padding: 12px 12px !important; gap: 12px !important; box-shadow: none; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button:first-child { border-radius: 22px 22px 6px 6px !important; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button:last-child { border-radius: 6px 6px 22px 22px !important; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button:active { background: #2a2a2d !important; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button > i { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(62,145,255,.22); font-size: 14px !important; flex-shrink: 0; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button .font-bold { font-size: 13px; font-weight: 500; color: #fff !important; }
+html.midnight-skin #sideWidgetMenu .space-y-1 > button .text-slate-400, html.midnight-skin #sideWidgetMenu .space-y-1 > button .text-slate-500 { color: #9a9aa0 !important; }
+
+/* --- ミッドナイト風: 右のパネルのすべての画面(エアコン・ルート・高速・クイック・検索・車両・視覚・音楽・ソナーなど)と、地図の上のカード --- */
+html.midnight-skin #mapPinPanel, html.midnight-skin #routeDestinationCard { background: rgba(28,28,30,.97) !important; border: none !important; border-radius: 24px !important; box-shadow: 0 10px 28px rgba(0,0,0,.55); }
+html.midnight-skin #sidePanel { padding: 10px !important; }
+html.midnight-skin #sidePanel .bg-slate-900, html.midnight-skin #sidePanel .bg-slate-950, html.midnight-skin #sidePanel .bg-black { background: #1c1c1e !important; }
+html.midnight-skin #sidePanel .bg-slate-800 { background: #2a2a2d !important; }
+html.midnight-skin #sidePanel [class*="border-slate"] { border-color: rgba(255,255,255,.08) !important; }
+html.midnight-skin #sidePanel [class*="border-cyan"] { border-color: rgba(138,180,255,.3) !important; }
+html.midnight-skin #sidePanel button.rounded-lg, html.midnight-skin #sidePanel button.rounded-xl, html.midnight-skin #sidePanel div.rounded-lg, html.midnight-skin #sidePanel div.rounded-xl, html.midnight-skin #sidePanel div.rounded-2xl { border-radius: 18px !important; }
+html.midnight-skin #sidePanel .text-slate-200 { color: #fff !important; }
+html.midnight-skin #sidePanel .text-slate-300 { color: #e0e0e5 !important; }
+html.midnight-skin #sidePanel .text-slate-400, html.midnight-skin #sidePanel .text-slate-500 { color: #9a9aa0 !important; }
+html.midnight-skin #sidePanel .text-cyan-300, html.midnight-skin #sidePanel .text-cyan-400 { color: #8ab4ff !important; }
+html.midnight-skin #sidePanel .bg-cyan-500, html.midnight-skin #sidePanel .bg-cyan-600, html.midnight-skin #sidePanel .bg-cyan-700 { background: #3e91ff !important; color: #fff !important; border-color: transparent !important; }
+html.midnight-skin #sidePanel .bg-cyan-500 *, html.midnight-skin #sidePanel .bg-cyan-600 * { color: #fff; }
+html.midnight-skin #sidePanel [class*="bg-cyan-950"] { background: rgba(62,145,255,.2) !important; }
+html.midnight-skin #sidePanel .border-b { border-color: rgba(255,255,255,.08) !important; }
+html.midnight-skin #sidePanel input[type="text"], html.midnight-skin #sidePanel input[type="search"], html.midnight-skin #sidePanel input[type="number"], html.midnight-skin #sidePanel input:not([type]), html.midnight-skin #sidePanel textarea, html.midnight-skin #sidePanel select { background: #2a2a2d !important; color: #fff !important; border: none !important; border-radius: 16px !important; padding: 10px 14px !important; }
+html.midnight-skin #sidePanel button.rounded, html.midnight-skin #sidePanel button.rounded-md { border-radius: 999px !important; padding-left: 12px; padding-right: 12px; white-space: nowrap; }
+html.midnight-skin #sidePanel input[type="range"] { accent-color: #3e91ff; }
+html.midnight-skin #sidePanel button:active { opacity: .8; }
+html.midnight-skin #sidePanel [id^="sideWidget"] { gap: 8px; }
+html.midnight-skin #sidePanel [id^="sideWidget"] > div:first-child:not([id]) { font-weight: 600; }
+</style>
+<style id="midnightColors">
+/* ===== ミッドナイト Colors: 色の使い方を全画面でミッドナイトにそろえる(標準/ナビ風は :root の元の色のまま) ===== */
+:root{--c-slate-50:248 250 252;--c-slate-100:241 245 249;--c-slate-200:226 232 240;--c-slate-300:203 213 225;--c-slate-400:148 163 184;--c-slate-500:100 116 139;--c-slate-600:71 85 105;--c-slate-700:51 65 85;--c-slate-800:30 41 59;--c-slate-900:15 23 42;--c-slate-950:2 6 23;--c-cyan-300:103 232 249;--c-cyan-400:34 211 238;--c-cyan-500:6 182 212;--c-cyan-600:8 145 178;--c-cyan-700:14 116 144;--c-cyan-800:21 94 117;--c-cyan-900:22 78 99;--c-cyan-950:8 51 68;--c-sky-200:186 230 253;--c-sky-300:125 211 252;--c-sky-400:56 189 248;--c-sky-500:14 165 233;--c-sky-600:2 132 199;--c-sky-900:12 74 110;--c-emerald-300:110 231 183;--c-emerald-400:52 211 153;--c-emerald-500:16 185 129;--c-emerald-950:2 44 34;--c-green-400:74 222 128;--c-green-500:34 197 94;--c-green-600:22 163 74;--c-green-700:21 128 61;--c-green-800:22 101 52;--c-green-900:20 83 45;--c-red-100:254 226 226;--c-red-200:254 202 202;--c-red-300:252 165 165;--c-red-400:248 113 113;--c-red-500:239 68 68;--c-red-600:220 38 38;--c-red-900:127 29 29;--c-red-950:69 10 10;--c-amber-300:252 211 77;--c-amber-400:251 191 36;--c-amber-500:245 158 11;--c-amber-950:69 26 3;--c-yellow-300:253 224 71;--c-yellow-400:250 204 21;--c-yellow-500:234 179 8;--c-orange-300:253 186 116;--c-orange-400:251 146 60;--c-orange-500:249 115 22;--c-purple-200:233 213 255;--c-purple-300:216 180 254;--c-purple-400:192 132 252;--c-purple-500:168 85 247;--c-purple-600:147 51 234;--c-purple-900:88 28 135;--c-purple-950:59 7 100;--c-indigo-400:129 140 248;--c-indigo-500:99 102 241;--c-pink-500:236 72 153;--ac:#22d3ee;--ac-t:#67e8f9;--ac-d:#06b6d4;--ac-ln:#155e75;--ac-bg:#083344;--bg0:#020617;--bg2:#0f172a;--bg3:#1e293b;--ln:#334155;--ln2:#475569;--ln3:#64748b;--tx3:#94a3b8;--tx2:#cbd5e1;--tx1:#e2e8f0;--ac-rgb:34,211,238;--bg0-rgb:2,6,23;--bg2-rgb:15,23,42;--bg3-rgb:30,41,59}
+html.midnight-skin{--c-slate-50:245 245 247;--c-slate-100:236 236 240;--c-slate-200:226 226 231;--c-slate-300:201 201 207;--c-slate-400:154 154 160;--c-slate-500:117 117 123;--c-slate-600:74 74 79;--c-slate-700:58 58 62;--c-slate-800:42 42 45;--c-slate-900:28 28 30;--c-slate-950:13 13 15;--c-cyan-300:169 203 255;--c-cyan-400:138 180 255;--c-cyan-500:62 145 255;--c-cyan-600:47 126 232;--c-cyan-700:36 104 196;--c-cyan-800:26 79 152;--c-cyan-900:21 59 115;--c-cyan-950:18 41 77;--c-sky-200:207 224 255;--c-sky-300:169 203 255;--c-sky-400:138 180 255;--c-sky-500:62 145 255;--c-sky-600:47 126 232;--c-sky-900:21 59 115;--c-emerald-300:143 224 174;--c-emerald-400:92 205 136;--c-emerald-500:61 187 107;--c-emerald-950:15 47 28;--c-green-400:92 205 136;--c-green-500:61 187 107;--c-green-600:47 160 90;--c-green-700:37 128 74;--c-green-800:29 99 58;--c-green-900:23 73 44;--c-red-100:255 227 228;--c-red-200:255 194 196;--c-red-300:255 154 158;--c-red-400:255 122 128;--c-red-500:255 90 95;--c-red-600:229 72 77;--c-red-900:92 28 31;--c-red-950:58 17 20;--c-amber-300:255 215 107;--c-amber-400:247 197 45;--c-amber-500:242 183 5;--c-amber-950:58 44 6;--c-yellow-300:255 215 107;--c-yellow-400:247 197 45;--c-yellow-500:242 183 5;--c-orange-300:255 178 122;--c-orange-400:255 157 87;--c-orange-500:255 138 61;--c-purple-200:220 203 255;--c-purple-300:196 171 255;--c-purple-400:171 138 255;--c-purple-500:154 107 255;--c-purple-600:127 82 224;--c-purple-900:61 42 115;--c-purple-950:35 23 69;--c-indigo-400:143 155 255;--c-indigo-500:111 125 255;--c-pink-500:255 95 162;--ac:#3e91ff;--ac-t:#8ab4ff;--ac-d:#3e91ff;--ac-ln:#2a4f8f;--ac-bg:#12294d;--bg0:#000;--bg2:#1c1c1e;--bg3:#2a2a2d;--ln:#3a3a3e;--ln2:#4a4a4f;--ln3:#75757b;--tx3:#9a9aa0;--tx2:#d0d0d5;--tx1:#ececf0;--ac-rgb:62,145,255;--bg0-rgb:0,0,0;--bg2-rgb:28,28,30;--bg3-rgb:42,42,45;color-scheme:dark}
+html.midnight-skin body{background:#000 !important;color:#fff}
+html.midnight-skin .bg-cyan-500.text-slate-950,html.midnight-skin .bg-cyan-600.text-slate-950,html.midnight-skin .bg-cyan-500 .text-slate-950{color:#fff !important}
+html.midnight-skin .sx-tab.on,html.midnight-skin .sx-btn-go,html.midnight-skin .sx-pickbtn,html.midnight-skin .mset-btn.mset-on,html.midnight-skin #panelFsClose{color:#fff !important}
+html.midnight-skin .sx-tab,html.midnight-skin .sx-btn,html.midnight-skin .sx-item,html.midnight-skin .sx-key,html.midnight-skin .sx-crumb,html.midnight-skin .mset-btn{border-color:transparent !important;border-radius:999px}
+html.midnight-skin .sx-item,html.midnight-skin .sx-key{border-radius:18px}
+html.midnight-skin .sx-tab.on,html.midnight-skin .sx-btn-go{background:#3e91ff !important;border-color:#3e91ff !important}
+html.midnight-skin .sx-display{border:none !important;background:#1c1c1e !important;border-radius:26px !important}
+html.midnight-skin .sx-item:active,html.midnight-skin .sx-key:active{background:#3e91ff !important}
+html.midnight-skin .sx-key.fn{color:#ff7a80}
+html.midnight-skin .mset-btn.mset-on{background:#3e91ff !important}
+html.midnight-skin .leaflet-control-attribution{background:rgba(28,28,30,.8) !important;color:#d0d0d5 !important}
+html.midnight-skin .leaflet-control-attribution a{color:#8ab4ff !important}
+html.midnight-skin #realMap.map-color-invert,html.midnight-skin #mapContainer.map-dark-bg #realMap,html.midnight-skin #musicMapBox{background:#1c1c1e}
+html.midnight-skin .ap-grad{background-image:linear-gradient(90deg,#3e91ff,#8ab4ff,#c4abff,#8ab4ff,#3e91ff)}
+@media (hover:hover){html.midnight-skin button:hover{box-shadow:0 0 0 1px rgba(62,145,255,.35),0 6px 18px rgba(62,145,255,.16)}}
+html.navi-skin{--c-slate-50:238 245 255;--c-slate-100:220 235 255;--c-slate-200:196 217 245;--c-slate-300:185 208 240;--c-slate-400:143 169 212;--c-slate-500:107 134 179;--c-slate-600:59 90 140;--c-slate-700:42 69 115;--c-slate-800:28 51 88;--c-slate-900:17 33 64;--c-slate-950:8 17 31;--c-cyan-300:184 224 255;--c-cyan-400:143 208 255;--c-cyan-500:74 168 255;--c-cyan-600:58 138 224;--c-cyan-700:42 107 184;--c-cyan-800:31 79 138;--c-cyan-900:23 56 106;--c-cyan-950:15 37 71;--c-sky-200:212 236 255;--c-sky-300:184 224 255;--c-sky-400:143 208 255;--c-sky-500:74 168 255;--c-sky-600:58 138 224;--c-sky-900:23 56 106;--ac:#8fd0ff;--ac-t:#b8e0ff;--ac-d:#4aa8ff;--ac-ln:#2a5f9e;--ac-bg:#12335c;--bg0:#060b14;--bg2:#10203b;--bg3:#1a3055;--ln:#2a4573;--ln2:#3b5a8c;--ln3:#6b86b3;--tx3:#8fa9d4;--tx2:#b9d0f0;--tx1:#dcebff;--ac-rgb:143,208,255;--bg0-rgb:6,11,20;--bg2-rgb:16,32,59;--bg3-rgb:26,48,88;color-scheme:dark}
+html.navi-skin body{background:#060b14 !important}
+html.navi-skin .sx-tab.on,html.navi-skin .sx-btn-go,html.navi-skin .sx-pickbtn,html.navi-skin .mset-btn.mset-on{background:linear-gradient(180deg,#6ab8ff,#3a8ae0) !important;color:#04101f !important;border-color:rgba(160,210,255,.7) !important}
+html.navi-skin .sx-tab,html.navi-skin .sx-btn,html.navi-skin .sx-item,html.navi-skin .sx-key,html.navi-skin .sx-crumb,html.navi-skin .mset-btn{background:linear-gradient(180deg,#1c3358,#112140);border-color:rgba(130,180,250,.3)}
+html.navi-skin .sx-display{background:#08111f !important;border-color:rgba(143,208,255,.7) !important}
+html.navi-skin .leaflet-control-attribution{background:rgba(10,20,40,.8) !important;color:#b9d0f0 !important}
+html.navi-skin .leaflet-control-attribution a{color:#8fd0ff !important}
+html.navi-skin #realMap.map-color-invert,html.navi-skin #mapContainer.map-dark-bg #realMap,html.navi-skin #musicMapBox{background:#0b1627}
+@media (hover:hover){html.navi-skin button:hover{box-shadow:0 0 0 1px rgba(143,208,255,.35),0 6px 18px rgba(80,145,235,.2)}}
+html.navi-skin input[type="checkbox"],html.navi-skin input[type="radio"],html.navi-skin input[type="range"]{accent-color:#4aa8ff}
+html.navi-skin input:not([type]),html.navi-skin input[type="text"],html.navi-skin input[type="search"],html.navi-skin input[type="number"],html.navi-skin input[type="password"],html.navi-skin textarea,html.navi-skin select{background-color:#112140;color:#eaf3ff;border-color:rgba(130,180,250,.3)}
+html.midnight-skin #signRecogCard,html.midnight-skin #camSignTag,html.navi-skin #signRecogCard,html.navi-skin #camSignTag{--c-slate-50:248 250 252;--c-slate-100:241 245 249;--c-slate-200:226 232 240;--c-slate-300:203 213 225;--c-slate-400:148 163 184;--c-slate-500:100 116 139;--c-slate-600:71 85 105;--c-slate-700:51 65 85;--c-slate-800:30 41 59;--c-slate-900:15 23 42;--c-slate-950:2 6 23;--c-cyan-300:103 232 249;--c-cyan-400:34 211 238;--c-cyan-500:6 182 212;--c-cyan-600:8 145 178;--c-cyan-700:14 116 144;--c-cyan-800:21 94 117;--c-cyan-900:22 78 99;--c-cyan-950:8 51 68;--c-sky-200:186 230 253;--c-sky-300:125 211 252;--c-sky-400:56 189 248;--c-sky-500:14 165 233;--c-sky-600:2 132 199;--c-sky-900:12 74 110;--c-emerald-300:110 231 183;--c-emerald-400:52 211 153;--c-emerald-500:16 185 129;--c-emerald-950:2 44 34;--c-green-400:74 222 128;--c-green-500:34 197 94;--c-green-600:22 163 74;--c-green-700:21 128 61;--c-green-800:22 101 52;--c-green-900:20 83 45;--c-red-100:254 226 226;--c-red-200:254 202 202;--c-red-300:252 165 165;--c-red-400:248 113 113;--c-red-500:239 68 68;--c-red-600:220 38 38;--c-red-900:127 29 29;--c-red-950:69 10 10;--c-amber-300:252 211 77;--c-amber-400:251 191 36;--c-amber-500:245 158 11;--c-amber-950:69 26 3;--c-yellow-300:253 224 71;--c-yellow-400:250 204 21;--c-yellow-500:234 179 8;--c-orange-300:253 186 116;--c-orange-400:251 146 60;--c-orange-500:249 115 22;--c-purple-200:233 213 255;--c-purple-300:216 180 254;--c-purple-400:192 132 252;--c-purple-500:168 85 247;--c-purple-600:147 51 234;--c-purple-900:88 28 135;--c-purple-950:59 7 100;--c-indigo-400:129 140 248;--c-indigo-500:99 102 241;--c-pink-500:236 72 153;--ac:#22d3ee;--ac-t:#67e8f9;--ac-d:#06b6d4;--ac-ln:#155e75;--ac-bg:#083344;--bg0:#020617;--bg2:#0f172a;--bg3:#1e293b;--ln:#334155;--ln2:#475569;--ln3:#64748b;--tx3:#94a3b8;--tx2:#cbd5e1;--tx1:#e2e8f0;--ac-rgb:34,211,238;--bg0-rgb:2,6,23;--bg2-rgb:15,23,42;--bg3-rgb:30,41,59}
+html.midnight-skin ::selection{background:rgba(62,145,255,.45)}
+html.midnight-skin input[type="checkbox"],html.midnight-skin input[type="radio"],html.midnight-skin input[type="range"]{accent-color:#3e91ff}
+html.midnight-skin input:not([type]),html.midnight-skin input[type="text"],html.midnight-skin input[type="search"],html.midnight-skin input[type="number"],html.midnight-skin input[type="password"],html.midnight-skin textarea,html.midnight-skin select{background-color:#2a2a2d;color:#fff;border-color:transparent}
+html.midnight-skin ::placeholder{color:#75757b}
+html.midnight-skin .toast-card{border-radius:22px}
 </style>
 <style id="shoMotion">
 /* ===== Sho Motion: 動き(アニメーション)まとめ。transform を奪わないよう translate / scale を使う ===== */
 :root{--sho-ease:cubic-bezier(.22,1,.36,1);--sho-spring:cubic-bezier(.34,1.56,.64,1)}
 button{transition:scale .18s var(--sho-spring),translate .2s var(--sho-ease),box-shadow .25s,filter .2s,background-color .25s,border-color .25s,color .2s;-webkit-tap-highlight-color:transparent}
 button:active{scale:.94;filter:brightness(1.18)}
-@media (hover:hover){button:hover{translate:0 -1px;box-shadow:0 0 0 1px rgba(34,211,238,.35),0 6px 18px rgba(34,211,238,.16)}}
+@media (hover:hover){button:hover{translate:0 -1px;box-shadow:0 0 0 1px rgba(var(--ac-rgb,34,211,238),.35),0 6px 18px rgba(var(--ac-rgb,34,211,238),.16)}}
 .sho-ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.6),rgba(255,255,255,0) 70%);scale:0;opacity:.9;pointer-events:none;animation:shoRipple .6s ease-out forwards}
 @keyframes shoRipple{to{scale:1;opacity:0}}
 body{animation:shoFade .6s ease-out}
 @keyframes shoFade{from{opacity:0}to{opacity:1}}
-#turnArrow,#navTurnIcon,#guidanceNavTurnIcon{animation:shoNudge 1.5s ease-in-out infinite}
+#turnArrow,#navTurnIcon,#guidanceNavTurnIcon{animation:none!important}
 @keyframes shoNudge{0%,100%{translate:0 0}50%{translate:0 -4px}}
 #g3dProgFill{animation:shoGlowBar 2.2s ease-in-out infinite}
 @keyframes shoGlowBar{0%,100%{box-shadow:0 0 0 rgba(52,211,153,0)}50%{box-shadow:0 0 12px rgba(52,211,153,.9)}}
@@ -230,7 +477,7 @@ body{animation:shoFade .6s ease-out}
 #g3dOsmStat.sho-loading{animation:shoBlink 1s ease-in-out infinite}
 @keyframes shoBlink{50%{opacity:.35}}
 #threeDGuidanceOverlay>:first-child{animation:shoBorder 3.2s ease-in-out infinite}
-@keyframes shoBorder{0%,100%{box-shadow:0 0 0 rgba(34,211,238,0)}50%{box-shadow:0 0 18px rgba(34,211,238,.35)}}
+@keyframes shoBorder{0%,100%{box-shadow:0 0 0 rgba(var(--ac-rgb,34,211,238),0)}50%{box-shadow:0 0 18px rgba(var(--ac-rgb,34,211,238),.35)}}
 #guidanceRealMap{transition:left .45s var(--sho-ease)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 .dg-knob{animation:dgKnob 1.8s var(--sho-ease) infinite}
@@ -238,7 +485,7 @@ body{animation:shoFade .6s ease-out}
 .dg-arrow{animation:dgArrow 1.8s ease-in-out infinite}
 @keyframes dgArrow{0%,100%{opacity:.55;transform:translateY(0)}50%{opacity:1;transform:translateY(5px)}}
 .dg-d{animation:dgPulse 1.6s ease-in-out infinite}
-@keyframes dgPulse{0%,100%{box-shadow:0 0 0 0 rgba(34,211,238,.55)}50%{box-shadow:0 0 0 7px rgba(34,211,238,0)}}
+@keyframes dgPulse{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac-rgb,34,211,238),.55)}50%{box-shadow:0 0 0 7px rgba(var(--ac-rgb,34,211,238),0)}}
 @keyframes dgFoot{0%,100%{transform:translate(0,0)}35%,65%{transform:translate(-10px,3px)}}
 @keyframes dgArm{0%,100%{transform:rotate(0deg)}35%,65%{transform:rotate(5.2deg)}}
 @keyframes dgLamp{0%,100%{opacity:.12}35%,65%{opacity:1}}
@@ -254,7 +501,7 @@ body{animation:shoFade .6s ease-out}
 /* 住所探索: 上の段(パンくず+都道府県を選ぶ)と、横画面でも全部見えるキーパッド */
 .sx-topbar { display: flex; align-items: center; gap: 6px; flex-shrink: 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
 .sx-topbar .sx-crumb { flex: 0 0 auto; }
-.sx-pickbtn { flex: 0 0 auto; margin-left: auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #020617; background: #22d3ee; border: 1.5px solid #22d3ee; }
+.sx-pickbtn { flex: 0 0 auto; margin-left: auto; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: var(--bg0,#020617); background: var(--ac,#22d3ee); border: 1.5px solid var(--ac,#22d3ee); }
 .sx-pickbtn:active { transform: scale(.96); }
 #sxPad { grid-template-rows: repeat(4, minmax(0, 1fr)); max-height: 360px; }
 #sxPad .sx-key { height: auto; min-height: 0; }
@@ -273,12 +520,12 @@ body{animation:shoFade .6s ease-out}
   <!-- Main Display Screen Container -->
   <div id="mainDisplayContainer" class="relative flex-1 w-full max-w-7xl mx-auto bg-black rounded-xl border-2 border-slate-800 shadow-2xl overflow-hidden flex flex-col transition-all duration-300 my-auto">
   <!-- ドライブ案内: 起動して30秒たってもドライブ(D)にならないとき、地図画面にして、左上に出す -->
-  <div id="driveGuide" class="hidden" style="position:absolute;left:12px;top:12px;z-index:60;width:min(360px,64vw);padding:10px 12px;border-radius:16px;background:rgba(2,6,23,.93);border:1.5px solid #22d3ee;box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 22px rgba(34,211,238,.25);color:#fff;font-family:sans-serif">
+  <div id="driveGuide" class="hidden" style="position:absolute;left:12px;top:12px;z-index:60;width:min(360px,64vw);padding:10px 12px;border-radius:16px;background:rgba(var(--bg0-rgb,2,6,23),.93);border:1.5px solid var(--ac,#22d3ee);box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 22px rgba(var(--ac-rgb,34,211,238),.25);color:#fff;font-family:sans-serif">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">
-      <div style="font-weight:900;color:#22d3ee;font-size:15px">ドライブに入れるには</div>
+      <div style="font-weight:900;color:var(--ac,#22d3ee);font-size:15px">ドライブに入れるには</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <button id="driveGuideMute" onclick="toggleDriveGuideMute()" aria-label="ポンポン音の入り切り" style="width:30px;height:26px;border-radius:8px;border:1px solid #22d3ee;background:#0f172a;color:#67e8f9;display:flex;align-items:center;justify-content:center"></button>
-        <button onclick="hideDriveGuide()" aria-label="閉じる" style="width:26px;height:26px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#cbd5e1;font-weight:900;line-height:1">×</button>
+        <button id="driveGuideMute" onclick="toggleDriveGuideMute()" aria-label="ポンポン音の入り切り" style="width:30px;height:26px;border-radius:8px;border:1px solid var(--ac,#22d3ee);background:var(--bg2,#0f172a);color:var(--ac-t,#67e8f9);display:flex;align-items:center;justify-content:center"></button>
+        <button onclick="hideDriveGuide()" aria-label="閉じる" style="width:26px;height:26px;border-radius:8px;border:1px solid var(--ln2,#475569);background:var(--bg2,#0f172a);color:var(--tx2,#cbd5e1);font-weight:900;line-height:1">×</button>
       </div>
     </div>
     <div style="display:flex;gap:12px;align-items:center">
@@ -323,22 +570,22 @@ body{animation:shoFade .6s ease-out}
       </div>
       <div style="flex:1;min-width:0">
         <div id="dgStep1" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;transition:opacity .3s">
-          <div id="dgNum1" style="flex:none;width:22px;height:22px;border-radius:50%;background:#22d3ee;color:#041018;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center">1</div>
+          <div id="dgNum1" style="flex:none;width:22px;height:22px;border-radius:50%;background:var(--ac,#22d3ee);color:#041018;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center">1</div>
           <div style="font-weight:800;font-size:15px;line-height:1.35">ブレーキを<br>踏む</div>
         </div>
         <div id="dgStep2" style="display:flex;gap:8px;align-items:flex-start;transition:opacity .3s;opacity:.3">
-          <div style="flex:none;width:22px;height:22px;border-radius:50%;background:#22d3ee;color:#041018;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center">2</div>
-          <div style="font-weight:800;font-size:15px;line-height:1.35">スイッチを<span style="color:#38bdf8">下に倒す</span><div style="font-weight:600;font-size:11px;color:#94a3b8;margin-top:2px">「D / B」が青く光ります</div></div>
+          <div style="flex:none;width:22px;height:22px;border-radius:50%;background:var(--ac,#22d3ee);color:#041018;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center">2</div>
+          <div style="font-weight:800;font-size:15px;line-height:1.35">スイッチを<span style="color:var(--ac,#38bdf8)">下に倒す</span><div style="font-weight:600;font-size:11px;color:var(--tx3,#94a3b8);margin-top:2px">「D / B」が青く光ります</div></div>
         </div>
       </div>
     </div>
-    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1e293b">
-      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">または、画面上で変更</div>
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--bg3,#1e293b)">
+      <div style="font-size:11px;color:var(--tx3,#94a3b8);margin-bottom:6px">または、画面上で変更</div>
       <div style="display:flex;gap:6px">
-        <button onclick="changeGear('P')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid #f59e0b;background:#0f172a;color:#fbbf24;font-weight:900">P</button>
-        <button onclick="changeGear('R')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid #ef4444;background:#0f172a;color:#f87171;font-weight:900">R</button>
-        <button onclick="changeGear('N')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid #64748b;background:#0f172a;color:#e2e8f0;font-weight:900">N</button>
-        <button onclick="changeGear('D')" class="dg-d" style="flex:1.4;padding:8px 0;border-radius:10px;border:1px solid #22d3ee;background:#083344;color:#67e8f9;font-weight:900">D ドライブ</button>
+        <button onclick="changeGear('P')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid #f59e0b;background:var(--bg2,#0f172a);color:#fbbf24;font-weight:900">P</button>
+        <button onclick="changeGear('R')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid #ef4444;background:var(--bg2,#0f172a);color:#f87171;font-weight:900">R</button>
+        <button onclick="changeGear('N')" style="flex:1;padding:8px 0;border-radius:10px;border:1px solid var(--ln3,#64748b);background:var(--bg2,#0f172a);color:var(--tx1,#e2e8f0);font-weight:900">N</button>
+        <button onclick="changeGear('D')" class="dg-d" style="flex:1.4;padding:8px 0;border-radius:10px;border:1px solid var(--ac,#22d3ee);background:var(--ac-bg,#083344);color:var(--ac-t,#67e8f9);font-weight:900">D ドライブ</button>
       </div>
     </div>
   </div>
@@ -411,7 +658,7 @@ body{animation:shoFade .6s ease-out}
         </div>
 
         <!-- コンパス(北の向き)。タッチすると地図の表示(進行方向/北基準/3D)が切り替わる。設定で表示(初期はオフ) -->
-        <button id="mapCompass" type="button" onclick="cycleMapViewMode()" class="hidden absolute right-3 z-30" style="top:80px;width:54px;height:54px;border-radius:50%;background:rgba(2,6,23,.88);border:2px solid #22d3ee;box-shadow:0 4px 14px rgba(0,0,0,.6);padding:0">
+        <button id="mapCompass" type="button" onclick="cycleMapViewMode()" class="hidden absolute right-3 z-30" style="top:80px;width:54px;height:54px;border-radius:50%;background:rgba(var(--bg0-rgb,2,6,23),.88);border:2px solid var(--ac,#22d3ee);box-shadow:0 4px 14px rgba(0,0,0,.6);padding:0">
           <svg id="mapCompassDial" viewBox="0 0 48 48" width="46" height="46" style="display:block;margin:0 auto;transition:transform .35s linear">
             <circle cx="24" cy="24" r="21" fill="none" stroke="#334155" stroke-width="1.5"/>
             <path d="M24 6 L30 24 L18 24 Z" fill="#ef4444"/>
@@ -419,16 +666,19 @@ body{animation:shoFade .6s ease-out}
             <circle cx="24" cy="24" r="2.2" fill="#0f172a"/>
             <text x="24" y="5.5" text-anchor="middle" font-size="7" font-weight="900" fill="#fca5a5" font-family="sans-serif">N</text>
           </svg>
-          <span id="mapCompassLbl" style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font-size:9px;font-weight:800;color:#e2e8f0;background:rgba(2,6,23,.85);border:1px solid #334155;border-radius:8px;padding:0 6px"></span>
+          <span id="mapCompassLbl" style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font-size:9px;font-weight:800;color:var(--tx1,#e2e8f0);background:rgba(var(--bg0-rgb,2,6,23),.85);border:1px solid var(--ln,#334155);border-radius:8px;padding:0 6px"></span>
         </button>
 
         <!-- 十字で選んだ地点に対する操作メニュー -->
         <div id="mapPinPanel" class="hidden absolute top-3 right-3 z-30 bg-slate-950/95 border-2 border-cyan-400 backdrop-blur-md rounded-2xl p-2 shadow-2xl flex flex-col gap-1.5 w-40 text-xs">
-          <button onclick="pinGoHere()" class="bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black py-2 rounded-xl shadow-lg transition">
+          <button onclick="pinGoHere()" id="pinGoBtn" class="bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black py-2 rounded-xl shadow-lg transition">
             ここへ行く
           </button>
           <button onclick="pinSetAsWaypoint()" id="pinWaypointBtn" class="bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black py-2 rounded-xl shadow-lg transition">
             経由地として設定
+          </button>
+          <button onclick="pinClearWaypoints()" id="pinWaypointClearBtn" class="hidden bg-slate-800 hover:bg-slate-700 active:scale-95 text-purple-300 font-bold py-2 rounded-xl border border-slate-700 transition">
+            経由地を解除
           </button>
           <button onclick="pinSetAsCurrentLocation()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold py-2 rounded-xl border border-slate-700 transition">
             ここを現在地として設定
@@ -443,12 +693,13 @@ body{animation:shoFade .6s ease-out}
         
         <!-- TOP-LEFT PROFESSIONAL NAVIGATION BANNER -->
         <div id="topNavGuidance" class="hidden absolute top-3 left-3 z-20 bg-slate-950/95 border-2 border-cyan-400 backdrop-blur-md rounded-2xl p-3 text-white shadow-2xl flex items-center gap-3 max-w-[92%] sm:max-w-none">
-          <div id="navTurnIcon" class="w-12 h-12 bg-cyan-500 text-slate-950 font-black rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0 animate-pulse font-mono">
+          <div id="navTurnIcon" class="w-12 h-12 bg-cyan-500 text-slate-950 font-black rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0 font-mono">
             ↑
           </div>
           <div class="flex flex-col">
             <div class="text-[10px] font-bold text-cyan-400 tracking-wider" id="navDestinationTitle">交差点</div>
-            <div class="text-xl font-black font-mono tracking-tight text-white mt-0.5"><span id="navDistanceMeters">300</span> <span id="navDistanceUnit" class="text-xs font-normal">m</span></div>
+            <div class="text-xl font-black font-mono tracking-tight text-white mt-0.5"><span id="navDistanceMeters">0.30</span> <span id="navDistanceUnit" class="text-xs font-normal">km</span></div>
+            <div id="navTurnText" class="text-sm font-black text-cyan-300 leading-tight mt-0.5">直進</div>
           </div>
         </div>
 
@@ -562,8 +813,11 @@ ETC
         <!-- MODE 1: Menu Drawer Panel -->
         <div id="sideWidgetMenu" class="flex-1 flex flex-col p-0.5 space-y-1.5">
           <div class="text-xs font-bold text-slate-200 border-b border-slate-800 pb-1 flex items-center justify-between">
-            <span class="flex items-center gap-1.5"><span><i class="fa-solid fa-bars mr-1 text-cyan-400"></i> メニュー</span><span class="reroute-badge hidden items-center gap-0.5 text-[9px] font-black text-amber-300 bg-amber-950 border border-amber-500/60 px-1 py-0.5 rounded leading-none"><span class="inline-block animate-spin">🌀</span>再探索中</span></span>
-            <span class="text-[8px] text-slate-500 font-normal bg-slate-900 px-1 py-0.5 rounded border border-slate-800">通常モード</span>
+            <span class="flex items-center gap-1.5"><span><i class="fa-solid fa-bars mr-1 text-cyan-400"></i> メニュー</span><span class="reroute-badge hidden items-center gap-0.5 text-[9px] font-black text-amber-300 bg-amber-950 border border-amber-500/60 px-1 py-0.5 rounded leading-none"><span class="sho-ring" style="font-size:13px;margin-right:2px"></span>再探索中</span></span>
+            <div id="curLocMenu" class="hidden min-w-0 flex-1 text-right pl-2">
+              <div id="curLocAddr" class="text-[10px] font-black text-white leading-tight truncate"></div>
+              <div id="curLocRoad" class="hidden text-[9px] font-bold text-cyan-300 leading-tight truncate"></div>
+            </div>
           </div>
 
           <div class="space-y-1 text-[11px]">
@@ -828,6 +1082,7 @@ ETC
           <div class="bg-black border border-slate-600 rounded-lg overflow-hidden flex items-stretch">
             <div class="px-2 py-1 flex flex-col justify-center min-w-0 flex-1">
               <div id="turnDist" class="text-2xl font-black text-white font-mono leading-none">--</div>
+              <div id="turnDirText" class="text-sm font-black text-cyan-300 leading-tight mt-0.5">直進</div>
               <div id="turnRoad" class="text-[11px] font-bold text-slate-200 truncate mt-0.5">交差点</div>
             </div>
             <div id="turnArrow" class="w-14 bg-green-600 flex items-center justify-center text-4xl text-white font-black leading-none">↑</div>
@@ -1310,6 +1565,17 @@ ETC
 
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
 <div>
+<div class="font-bold text-white">画面の明るさ(ダーク / ホワイト)</div>
+<div class="text-xs text-slate-400 mt-0.5">画面全体の色を切り替えます。地図の見た目はそのままです</div>
+</div>
+<select id="uiModeSelect" class="bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-3 py-1.5 text-xs font-bold focus:outline-none flex-shrink-0 ml-3">
+<option value="dark">ダーク</option>
+<option value="light">ホワイト</option>
+</select>
+</div>
+
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+<div>
 <div class="font-bold text-white">縦画面スマートフォンモード(歩行者)</div>
 <div class="text-xs text-slate-400 mt-0.5">縦画面で歩く人向けの表示にします。シフト・ETC・カメラ・車両情報など、車用の表示は出しません(今までの車用の表示は、オフにすると戻ります)</div>
 </div>
@@ -1377,7 +1643,17 @@ ETC
                   <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                 </label>
               </div>
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+<div class="font-bold text-white">デザイン(見た目)</div>
+<div class="text-xs text-slate-400 mt-0.5 mb-2.5">画面全体の見た目を選びます。「標準」は今までの見た目です</div>
+<div class="grid grid-cols-3 gap-1.5" id="uiSkinButtons">
+<button type="button" data-skin="standard" onclick="setUiSkin('standard')" class="mset-btn">標準</button>
+<button type="button" data-skin="navi" onclick="setUiSkin('navi')" class="mset-btn">ナビ風</button>
+<button type="button" data-skin="midnight" onclick="setUiSkin('midnight')" class="mset-btn">ミッドナイト風</button>
+</div>
+</div>
+
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
                 <div>
                   <div class="font-bold text-white">全画面表示</div>
                   <div class="text-xs text-slate-400 mt-0.5" id="fullscreenStatusLabel">ブラウザの外枠やアドレスバーを消して、画面いっぱいに表示します</div>
@@ -1752,7 +2028,7 @@ ETC
           <div id="keypadPanel" style="display:none;flex:1;min-height:0;gap:12px;flex-wrap:wrap">
             <div style="flex:1 1 280px;min-width:0;min-height:0;display:flex;flex-direction:column;gap:8px">
               <div id="kpDisplay" class="sx-display"></div>
-              <div id="kpHint" style="font-size:11px;color:#94a3b8"></div>
+              <div id="kpHint" style="font-size:11px;color:var(--tx3,#94a3b8)"></div>
               <div style="display:flex;gap:8px"><button class="sx-btn sx-btn-go" onclick="kpGo()" style="flex:1">検索</button><button class="sx-btn" onclick="kpClear()">クリア</button></div>
               <div id="kpResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
             </div>
@@ -1918,14 +2194,14 @@ ETC
   <div id="autoParkOverlay" class="hidden fixed inset-0 z-[9000] bg-black text-white overflow-hidden">
     <canvas id="apAvm" width="640" height="459" style="position:absolute;inset:0;width:100%;height:100%;background:#101418"></canvas>
     <div style="position:absolute;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none">
-      <div style="background:rgba(2,6,23,.7);border-radius:10px;padding:6px 10px;font-weight:900;font-size:12px;color:#34d399;white-space:nowrap"><i class="fa-solid fa-square-parking"></i> オートパーキング <span style="font-size:10px;color:#94a3b8;font-weight:400">デモ</span></div>
-      <div id="apMsg" style="flex:1;max-width:60%;background:rgba(2,6,23,.72);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:800;line-height:1.45;text-align:center;white-space:pre-line"></div>
+      <div style="background:rgba(var(--bg0-rgb,2,6,23),.7);border-radius:10px;padding:6px 10px;font-weight:900;font-size:12px;color:#34d399;white-space:nowrap"><i class="fa-solid fa-square-parking"></i> オートパーキング <span style="font-size:10px;color:var(--tx3,#94a3b8);font-weight:400">デモ</span></div>
+      <div id="apMsg" style="flex:1;max-width:60%;background:rgba(var(--bg0-rgb,2,6,23),.72);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:800;line-height:1.45;text-align:center;white-space:pre-line"></div>
       <div style="display:flex;gap:6px;pointer-events:auto">
-        <button onclick="apReset()" style="background:rgba(30,41,59,.85);border:1px solid #475569;border-radius:10px;padding:6px 10px;font-size:11px;font-weight:700;color:#cbd5e1">別の駐車場</button>
-        <button onclick="apClose()" style="background:rgba(30,41,59,.85);border:1px solid #475569;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:700;color:#e2e8f0">閉じる</button>
+        <button onclick="apReset()" style="background:rgba(var(--bg3-rgb,30,41,59),.85);border:1px solid var(--ln2,#475569);border-radius:10px;padding:6px 10px;font-size:11px;font-weight:700;color:var(--tx2,#cbd5e1)">別の駐車場</button>
+        <button onclick="apClose()" style="background:rgba(var(--bg3-rgb,30,41,59),.85);border:1px solid var(--ln2,#475569);border-radius:10px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--tx1,#e2e8f0)">閉じる</button>
       </div>
     </div>
-    <div id="apToolbar" style="position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;align-items:center;gap:4px;padding:6px;background:rgba(2,6,23,.62);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,.55);border-radius:16px;max-width:96vw">
+    <div id="apToolbar" style="position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;align-items:center;gap:4px;padding:6px;background:rgba(var(--bg0-rgb,2,6,23),.62);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,.55);border-radius:16px;max-width:96vw">
       <button id="apT_back" class="apT" onclick="apMethod('back')" aria-label="バック駐車"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 25v10h24V25"/><path d="M20 4v22M13 19l7 8 7-8"/></svg></button>
       <button id="apT_front" class="apT" onclick="apMethod('front')" aria-label="前向き駐車"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 25v10h24V25"/><path d="M20 34V10M13 17l7-8 7 8"/></svg></button>
       <button id="apT_usual" class="apT" style="width:92px" onclick="apMethod('usual')" aria-label="いつもの駐車"><img class="apCarIco" alt=""><svg width="26" height="40" viewBox="0 0 26 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M3 15h20M3 25h20"/></svg></button>
@@ -2099,10 +2375,10 @@ ETC
           const ctx = c.getContext('2d');
           ctx.fillStyle = '#f1f5f9';
           ctx.fillRect(0, 0, 256, 128);
-          ctx.strokeStyle = '#0f172a';
+          ctx.strokeStyle = 'var(--bg2,#0f172a)';
           ctx.lineWidth = 8;
           ctx.strokeRect(4, 4, 248, 120);
-          ctx.fillStyle = '#0f172a';
+          ctx.fillStyle = 'var(--bg2,#0f172a)';
           ctx.font = 'bold 58px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -3690,10 +3966,10 @@ ETC
       const b = document.createElement('div'); b.id = 'g3dSpdBox';
       b.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center';
       const bs = 'flex:1;padding:8px;border-radius:8px;font-weight:800;border:0;';
-      b.innerHTML = '<div style="background:#0f172a;border:2px solid #22d3ee;border-radius:14px;padding:14px;color:#fff;font-family:sans-serif;width:260px;text-align:center">' +
+      b.innerHTML = '<div style="background:var(--bg2,#0f172a);border:2px solid var(--ac,#22d3ee);border-radius:14px;padding:14px;color:#fff;font-family:sans-serif;width:260px;text-align:center">' +
         '<div style="font-weight:800;margin-bottom:8px">速度を入力 (km/h)</div>' +
         '<input id="g3dSpdIn" type="number" inputmode="numeric" min="0" max="200" style="width:100%;font-size:22px;text-align:center;border-radius:8px;padding:6px;color:#000">' +
-        '<div style="display:flex;gap:6px;margin-top:10px"><button id="g3dSpdNo" style="' + bs + 'background:#475569;color:#fff">戻る</button><button id="g3dSpdStop" style="' + bs + 'background:#ef4444;color:#fff">停止</button><button id="g3dSpdOk" style="' + bs + 'background:#22d3ee;color:#000">走る</button></div></div>';
+        '<div style="display:flex;gap:6px;margin-top:10px"><button id="g3dSpdNo" style="' + bs + 'background:var(--ln2,#475569);color:#fff">戻る</button><button id="g3dSpdStop" style="' + bs + 'background:#ef4444;color:#fff">停止</button><button id="g3dSpdOk" style="' + bs + 'background:var(--ac,#22d3ee);color:#000">走る</button></div></div>';
       document.body.appendChild(b);
       const inp = document.getElementById('g3dSpdIn');
       inp.value = String(Math.round(G3D.manualV != null ? G3D.manualV : (meterSpeedKmh || 40)));
@@ -4776,7 +5052,7 @@ ETC
       if (pendingRouteGeometry) {
         guidanceMiniMapRouteLine = L.layerGroup([
           L.geoJSON(pendingRouteGeometry, { style: { color: '#0c4a6e', weight: 9, opacity: 0.9, lineCap: 'round', lineJoin: 'round' } }),
-          L.geoJSON(pendingRouteGeometry, { style: { color: '#38bdf8', weight: 5, opacity: 1, lineCap: 'round', lineJoin: 'round' } })
+          L.geoJSON(pendingRouteGeometry, { style: { color: 'var(--ac,#38bdf8)', weight: 5, opacity: 1, lineCap: 'round', lineJoin: 'round' } })
         ]).addTo(guidanceMiniMap);
       }
     }
@@ -5207,9 +5483,9 @@ ETC
           voiceAnnounce('経由地は、先に目的地を設定した後に使えます。「目的地に設定する」とお答えください。');
           return;
         }
-        waypointsList.push({ lat: dest.lat, lon: dest.lon, name: dest.name });
-        voiceAnnounce(`${dest.name}を経由地として設定しました。`);
+
         closePinPanel();
+        addWaypoint(dest.lat, dest.lon, dest.name);
       } else if (command.includes("目的地") || command.includes("行く") || command.includes("ここにする")) {
         closePinPanel();
         voiceAnnounce(`${dest.name}に決定しました。ルートを検索します。`);
@@ -5491,6 +5767,23 @@ ETC
     
 // ============ 縦画面スマートフォン(歩行者)モード ============
 // 車用の表示(シフト・ETC・カメラ・車両情報・ソナー・エアコン・標識認識)を隠して、縦長の画面に組み替える。車用の表示はオフにすれば元に戻る
+
+// ============ デザイン(見た目)の切り替え: standard=今までの見た目 / navi=ナビ風 / midnight=ミッドナイト風 ============
+function currentUiSkin() {
+const h = document.documentElement.classList;
+return h.contains('midnight-skin') ? 'midnight' : (h.contains('navi-skin') ? 'navi' : 'standard');
+}
+function setUiSkin(name) {
+if (name !== 'navi' && name !== 'midnight') name = 'standard';
+const h = document.documentElement.classList;
+h.toggle('navi-skin', name === 'navi');
+h.toggle('midnight-skin', name === 'midnight');
+try { localStorage.setItem('uiSkin', name); } catch (e) { /* 無視 */ }
+document.querySelectorAll('#uiSkinButtons [data-skin]').forEach(b => b.classList.toggle('mset-on', b.dataset.skin === name));
+setTimeout(() => { try { if (typeof map !== 'undefined' && map) map.invalidateSize(); } catch (e) { /* 無視 */ } }, 150);
+}
+setUiSkin(currentUiSkin());   // 起動時に、選択中のボタンの色をそろえる
+
 function walkModeOn() { return document.body.classList.contains('walk-mode'); }
 function setWalkMode(on) {
 on = !!on;
@@ -5946,7 +6239,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const b = document.getElementById('driveGuideMute'); if (!b) return;
       const sp = '<path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/>';
       b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' + sp + (driveGuideMuted ? '<path d="M16 9l5 6M21 9l-5 6" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>' : '<path d="M15.5 8.5a5 5 0 010 7M18 6a8.5 8.5 0 010 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>') + '</svg>';
-      b.style.borderColor = driveGuideMuted ? '#64748b' : '#22d3ee'; b.style.color = driveGuideMuted ? '#94a3b8' : '#67e8f9';
+      b.style.borderColor = driveGuideMuted ? 'var(--ln3,#64748b)' : 'var(--ac,#22d3ee)'; b.style.color = driveGuideMuted ? 'var(--tx3,#94a3b8)' : 'var(--ac-t,#67e8f9)';
       b.title = driveGuideMuted ? '音を入れる' : '音を消す';
     }
     function toggleDriveGuideMute() {
@@ -6212,7 +6505,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     // 周囲の車のシミュレーション(車線: -1=左 0=中央 1=右 の道路の車線。自車は車線変更でどれかの車線にいる。rel=自車から見た前後位置(m、前が+))
     const VIS = { cars: [], timer: null, last: 0, hadR: false, hadL: false, lastSpeak: 0 };
-    const VIS_COLORS = ['#cbd5e1', '#fca5a5', '#fde68a', '#86efac', '#93c5fd', '#c4b5fd'];
+    const VIS_COLORS = ['var(--tx2,#cbd5e1)', '#fca5a5', '#fde68a', '#86efac', '#93c5fd', '#c4b5fd'];
     const VIS_RANGE = 24;
     function visSpawn(initial) {
       // 一方通行の道路: 他の車はみんな自分と同じ向きに走る。後ろから来て追い越して前へ進むだけ(前から後ろへは来ない)
@@ -6233,7 +6526,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     function visCarSvg(cx, cy, fill, own, frame) {
       const w = 26, h = 40, x = cx - w / 2, y = cy - h / 2;
       return (frame ? `<rect x="${x - 4}" y="${y - 4}" width="${w + 8}" height="${h + 8}" rx="4" fill="none" stroke="#facc15" stroke-width="2.2"/>` : '') +
-        `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${own ? '#22d3ee' : '#475569'}" stroke-width="${own ? 1.8 : 1}"/>` +
+        `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${own ? 'var(--ac,#22d3ee)' : 'var(--ln2,#475569)'}" stroke-width="${own ? 1.8 : 1}"/>` +
         `<rect x="${x + 3}" y="${y + 5}" width="${w - 6}" height="8" rx="2" fill="#1e293b"/>` +
         `<rect x="${x + 5}" y="${y + 16}" width="${w - 10}" height="13" rx="2" fill="#f1f5f9" opacity=".55"/>` +
         `<rect x="${x + 3}" y="${y + h - 11}" width="${w - 6}" height="6" rx="2" fill="#334155"/>`;
@@ -6634,10 +6927,10 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         const ctx = c.getContext('2d');
         ctx.fillStyle = '#f1f5f9';
         ctx.fillRect(0, 0, 256, 128);
-        ctx.strokeStyle = '#0f172a';
+        ctx.strokeStyle = 'var(--bg2,#0f172a)';
         ctx.lineWidth = 8;
         ctx.strokeRect(4, 4, 248, 120);
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = 'var(--bg2,#0f172a)';
         ctx.font = 'bold 58px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -7902,7 +8195,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     function getMarkerColors(mode) {
       switch (mode) {
         case 'black': return { fill: '#111827', stroke: '#f8fafc' };
-        case 'redblack': return { fill: '#ef4444', stroke: '#0f172a' };
+        case 'redblack': return { fill: '#ef4444', stroke: 'var(--bg2,#0f172a)' };
         case 'red':
         default: return { fill: '#ef4444', stroke: '#f8fafc' };
       }
@@ -7942,6 +8235,72 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       placeUserMarker();
     }
 
+    // 現在地の住所(何県 何市 何町 付近)と、今走っている国道・県道を調べる
+    const CURLOC = { lat: null, lon: null, t: 0, busy: false, addr: '', road: null, marker: null };
+    function renderCurLocBanner() {
+      const el = document.getElementById('curLocMenu');
+      if (!el) return;
+      const show = !!CURLOC.addr;
+      el.classList.toggle('hidden', !show);
+      if (!show) return;
+      const a = document.getElementById('curLocAddr');
+      if (a && a.textContent !== CURLOC.addr) a.textContent = CURLOC.addr;
+      const rEl = document.getElementById('curLocRoad');
+      const rt = CURLOC.road ? CURLOC.road.label : (CURLOC.roadName || '');
+      if (rEl) { if (rEl.textContent !== rt) rEl.textContent = rt; rEl.classList.toggle('hidden', !rt); }
+    }
+    function renderCarRoadLabel() {
+      if (CURLOC.marker) { try { CURLOC.marker.remove(); } catch (e) {} CURLOC.marker = null; }
+      if (!map || !userPos || !CURLOC.road) return;
+      const r = CURLOC.road;
+      const fs = String(r.num).length > 2 ? 11 : 14;
+      const shield = r.type === 'nat'
+        ? `<svg width="30" height="33" viewBox="0 0 36 40"><path d="M3 9Q3 2 10 2H26Q33 2 33 9V23Q33 27 18 38Q3 27 3 23Z" fill="#fff"/><text x="18" y="21" text-anchor="middle" font-size="${fs + 2}" font-weight="900" fill="#0b5ea8" font-family="Arial,sans-serif">${r.num}</text></svg>`
+        : `<svg width="33" height="31" viewBox="0 0 40 38"><path d="M10 2H30L38 19L30 36H10L2 19Z" fill="#fff"/><text x="20" y="24" text-anchor="middle" font-size="${fs + 1}" font-weight="900" fill="#0b5ea8" font-family="Arial,sans-serif">${r.num}</text></svg>`;
+      const rot = (typeof mapRotationDeg === 'function') ? mapRotationDeg() : 0;
+      const html = `<div class="car-road-rot" style="transform:rotate(${rot}deg);transform-origin:0 0;pointer-events:none"><div style="position:absolute;left:26px;top:-17px;display:flex;align-items:center;gap:6px;padding:3px 10px 3px 5px;background:#0b5ea8;border:2px solid #fff;border-radius:8px;box-shadow:0 2px 8px #0009;color:#fff;font:900 13px/1 Arial,'Noto Sans JP',sans-serif;white-space:nowrap">${shield}<span>${escapeHtml(r.label)}</span></div></div>`;
+      CURLOC.marker = L.marker([userPos.lat, userPos.lon], { icon: L.divIcon({ className: '', html, iconSize: [0, 0], iconAnchor: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: 900 }).addTo(map);
+    }
+    function updateCarRoadLabelRot(rot) {
+      const el = CURLOC.marker && CURLOC.marker.getElement();
+      const w = el && el.querySelector('.car-road-rot');
+      if (w) w.style.transform = `rotate(${rot}deg)`;
+    }
+    async function requestCurLocUpdate() {
+      if (!userPos || CURLOC.busy) return;
+      const now = Date.now();
+      if (CURLOC.lat != null && (distM(userPos, { lat: CURLOC.lat, lon: CURLOC.lon }) < 60 || now - CURLOC.t < 6000)) return;
+      CURLOC.busy = true; CURLOC.t = now;
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${userPos.lat.toFixed(6)}&lon=${userPos.lon.toFixed(6)}&zoom=17&addressdetails=1&extratags=1&accept-language=ja`;
+        const res = await fetch(url, { headers: { 'Accept-Language': 'ja' } });
+        if (!res.ok) throw new Error('reverse ' + res.status);
+        const j = await res.json();
+        const a = j.address || {};
+        const parts = [];
+        [a.state || a.province, a.city || a.town || a.village || a.county, a.city_district, a.suburb || a.neighbourhood || a.quarter].forEach(p => { if (p && !parts.includes(p)) parts.push(p); });
+        CURLOC.addr = parts.length ? parts.join(' ') + ' 付近' : '';
+        CURLOC.roadName = String(a.road || ((j.category === 'highway' || j.type === 'road') ? (j.name || '') : ''));
+        const ex = j.extratags || {};
+        const sh = (typeof g3dRoadShield === 'function') ? g3dRoadShield({ name: j.name || a.road || '', ref: ex.ref || '' }) : null;
+        if (sh) {
+          const kind = (String(j.name || a.road || '').match(/(県道|都道|府道|道道)/) || [])[1] || '県道';
+          CURLOC.road = { type: sh.type, num: sh.num, label: sh.type === 'nat' ? `国道${sh.num}号線` : `${kind}${sh.num}号線` };
+        } else CURLOC.road = null;
+        CURLOC.lat = userPos.lat; CURLOC.lon = userPos.lon;
+      } catch (e) { /* 通信できないときは、前の表示のまま */ }
+      finally { CURLOC.busy = false; renderCurLocBanner(); renderCarRoadLabel(); }
+    }
+    setInterval(() => { try { requestCurLocUpdate(); renderCurLocBanner(); } catch (e) {} }, 1500);
+    // 目的地の30m以内に着いたら、案内(左上の案内・到着時間・目的地マーク)を自動で終わらせる
+    setInterval(() => {
+      try {
+        if (!(isNavigating || demoTimer) || !destMarker || !userPos) return;
+        const d = destMarker.getLatLng();
+        if (distM(userPos, { lat: d.lat, lon: d.lng }) <= 30) terminateRoute(true);
+      } catch (e) { /* 無視 */ }
+    }, 1000);
+
     function placeUserMarker() {
       if (!map || !userPos) return;
       if (userMarker) userMarker.remove();
@@ -7949,6 +8308,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         icon: createNavMarkerIcon(currentMarkerColor),
         zIndexOffset: 1000
       }).addTo(map).bindPopup('現在地');
+      try { renderCarRoadLabel(); } catch (e) {}
 
       // 3Dビュー案内モード内の小さい本物地図も、現在地の動きに合わせて追従させる
       if (guidanceMiniMap) {
@@ -7989,9 +8349,9 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         });
         const popupHtml = `
           <div style="min-width:150px">
-            <div style="font-weight:bold;color:#0f172a;">★ ${escapeHtml(p.name)}</div>
-            <div style="font-size:11px;color:#475569;margin:2px 0 6px;">${escapeHtml(p.address || '')}</div>
-            <button onclick="selectSavedPlace(${idx})" style="background:#06b6d4;color:#0f172a;font-weight:bold;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;">ここへ行く</button>
+            <div style="font-weight:bold;color:var(--bg2,#0f172a);">★ ${escapeHtml(p.name)}</div>
+            <div style="font-size:11px;color:var(--ln2,#475569);margin:2px 0 6px;">${escapeHtml(p.address || '')}</div>
+            <button onclick="selectSavedPlace(${idx})" style="background:var(--ac-d,#06b6d4);color:var(--bg2,#0f172a);font-weight:bold;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;">ここへ行く</button>
           </div>`;
         marker.bindPopup(popupHtml);
         savedPlaceMarkersLayer.addLayer(marker);
@@ -8007,8 +8367,8 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       if (!map || !userPos) return;
       const btn = document.getElementById('recenterBtnContainer');
       if (btn) {
-        btn.classList.add('!shadow-[0_0_16px_rgba(34,211,238,0.9)]');
-        setTimeout(() => btn.classList.remove('!shadow-[0_0_16px_rgba(34,211,238,0.9)]'), 350);
+        btn.classList.add('!shadow-[0_0_16px_rgba(var(--ac-rgb,34,211,238),0.9)]');
+        setTimeout(() => btn.classList.remove('!shadow-[0_0_16px_rgba(var(--ac-rgb,34,211,238),0.9)]'), 350);
       }
       const z = Math.max(map.getZoom(), 15);
       setViewOnUser([userPos.lat, userPos.lon], z, { animate: true });
@@ -8017,15 +8377,16 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     /* ============ 地図ドラッグ時の十字ピン操作パネル ============ */
     function updatePinPanelButtons() {
       const wpBtn = document.getElementById('pinWaypointBtn');
-      // 目的地がまだ無いときは、隠さずにグレーアウトして押せなくする
+      const wpClr = document.getElementById('pinWaypointClearBtn');
+      if (wpClr) wpClr.classList.toggle('hidden', !waypointsList.some(w => !w.passed));
+      // 目的地がまだ無いときは「経由地」ボタンを出さない。あるときは「目的地を上書きして出発」と「経由地Nとして設定」
+      const goBtn = document.getElementById('pinGoBtn');
+      const has = !!hasDestinationSet;
+      if (goBtn) goBtn.textContent = has ? '目的地を上書きして出発' : 'ここへ行く';
       if (wpBtn) {
-        const off = !hasDestinationSet;
-        wpBtn.classList.remove('hidden');
-        wpBtn.disabled = off;
-        wpBtn.setAttribute('aria-disabled', off ? 'true' : 'false');
-        wpBtn.classList.toggle('opacity-50', off);
-        wpBtn.classList.toggle('grayscale', off);
-        wpBtn.classList.toggle('cursor-not-allowed', off);
+        wpBtn.classList.toggle('hidden', !has);
+        wpBtn.disabled = false;
+        wpBtn.textContent = `経由地${waypointsList.filter(w => !w.passed).length + 1}として設定`;
       }
     }
 
@@ -8047,13 +8408,15 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     function pinSetAsWaypoint() {
       if (!map || !hasDestinationSet) return;
       const c = map.getCenter();
-      waypointsList.push({ lat: c.lat, lon: c.lng });
+
       closePinPanel();
-      if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance('この地点を経由地として設定しました。');
-        u.lang = 'ja-JP';
-        window.speechSynthesis.speak(u);
-      }
+      if (!addWaypoint(c.lat, c.lng, '')) speak('その近くには、すでに経由地があります。');
+    }
+
+    function pinClearWaypoints() {
+      closePinPanel();
+      clearWaypoints();
+      applyWaypointChange();
     }
 
     function pinSetAsCurrentLocation() {
@@ -8268,7 +8631,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       toll:        { label: '有料優先', color: '#22c55e' },
       local:       { label: '一般優先', color: '#eab308' },
       distance:    { label: '距離優先', color: '#ef4444' },
-      eco:         { label: 'エコ',     color: '#06b6d4' },
+      eco:         { label: 'エコ',     color: 'var(--ac-d,#06b6d4)' },
       avoidJam:    { label: '渋滞回避', color: '#f97316' },
       alt:         { label: '別ルート', color: '#ec4899' }
     };
@@ -8448,7 +8811,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const coordinates = [];
       const steps = [];
       let distance = 0, duration = 0;
-      trip.legs.forEach(leg => {
+      trip.legs.forEach((leg, li) => {
         const shape = decodePolyline6(leg.shape || '');
         const base = coordinates.length ? coordinates.length - 1 : 0;   // 区間のつなぎ目の点は重ねない
         shape.forEach((c, idx) => { if (!(coordinates.length && idx === 0)) coordinates.push(c); });
@@ -8498,13 +8861,14 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       return [];
     }
     async function valhallaRequestOnce(from, to, costingOptions, opts, heading, layer) {
+      const viaLocs = (opts.via || []).map(v => ({ lat: v.lat, lon: v.lon, type: 'through' }));
       const start = { lat: from.lat, lon: from.lon };
       if (heading !== null && heading !== undefined) { start.heading = Math.round(heading); start.heading_tolerance = 60; }
       // 出発地を「高速道路(motorway)だけ」または「高速を除く道路だけ」にはめる(高架の高速と下道が重なる場所の取り違え対策)
       if (layer === 'highway') start.search_filter = { min_road_class: 'motorway' };
       else if (layer === 'local') start.search_filter = { max_road_class: 'trunk' };
       const body = {
-        locations: [start, { lat: to.lat, lon: to.lon }],
+        locations: [start].concat(viaLocs, [{ lat: to.lat, lon: to.lon }]),
         costing: 'auto',
         costing_options: { auto: costingOptions || {} },
         directions_type: 'maneuvers'
@@ -8530,19 +8894,20 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     // 候補を集める: 探索条件を変えた4回(標準+代替 / 一般道優先 / 高速・有料優先 / 最短距離)を同時に問い合わせる。
     // Valhallaが使えなければOSRMに切り替える
-    async function searchRouteCandidates(from, to, roadLayer) {
+    async function searchRouteCandidates(from, to, roadLayer, via) {
+      via = via || [];
       const heading = headingForRoute(from);   // 車の向き(走っていて分かるときだけ)
       const layer = roadLayer || null;          // 'highway'=高速道路の上から / 'local'=下道から 出発する
       const [std, local, highway, shortest] = await Promise.all([
-        valhallaRequest(from, to, {}, { alternates: 2, heading, layer }),
-        valhallaRequest(from, to, { use_highways: 0, use_tolls: 0 }, { heading, layer }),
-        valhallaRequest(from, to, { use_highways: 1, use_tolls: 1 }, { heading, layer }),
-        valhallaRequest(from, to, { shortest: true }, { heading, layer })
+        valhallaRequest(from, to, {}, { alternates: via.length ? 0 : 2, heading, layer, via }),
+        valhallaRequest(from, to, { use_highways: 0, use_tolls: 0 }, { heading, layer, via }),
+        valhallaRequest(from, to, { use_highways: 1, use_tolls: 1 }, { heading, layer, via }),
+        valhallaRequest(from, to, { shortest: true }, { heading, layer, via })
       ]);
       const routes = [].concat(std, local, highway, shortest);
       if (!routes.length) {
         routeSource = 'osrm';
-        return searchRouteCandidatesOsrm(from, to);
+        return searchRouteCandidatesOsrm(from, to, via);
       }
       routeSource = 'valhalla';
       const seen = new Set();
@@ -8558,11 +8923,12 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     // (予備) OSRMで候補を集める: 通常(代替ルート付き) + 高速を使わないルート を同時に問い合わせる
     // 候補を集める: 通常(代替ルート付き) + 高速を使わないルート を同時に問い合わせる
-    async function searchRouteCandidatesOsrm(from, to) {
+    async function searchRouteCandidatesOsrm(from, to, via) {
+      via = via || [];
       const heading = headingForRoute(from);
       const [alts, noHighway] = await Promise.all([
-        osrmRequest(from, to, '&alternatives=3', { heading }),
-        osrmRequest(from, to, '&exclude=motorway', { quiet: true, heading })   // 未対応のサーバーなら空になるだけ
+        osrmRequest(from, to, via.length ? '' : '&alternatives=3', { heading, via }),
+        osrmRequest(from, to, '&exclude=motorway', { quiet: true, heading, via })   // 未対応のサーバーなら空になるだけ
       ]);
       const seen = new Set();
       const cands = [];
@@ -8735,10 +9101,11 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     // 従来の呼び出し口。現在の種別で選んだ1本を返す(候補は routeCandidates に保存される)
     async function fetchOsrmRoute(from, to, opts = {}) {
-      const q = { from, to };
+      const via = waypointsList.filter(w => !w.passed).map(w => ({ lat: w.lat, lon: w.lon }));
+      const q = { from, to, via };
       lastRouteQuery = q;
-      forcedHighwayTried = false;
-      const cands = await searchRouteCandidates(from, to, opts.roadLayer);
+      forcedHighwayTried = via.length > 0;   // 経由地があるときは「高速の入口・出口を自動で足す」処理をしない(経由地が優先)
+      const cands = await searchRouteCandidates(from, to, opts.roadLayer, via);
       routeCandidates = cands;
       if (!cands.length) { lastRouteChoice = null; return null; }
       if (routeSource === 'valhalla' && routeCandidates.some(c => c.a.hwM >= 5000)) forcedHighwayTried = true;
@@ -9315,7 +9682,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const nowJam = hwGuide.congested.length && hwRangeCongested(traveled - 1, traveled + 1);
       let html = `<div class="flex items-stretch gap-1 h-6">
           <div class="w-12"></div>
-          <div class="w-3 flex justify-center"><div class="w-1.5 h-full" style="background:${nowJam ? '#ef4444' : '#38bdf8'}"></div></div>
+          <div class="w-3 flex justify-center"><div class="w-1.5 h-full" style="background:${nowJam ? '#ef4444' : 'var(--ac,#38bdf8)'}"></div></div>
           <div class="flex-1 flex items-center text-[9px] text-slate-500">
             <i class="fa-solid fa-location-arrow text-cyan-400 text-[10px] mr-1" style="transform:rotate(-45deg)"></i>現在地${nowJam ? ' <span class="text-red-400 font-bold ml-1">渋滞中</span>' : ''}
           </div>
@@ -9323,7 +9690,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       let prev = traveled;
       upcoming.forEach(f => {
         const jam = hwRangeCongested(prev, f.m);
-        const bar = jam ? '#ef4444' : '#38bdf8';
+        const bar = jam ? '#ef4444' : 'var(--ac,#38bdf8)';
         prev = f.m;
         // 2行目: 種類 ・ 到着時刻 ・(IC/JCTは)ここで降りたときの概算料金
         const sub = [HW_KIND_JA[f.kind], `${clockAt(f.m)}着`];
@@ -9686,10 +10053,10 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const remain = Math.max(0, guidanceRemaining);
       const distEl = document.getElementById('turnDist');
       if (distEl) {
-        distEl.innerHTML = remain >= 1000
-          ? `${(remain / 1000).toFixed(1)}<span class="text-xs">km</span>`
-          : `${remain >= 60 ? Math.round(remain / 10) * 10 : Math.round(remain)}<span class="text-xs">m</span>`;
+        distEl.innerHTML = `${(remain / 1000).toFixed(remain < 10000 ? 2 : 1)}<span class="text-xs"> km</span>`;
       }
+      const dirEl = document.getElementById('turnDirText');
+      if (dirEl) dirEl.textContent = navTurnLabel(m);
       const roadEl = document.getElementById('turnRoad');
       if (roadEl) roadEl.textContent = (p.roadName && p.roadName.trim()) ? p.roadName.trim() : '交差点';
       const arrowEl = document.getElementById('turnArrow');
@@ -9755,7 +10122,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       else if (t.amenity === 'karaoke_box') o = { bg: '#7c3aed', fg: '#fff', mark: 'K', sc: 2 };
       else if (t.amenity === 'cinema') o = { bg: '#be123c', fg: '#fff', mark: '映', sc: 2, big: true };
       else if (t.amenity === 'library') o = { bg: '#0f766e', fg: '#fff', mark: '図', sc: 2, big: true };
-      else if (t.amenity === 'townhall') o = { bg: '#475569', fg: '#fff', mark: '役', sc: 2, big: true };
+      else if (t.amenity === 'townhall') o = { bg: 'var(--ln2,#475569)', fg: '#fff', mark: '役', sc: 2, big: true };
       else if (t.amenity === 'pub' || t.amenity === 'bar') o = { bg: '#7f1d1d', fg: '#fff', mark: 'BAR', sc: 1 };
       else if (t.shop === 'doityourself') o = { bg: '#ea580c', fg: '#fff', mark: 'DIY', sc: 2, big: true };
       else if (t.shop === 'books') o = { bg: '#0369a1', fg: '#fff', mark: '本', sc: 1 };
@@ -9865,7 +10232,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
           c.font = 'bold ' + Math.round(Math.max(8, h * 0.034)) + 'px sans-serif';
           const tw = Math.min(c.measureText(nm).width + 10, bw * 1.25);
           const lx = g3dClamp(x0 + bw / 2 - tw / 2, 2, w - tw - 2);
-          c.fillStyle = 'rgba(15,23,42,.82)'; c.fillRect(lx, y0 + bh * 0.80, tw, h * 0.05);
+          c.fillStyle = 'rgba(var(--bg2-rgb,15,23,42),.82)'; c.fillRect(lx, y0 + bh * 0.80, tw, h * 0.05);
           c.fillStyle = '#fff'; c.fillText(nm, lx + tw / 2, y0 + bh * 0.80 + h * 0.026, tw - 4);
         }
         c.textAlign = 'left';
@@ -10026,7 +10393,66 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     let pendingGuidanceSteps = [];
     let hasDestinationSet = false;
-    let waypointsList = [];   // 経由地として設定した地点のリスト
+    let waypointsList = [];   // 経由地として設定した地点のリスト({lat, lon, name, passed})
+    let waypointMarkers = [];
+    function renderWaypointMarkers() {
+      waypointMarkers.forEach(m => m.remove());
+      waypointMarkers = [];
+      if (!map) return;
+      waypointsList.filter(w => !w.passed).forEach((w, i) => {
+        const icon = L.divIcon({ className: '', iconSize: [28, 28], iconAnchor: [14, 14],
+          html: `<div style="width:28px;height:28px;border-radius:50%;background:#8e5cf5;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font:900 13px sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.5)">${i + 1}</div>` });
+        waypointMarkers.push(L.marker([w.lat, w.lon], { icon, interactive: false, zIndexOffset: 500 }).addTo(map));
+      });
+    }
+    function clearWaypoints() { waypointsList.length = 0; renderWaypointMarkers(); }
+    // 経由地を足して、ルートを探し直す(案内中・デモ走行中は今の位置から、それ以外はルート選択画面のまま)
+    function addWaypoint(lat, lon, name) {
+      if (!hasDestinationSet) return false;
+      if (waypointsList.some(w => !w.passed && Math.abs(w.lat - lat) < 0.0003 && Math.abs(w.lon - lon) < 0.0003)) return false;
+      waypointsList.push({ lat, lon, name: name || '', passed: false });
+      renderWaypointMarkers();
+      applyWaypointChange();
+      return true;
+    }
+    let waypointSearching = false;
+    async function applyWaypointChange() {
+      if (!hasDestinationSet || !destMarker || !userPos || waypointSearching) return;
+      waypointSearching = true;
+      const n = waypointsList.filter(w => !w.passed).length;
+      if (typeof setReroutingIndicator === 'function' && (isNavigating || demoTimer)) setReroutingIndicator(true);
+      try {
+        speak(n ? '経由地を入れて、ルートを探し直します。' : '経由地を外して、ルートを探し直します。');
+        const d = destMarker.getLatLng();
+        const route = await fetchOsrmRoute(userPos, { lat: d.lat, lon: d.lng });
+        if (!route) { speak('経由地を通るルートを探せませんでした。'); return; }
+        if (isNavigating || demoTimer) {
+          applyRouteWhileDriving(route);
+        } else {
+          pendingRouteGeometry = route.geometry;
+          pendingGuidanceSteps = routeSteps(route);
+          totalRouteDistanceMeters = route.distance;
+          totalRouteDurationSeconds = route.duration;
+          updateNavRemaining(route.distance);
+          clearRouteDisplay();
+          drawRoutePreview(route.geometry);
+        }
+        renderRouteModeUI();
+        speak(n ? `経由地${n}か所を通るルートにしました。` : '目的地までの通常のルートに戻しました。');
+      } finally {
+        waypointSearching = false;
+        if (typeof setReroutingIndicator === 'function') setReroutingIndicator(false);
+      }
+    }
+    // 経由地の近く(50m以内)を通ったら「通過した」ことにして、地図のマークを消す
+    setInterval(() => {
+      if (!(isNavigating || demoTimer) || !userPos || !waypointsList.length) return;
+      let changed = false;
+      waypointsList.forEach(w => {
+        if (!w.passed && distM(userPos, w) <= 50) { w.passed = true; changed = true; speak('経由地を通過しました。'); }
+      });
+      if (changed) renderWaypointMarkers();
+    }, 1000);
     let savedPlaces = loadSavedPlaces();     // 「ここを登録」で保存した地点のリスト(localStorageに永続化)
 
     // 住所・施設名から本物の座標を検索し、目的地カードに実際の距離・到着時刻を反映
@@ -10077,6 +10503,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
 
     // 目的地の座標・名前が決まった後の共通処理(ルート計算・カード表示など)
     async function finalizeDestination(dest, name, opts = {}) {
+      clearWaypoints();   // 目的地が変わったら、前の経由地は消す
       routeOverviewActive = !opts.autoStart;
       if (!userPos) await tryGetUserPosition();
 
@@ -10279,6 +10706,49 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     let routeEntranceLayers = [];
     let routeEntranceToken = 0;
 
+    // 一般道(国道・県道など)の番号標識: 走行中だけ、道が変わる地点に青い標識を出す
+    let roadNumberLayers = [];
+    function clearRoadNumberMarkers() {
+      roadNumberLayers.forEach(layer => { try { layer.remove(); } catch (e) {} });
+      roadNumberLayers = [];
+    }
+    function renderRoadNumberMarkers(steps) {
+      clearRoadNumberMarkers();
+      if (!map || !steps || typeof g3dRoadShield !== 'function') return;
+      let prev = '', count = 0;
+      steps.forEach(st => {
+        if (count >= 16) return;
+        const m = st.maneuver;
+        if (!m || !m.location || m.type === 'arrive') return;
+        const sh = g3dRoadShield(st);
+        if (!sh) { prev = ''; return; }
+        const key = sh.type + sh.num;
+        if (key === prev) return;
+        prev = key;
+        const lat = +m.location[1], lon = +m.location[0];
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+        const kind = (String(st.name || '').match(/(県道|都道|府道|道道)/) || [])[1] || '県道';
+        const label = sh.type === 'nat' ? `国道${sh.num}号` : `${kind}${sh.num}号`;
+        const road = jpOnlyName(st.name || '');
+        const sub = road && !/国道|県道|都道|府道|道道/.test(road) ? road : '';
+        const shield = sh.type === 'nat'
+          ? `<svg width="36" height="40" viewBox="0 0 36 40"><path d="M3 9Q3 2 10 2H26Q33 2 33 9V23Q33 27 18 38Q3 27 3 23Z" fill="#fff"/><text x="18" y="21" text-anchor="middle" font-size="${String(sh.num).length > 2 ? 12 : 15}" font-weight="900" fill="#0b5ea8" font-family="Arial,sans-serif">${sh.num}</text></svg>`
+          : `<svg width="40" height="38" viewBox="0 0 40 38"><path d="M10 2H30L38 19L30 36H10L2 19Z" fill="#fff"/><text x="20" y="24" text-anchor="middle" font-size="${String(sh.num).length > 2 ? 12 : 15}" font-weight="900" fill="#0b5ea8" font-family="Arial,sans-serif">${sh.num}</text></svg>`;
+        const md = (m.modifier || '');
+        const arrow = /left/.test(md) ? '↰' : /right/.test(md) ? '↱' : '↑';
+        const html = `<div style="width:176px;height:56px;box-sizing:border-box;padding:6px 9px;background:#0b5ea8;border:3px solid #fff;border-radius:8px;box-shadow:0 3px 12px #0009;color:#fff;font-family:Arial,'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;pointer-events:none">${shield}<div style="min-width:0;flex:1"><div style="font-size:14px;font-weight:900;line-height:1.1;white-space:nowrap">${escapeHtml(label)}</div>${sub ? `<div style="font-size:10px;font-weight:700;opacity:.9;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(sub)}</div>` : ''}</div><div style="font-size:24px;font-weight:900;line-height:1">${arrow}</div></div>`;
+        const icon = L.divIcon({ className: 'sho-road-number-marker', html, iconSize: [176, 56], iconAnchor: [88, 62] });
+        roadNumberLayers.push(L.marker([lat, lon], { icon, interactive: false, keyboard: false, zIndexOffset: 1100 }).addTo(map));
+        count++;
+      });
+    }
+    // 走行中に出す標識(高速の入口 + 一般道の番号)
+    function renderDrivingRoadSigns(steps) {
+      if (!steps || !steps.length) return;
+      try { renderRouteEntranceMarkers({ legs: [{ steps }] }); } catch (e) { /* 無視 */ }
+      try { renderRoadNumberMarkers(steps); } catch (e) { /* 無視 */ }
+    }
+
     function clearRouteEntranceMarkers() {
       routeEntranceToken++;
       routeEntranceLayers.forEach(layer => { try { layer.remove(); } catch (e) {} });
@@ -10406,11 +10876,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       // 選んだルートは太く、その種別の色で一番上に描く
       const selColor = (ROUTE_MODES[currentRouteMode] || ROUTE_MODES.recommended).color;
       routeLine = L.geoJSON(geometry, { style: { color: selColor, weight: 8, opacity: 0.95 } }).addTo(map);
-      if (lastRouteChoice && lastRouteChoice.cand && lastRouteChoice.cand.route) {
-        renderRouteEntranceMarkers(lastRouteChoice.cand.route);
-      } else {
-        clearRouteEntranceMarkers();
-      }
+      clearRouteEntranceMarkers();   // 出発する前は、ナンバリングの標識は出さない
       fitRouteOverview();
     }
 
@@ -10472,6 +10938,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       lastRouteQuery = null;
       forcedHighwayTried = false;
       hasDestinationSet = false;
+      clearWaypoints();
       clearNavRemaining();
       stopHighwayGuidance(true);
       renderRouteModeUI();
@@ -10497,6 +10964,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     //  マニューバで高速区間を判定する)
     function clearRouteDisplay() {
       clearRouteEntranceMarkers();
+      clearRoadNumberMarkers();
       if (routeLine) { routeLine.remove(); routeLine = null; }
       routeSegmentLayers.forEach(l => l.remove());
       routeSegmentLayers = [];
@@ -10527,6 +10995,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const fit = opts.fit !== false; // 走行中のルート再検索では false を渡し、地図のズームを変えない
       clearRouteDisplay();
       if (!map) return;
+      renderDrivingRoadSigns(steps);   // 出発後だけ、ナンバリングの標識を出す
       const segments = buildRoadTypeSegments(steps);
       if (!segments.length) {
         // ステップ情報が無ければ、一般道扱い(緑)でルート全体をそのまま描画
@@ -10653,6 +11122,25 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     }
     /* ============ メインマップ上の「曲がります」マーク ここまで ============ */
 
+    // 左上の交差点案内に出す「どっちに曲がるか」の短い言葉
+    function navTurnLabel(m) {
+      if (!m) return '直進';
+      if (m.type === 'arrive') return '目的地です';
+      if (m.type === 'roundabout' || m.type === 'rotary') return 'ロータリー';
+      const mod = m.modifier || '';
+      if (mod === 'uturn') return 'Uターン';
+      const side = /left/.test(mod) ? '左' : /right/.test(mod) ? '右' : '';
+      const prefix = /^slight/.test(mod) ? '斜め' : /^sharp/.test(mod) ? '大きく' : '';
+      const dir = side ? `${prefix}${side}方向` : '';
+      switch (m.type) {
+        case 'on ramp': return dir ? `高速入口 ${dir}` : '高速入口';
+        case 'off ramp': return dir ? `出口 ${dir}` : '出口';
+        case 'fork': return dir ? `分岐 ${dir}` : '分岐 直進';
+        case 'merge': return '合流';
+        default: return dir || '直進';
+      }
+    }
+
     function renderGuidanceBanner() {
       const point = guidancePoints[guidanceIndex];
       if (!point) return;
@@ -10672,19 +11160,15 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       if (nameEl) nameEl.innerText = label;
       if (gNameEl) gNameEl.innerText = label;
 
-      // 1kmを超える距離は「1.0キロ」「2.3キロ」のようにキロ表示、それ未満はこれまで通りm表示
+      // 次の交差点までの距離は、いつでもkm表示(例: 0.30 km / 1.25 km / 12.3 km)
       const remain = Math.max(0, guidanceRemaining);
-      if (remain >= 1000) {
-        if (distEl) distEl.innerText = (remain / 1000).toFixed(1);
-        if (unitEl) unitEl.innerText = 'キロ';
-        if (gDistEl) gDistEl.innerText = (remain / 1000).toFixed(1);
-        if (gUnitEl) gUnitEl.innerText = 'キロ';
-      } else {
-        if (distEl) distEl.innerText = Math.round(remain);
-        if (unitEl) unitEl.innerText = 'm';
-        if (gDistEl) gDistEl.innerText = Math.round(remain);
-        if (gUnitEl) gUnitEl.innerText = 'm';
-      }
+      const kmTxt = (remain / 1000).toFixed(remain < 10000 ? 2 : 1);
+      if (distEl) distEl.innerText = kmTxt;
+      if (unitEl) unitEl.innerText = 'km';
+      if (gDistEl) gDistEl.innerText = kmTxt;
+      if (gUnitEl) gUnitEl.innerText = 'km';
+      const turnTextEl = document.getElementById('navTurnText');
+      if (turnTextEl) turnTextEl.innerText = navTurnLabel(point.maneuver);
       if (iconEl) iconEl.innerText = directionArrow(point.maneuver);
       if (gIconEl) gIconEl.innerText = directionArrow(point.maneuver);
       updateMainTurnMarker();
@@ -10888,7 +11372,8 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       }
     }
 
-    function terminateRoute() {
+    function terminateRoute(arrived) {
+      arrived = (arrived === true);   // 到着して自動で終わるときだけ true
       routeOverviewActive = false;   // ルートを選ぶ画面(北固定の全体表示)を終える
       initAudio();
       document.getElementById('topNavGuidance').classList.add('hidden');
@@ -10906,6 +11391,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       pendingRouteGeometry = null;
       pendingGuidanceSteps = [];
       hasDestinationSet = false;
+      clearWaypoints();
       clearNavRemaining();
       stopHighwayGuidance(true);
       if (!isMinimalMode) document.getElementById('sidePanel').classList.remove('hidden');
@@ -11079,6 +11565,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       demoPrevLatLng = pos;
 
       // 地図は毎フレーム、アニメーションなしで現在地に合わせる(アニメーションを重ねるとかえってカクつく)
+      // 地図をスクロールして見ている間(十字ピンが出ている間)は、自動追従を止める。「現在地」か「閉じる」で追従に戻る
       if (!demoFollowStarted) {
         demoFollowStarted = true;
         setViewOnUser(pos, 17, { animate: false });
@@ -11121,13 +11608,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       }
 
       if (remainingTotal <= 0) {
-        stopDemoDrive();
-        speak('目的地に到着しました。デモ走行を終了します。');
-        stopHighwayGuidance();
-        document.getElementById('topNavGuidance').classList.add('hidden');
-        document.getElementById('activeRouteTerminationWrapper').classList.add('hidden');
-        clearRouteDisplay();
-        enableGpsAfterDemo();
+        terminateRoute(true);   // 左上の案内・到着時間・目的地マークまで、全部まとめて終わらせる
       }
     }
 
@@ -11171,6 +11652,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const rot = (typeof mapRotationDeg === 'function') ? mapRotationDeg() : headingDeg;   // 北基準のときは地図を回さない
       if (mapEl) mapEl.style.transform = (mapEl.classList.contains('map-3d') ? `perspective(${MAP_PERSP}px) rotateX(${MAP_TILT_DEG}deg) ` : '') + `rotate(${-rot}deg)`;
       if (typeof updateCompassUI === 'function') updateCompassUI(rot);
+      try { updateCarRoadLabelRot(rot); } catch (e) {}
       if (userMarker) {
         const el = userMarker.getElement();
         const rotor = el && el.querySelector('.user-marker-rotor');
@@ -11206,7 +11688,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const camV = document.getElementById('camLive');
       const live = !!(CAML && CAML.stream && camV && camV.videoWidth > 0);
       if (live) pCtx.clearRect(0, 0, w, h);                       // 本物の映像が出ているときは、映像の上に補助線だけ重ねる
-      else { pCtx.fillStyle = '#1e293b'; pCtx.fillRect(0, 0, w, h); }
+      else { pCtx.fillStyle = 'var(--bg3,#1e293b)'; pCtx.fillRect(0, 0, w, h); }
       pCtx.globalAlpha = live ? 0.85 : 1;
 
       if (currentCameraView === 'rear') {
@@ -11226,7 +11708,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
           }
         });
       } else {
-        pCtx.strokeStyle = '#38bdf8';
+        pCtx.strokeStyle = 'var(--ac,#38bdf8)';
         pCtx.lineWidth = 4;
         pCtx.beginPath();
         pCtx.moveTo(w * 0.2, h * 0.7);
@@ -11391,13 +11873,13 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         if (us) avmCover(ctx, us, 0, 0, W / 2, H);                 // 左: インカメの映像を、左半分いっぱいに貼る
         if (es) avmCover(ctx, es, W / 2, 0, W / 2, H);             // 右: 外カメの映像を、右半分いっぱいに貼る
         if (car && car.naturalWidth) ctx.drawImage(car, (W - cw) / 2, (H - ch) / 2, cw, ch);
-        ctx.fillStyle = '#e2e8f0'; ctx.fillText('左' + (us && !ul ? '(静止画)' : ''), W / 4, fs + 3); ctx.fillText('右' + (es && !el ? '(静止画)' : ''), W * 3 / 4, fs + 3);
+        ctx.fillStyle = 'var(--tx1,#e2e8f0)'; ctx.fillText('左' + (us && !ul ? '(静止画)' : ''), W / 4, fs + 3); ctx.fillText('右' + (es && !el ? '(静止画)' : ''), W * 3 / 4, fs + 3);
         return;
       }
       if (es) avmCover(ctx, es, 0, 0, W, H / 2);                   // 外カメ(背面): 上端から車のちょうど真ん中まで、横いっぱいに貼る
       if (us) avmCover(ctx, us, 0, H / 2, W, H / 2);               // インカメ: 車の真ん中から下端まで、横いっぱいに貼る
       if (car && car.naturalWidth) ctx.drawImage(car, (W - cw) / 2, (H - ch) / 2, cw, ch);
-      ctx.fillStyle = '#e2e8f0'; ctx.fillText('前' + (es && !el ? '(静止画)' : ''), W / 2, fs + 3); ctx.fillText('後' + (us && !ul ? '(静止画)' : ''), W / 2, H - 6);
+      ctx.fillStyle = 'var(--tx1,#e2e8f0)'; ctx.fillText('前' + (es && !el ? '(静止画)' : ''), W / 2, fs + 3); ctx.fillText('後' + (us && !ul ? '(静止画)' : ''), W / 2, H - 6);
     }
     function avmLoop() {
       const ov = document.getElementById('parkingCameraOverlay');
@@ -12219,7 +12701,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
       if (!document.getElementById('panelFsStyle')) {
         const st = document.createElement('style'); st.id = 'panelFsStyle';
         st.textContent = '#sidePanel.panel-fs{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;z-index:9000!important;padding:14px 18px!important;border-left:0!important}'
-          + '#panelFsClose{position:fixed;top:10px;right:14px;z-index:9001;display:none;align-items:center;gap:6px;background:#06b6d4;color:#020617;font-weight:900;font-size:13px;padding:8px 14px;border-radius:12px;border:2px solid #0e7490;box-shadow:0 4px 18px rgba(0,0,0,.6)}'
+          + '#panelFsClose{position:fixed;top:10px;right:14px;z-index:9001;display:none;align-items:center;gap:6px;background:var(--ac-d,#06b6d4);color:var(--bg0,#020617);font-weight:900;font-size:13px;padding:8px 14px;border-radius:12px;border:2px solid #0e7490;box-shadow:0 4px 18px rgba(0,0,0,.6)}'
           + '#sidePanel.panel-fs~#panelFsClose,body.panel-fs-on #panelFsClose{display:flex}';
         document.head.appendChild(st);
       }
@@ -12268,7 +12750,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
       s1.style.opacity = p === 'brake' ? '1' : '.55';
       s2.style.opacity = p === 'gear' ? '1' : '.3';
       n1.textContent = p === 'gear' ? '✓' : '1';
-      n1.style.background = p === 'gear' ? '#34d399' : '#22d3ee';
+      n1.style.background = p === 'gear' ? '#34d399' : 'var(--ac,#22d3ee)';
     }
     function dgLoop() {
       dgTimer = setTimeout(() => { dgSetPhase(dgPhase === 'brake' ? 'gear' : 'brake'); dgLoop(); }, dgPhase === 'brake' ? 3200 : 4200);
@@ -12611,7 +13093,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         for (let tries = 0; tries < 12; tries++) {
           const occ = SLOTS.map(() => Math.random() < (LOT === 'para' ? 0.4 : 0.45));
           if (LOT === 'para' && occ.every(Boolean)) occ[(Math.random() * occ.length) | 0] = false;
-          const parked = [], cols = ['#94a3b8', '#fca5a5', '#93c5fd', '#fcd34d', '#a7f3d0', '#c4b5fd', '#e5e7eb', '#475569'];
+          const parked = [], cols = ['var(--tx3,#94a3b8)', '#fca5a5', '#93c5fd', '#fcd34d', '#a7f3d0', '#c4b5fd', '#e5e7eb', 'var(--ln2,#475569)'];
           SLOTS.forEach((sl, i) => { if (occ[i]) parked.push(parkedPoly(sl)); });
           const opts = SLOTS.map((sl, i) => (occ[i] ? null : { back: bestPlan(sl, 'back', parked), front: bestPlan(sl, 'front', parked) }));
           const n = opts.filter((o) => o && (o.back || o.front)).length;
@@ -12685,7 +13167,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
           const poly = parkedPoly(sl), cx = (poly[0][0] + poly[2][0]) / 2, cy = (poly[0][1] + poly[2][1]) / 2;
           g.save(); g.translate(cx, cy); g.rotate((sl.pk ? sl.pk.phi : Math.atan2(sl.din[1], sl.din[0])) + PI / 2);
           g.fillStyle = S.cols[i]; g.beginPath(); g.roundRect(-CAR_W / 2, -CAR_LEN / 2, CAR_W, CAR_LEN, 0.3); g.fill();
-          g.fillStyle = 'rgba(15,23,42,.6)'; g.beginPath(); g.roundRect(-CAR_W / 2 + 0.15, -CAR_LEN / 2 + 0.95, CAR_W - 0.3, 0.7, 0.15); g.fill();
+          g.fillStyle = 'rgba(var(--bg2-rgb,15,23,42),.6)'; g.beginPath(); g.roundRect(-CAR_W / 2 + 0.15, -CAR_LEN / 2 + 0.95, CAR_W - 0.3, 0.7, 0.15); g.fill();
           g.beginPath(); g.roundRect(-CAR_W / 2 + 0.15, CAR_LEN / 2 - 0.9, CAR_W - 0.3, 0.45, 0.12); g.fill();
           g.restore();
         });
@@ -12705,7 +13187,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         g.save(); g.translate(cx, cy); g.rotate(q.phi + PI / 2);
         const img = document.getElementById('avmCarImg');
         if (img && img.complete && img.naturalWidth > 0) { const hh = CAR_LEN, ww = hh * img.naturalWidth / img.naturalHeight; g.drawImage(img, -ww / 2, -hh / 2, ww, hh); }
-        else { g.fillStyle = '#e2e8f0'; g.strokeStyle = '#475569'; g.lineWidth = 0.08; g.beginPath(); g.roundRect(-CAR_W / 2, -CAR_LEN / 2, CAR_W, CAR_LEN, 0.3); g.fill(); g.stroke(); }
+        else { g.fillStyle = 'var(--tx1,#e2e8f0)'; g.strokeStyle = 'var(--ln2,#475569)'; g.lineWidth = 0.08; g.beginPath(); g.roundRect(-CAR_W / 2, -CAR_LEN / 2, CAR_W, CAR_LEN, 0.3); g.fill(); g.stroke(); }
         g.restore();
       }
       function drawAvm() {
@@ -12735,7 +13217,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         // 走るルート
         if (P && S.stage !== 'scan' && S.stage !== 'method') {
           const line = (a, b, col, dash) => { g.beginPath(); g.setLineDash(dash); g.strokeStyle = col; g.lineWidth = 0.16; for (let s = a, first = true; s <= b + 1e-6; s += 0.15) { const u = poseAt(P, Math.min(s, b)); if (first) { g.moveTo(u.x, u.y); first = false; } else g.lineTo(u.x, u.y); } g.stroke(); g.setLineDash([]); };
-          line(0, P.LA, 'rgba(226,232,240,.9)', [0.5, 0.35]); line(P.LA, P.LA + P.LB, '#22d3ee', []); line(P.LA + P.LB, P.total, '#34d399', []);
+          line(0, P.LA, 'rgba(226,232,240,.9)', [0.5, 0.35]); line(P.LA, P.LA + P.LB, 'var(--ac,#22d3ee)', []); line(P.LA + P.LB, P.total, '#34d399', []);
         }
         if (S.sel >= 0 && S.stage !== 'done' && S.stage !== 'scan') {      // 選んだ枠に、駐車したあとの車を透けて出す
           const o3 = S.opts[S.sel], gp = S.plan || (o3 && (o3.back || o3.front));
@@ -12745,7 +13227,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         g.restore();
         if (S.stage === 'scan') {                                       // 確認中のレーダー
           const cx = AVM_W / 2, cy = AVM_H / 2;
-          for (let k = 0; k < 3; k++) { const r = (now * 0.8 + k / 3) % 1; g.strokeStyle = 'rgba(34,211,238,' + (1 - r) * 0.8 + ')'; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, 20 + r * 260, 0, 7); g.stroke(); }
+          for (let k = 0; k < 3; k++) { const r = (now * 0.8 + k / 3) % 1; g.strokeStyle = 'rgba(var(--ac-rgb,34,211,238),' + (1 - r) * 0.8 + ')'; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, 20 + r * 260, 0, 7); g.stroke(); }
         }
         g.textAlign = 'left';
         if (S.notice) { const nf = Math.max(13, AVM_H / 32); g.font = 'bold ' + nf + 'px sans-serif'; const nw = g.measureText(S.notice).width + 30; g.fillStyle = 'rgba(127,29,29,.92)'; g.fillRect((AVM_W - nw) / 2, AVM_H * 0.22, nw, nf * 2); g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(S.notice, AVM_W / 2, AVM_H * 0.22 + nf * 1.35); }
@@ -12874,14 +13356,14 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         const inPara = LOT === 'para';
         [['apT_back', 'back', 'back'], ['apT_front', 'front', 'front'], ['apT_usual', 'usual', usualM]].forEach(([id, key, m]) => {
           const b = $(id); if (!b) return; const ok = inPara ? true : !!(selOk && o2[m]), on = !inPara && ok && S.methodBtn === key;
-          b.disabled = !ok; b.style.opacity = ok ? '1' : '.35'; b.style.background = on ? 'rgba(34,211,238,.3)' : 'transparent'; b.style.outline = on ? '2px solid #22d3ee' : 'none';
+          b.disabled = !ok; b.style.opacity = ok ? '1' : '.35'; b.style.background = on ? 'rgba(var(--ac-rgb,34,211,238),.3)' : 'transparent'; b.style.outline = on ? '2px solid var(--ac,#22d3ee)' : 'none';
         });
-        const bp = $('apT_para'); if (bp) { const on = inPara && S.methodBtn === 'parallel'; bp.disabled = false; bp.style.opacity = '1'; bp.style.background = on ? 'rgba(34,211,238,.3)' : 'transparent'; bp.style.outline = on ? '2px solid #22d3ee' : 'none'; }
+        const bp = $('apT_para'); if (bp) { const on = inPara && S.methodBtn === 'parallel'; bp.disabled = false; bp.style.opacity = '1'; bp.style.background = on ? 'rgba(var(--ac-rgb,34,211,238),.3)' : 'transparent'; bp.style.outline = on ? '2px solid var(--ac,#22d3ee)' : 'none'; }
                 const b = $('apMain'), done = S.stage === 'done', go = S.stage === 'ready', active = ['A', 'pA', 'B', 'pB', 'C'].indexOf(S.stage) >= 0;
         b.textContent = done ? 'もう一度' : active ? (S.running ? '一時停止' : '再開') : 'スタート';
         b.disabled = !(go || done || active);
         b.className = 'ap-start' + (go || done ? ' ap-grad' : '');
-        b.style.color = active ? '#fbbf24' : '#64748b';
+        b.style.color = active ? '#fbbf24' : 'var(--ln3,#64748b)';
         b.style.opacity = b.disabled ? '.4' : '1';
       }
       function loop(ts) {
@@ -12904,11 +13386,11 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         g.imageSmoothingEnabled = true; g.drawImage($('apCam'), 0, 0, CAM_W, CAM_H - 12, (w - dw) / 2, (h - dh) / 2, dw, dh);
         const fs = Math.max(15, Math.min(26, w / 26)), lines = guideText().split('。').filter(Boolean).map((t) => t + '。');
         g.font = '900 ' + fs + 'px sans-serif'; g.textAlign = 'center'; const bw = Math.min(w - 16, Math.max.apply(null, lines.map((t) => g.measureText(t).width)) + 28), bh = lines.length * fs * 1.35 + 16;
-        g.fillStyle = 'rgba(2,6,23,.78)'; g.fillRect((w - bw) / 2, h * 0.3, bw, bh); g.fillStyle = '#fde047';
+        g.fillStyle = 'rgba(var(--bg0-rgb,2,6,23),.78)'; g.fillRect((w - bw) / 2, h * 0.3, bw, bh); g.fillStyle = '#fde047';
         lines.forEach((t, i) => g.fillText(t, w / 2, h * 0.3 + 12 + fs * (1.05 + 1.35 * i)));
         const r = Math.min(w, h) * 0.085, cx = r + 16, cy = h - r - 16;                  // ハンドルの絵
-        g.save(); g.translate(cx, cy); g.fillStyle = 'rgba(2,6,23,.7)'; g.beginPath(); g.arc(0, 0, r + 6, 0, 7); g.fill(); g.rotate(((S.wh || 0)) * PI / 180);
-        g.strokeStyle = '#e2e8f0'; g.lineWidth = r * 0.16; g.beginPath(); g.arc(0, 0, r, 0, 7); g.stroke(); g.lineWidth = r * 0.14; g.beginPath(); g.moveTo(-r, 0); g.lineTo(r, 0); g.moveTo(0, 0); g.lineTo(0, r); g.stroke();
+        g.save(); g.translate(cx, cy); g.fillStyle = 'rgba(var(--bg0-rgb,2,6,23),.7)'; g.beginPath(); g.arc(0, 0, r + 6, 0, 7); g.fill(); g.rotate(((S.wh || 0)) * PI / 180);
+        g.strokeStyle = 'var(--tx1,#e2e8f0)'; g.lineWidth = r * 0.16; g.beginPath(); g.arc(0, 0, r, 0, 7); g.stroke(); g.lineWidth = r * 0.14; g.beginPath(); g.moveTo(-r, 0); g.lineTo(r, 0); g.moveTo(0, 0); g.lineTo(0, r); g.stroke();
         g.strokeStyle = '#ef4444'; g.beginPath(); g.moveTo(0, -r); g.lineTo(0, -r * 0.7); g.stroke(); g.restore();
         const dd = S.dist;                                               // 近づいたら、数字ではなく、下のほうがふわっと光る(赤=近い・黄=すこし近い・緑=何もなし)
         if (dd != null && dd < 2) {
@@ -13082,7 +13564,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
        ・電話番号探索 / マップコード検索: このアプリのキーボードで数字を入れる
        ・名所探索(名前での検索)は、今までどおり */
     const SX_REGIONS = ['北海道', '東北', '関東', '中部', '近畿', '中国', '四国', '九州・沖縄'];
-    const SX_COLORS = { '北海道': '#38bdf8', '東北': '#34d399', '関東': '#fbbf24', '中部': '#a78bfa', '近畿': '#fb7185', '中国': '#fb923c', '四国': '#2dd4bf', '九州・沖縄': '#e879f9' };
+    const SX_COLORS = { '北海道': 'var(--ac,#38bdf8)', '東北': '#34d399', '関東': '#fbbf24', '中部': '#a78bfa', '近畿': '#fb7185', '中国': '#fb923c', '四国': '#2dd4bf', '九州・沖縄': '#e879f9' };
     const SX_PREFS = [
       ['北海道', '北海道', 11, 0, '北海道'],
       ['青森県', '青森', 11, 1, '東北'], ['秋田県', '秋田', 10, 2, '東北'], ['岩手県', '岩手', 11, 2, '東北'], ['山形県', '山形', 10, 3, '東北'], ['宮城県', '宮城', 11, 3, '東北'], ['福島県', '福島', 10, 4, '東北'],
@@ -13128,7 +13610,7 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
       let h = `<svg viewBox="-4 -4 ${W + 8} ${H + 8}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
       SX_PREFS.forEach((p) => {
         const x = p[2] * st, y = p[3] * st, c = SX_COLORS[p[4]], dim = SX.region && SX.region !== p[4], sel = SX.pref === p[0], fs = p[1].length >= 3 ? 8.5 : 11.5;
-        h += `<g class="sx-tile" onclick="sxPickPref('${p[0]}')" opacity="${dim ? 0.28 : 1}"><rect x="${x}" y="${y}" width="${T}" height="${T}" rx="6" fill="${sel ? c : '#0f172a'}" stroke="${c}" stroke-width="${sel ? 2.5 : 1.5}"/><text x="${x + T / 2}" y="${y + T / 2 + fs * 0.36}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${sel ? '#020617' : c}" font-family="sans-serif">${p[1]}</text></g>`;
+        h += `<g class="sx-tile" onclick="sxPickPref('${p[0]}')" opacity="${dim ? 0.28 : 1}"><rect x="${x}" y="${y}" width="${T}" height="${T}" rx="6" fill="${sel ? c : 'var(--bg2,#0f172a)'}" stroke="${c}" stroke-width="${sel ? 2.5 : 1.5}"/><text x="${x + T / 2}" y="${y + T / 2 + fs * 0.36}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${sel ? 'var(--bg0,#020617)' : c}" font-family="sans-serif">${p[1]}</text></g>`;
       });
       h += '</svg>';
       sx$('sxMap').innerHTML = h;
@@ -13164,11 +13646,11 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
       if (SX.view === 'result') { R.innerHTML = '<div id="sxResultHost" style="flex:1;min-height:0;display:flex;flex-direction:column"></div><div style="display:flex;gap:8px;flex-shrink:0"><button class="sx-btn" onclick="sxBack(\'num\')">番地を直す</button></div>'; sxMountCard(sx$('sxResultHost')); sx$('searchResultsCard').style.display = ''; return; }
       if (SX.view === 'pref') {
         const list = SX_PREFS.filter((p) => !SX.region || p[4] === SX.region);
-        R.innerHTML = `<div style="font-size:13px;color:#cbd5e1;font-weight:800">${SX.region ? SX.region + 'の県を選んでください' : '上のタブか、日本地図の県をタッチしてください'}</div><div class="sx-list">${list.map((p) => `<button class="sx-item" onclick="sxPickPref('${p[0]}')">${p[0]}</button>`).join('')}</div>`;
+        R.innerHTML = `<div style="font-size:13px;color:var(--tx2,#cbd5e1);font-weight:800">${SX.region ? SX.region + 'の県を選んでください' : '上のタブか、日本地図の県をタッチしてください'}</div><div class="sx-list">${list.map((p) => `<button class="sx-item" onclick="sxPickPref('${p[0]}')">${p[0]}</button>`).join('')}</div>`;
         return;
       }
       if (SX.loading || SX.err) {
-        R.innerHTML = (SX.loading ? '<div style="color:#94a3b8;padding:20px;text-align:center">読み込み中…</div>' : `<div style="color:#fca5a5;padding:14px;text-align:center;font-size:13px">${escapeHtml(SX.err)}<br><button class="sx-btn" style="margin-top:10px" onclick="sxRetry()">もう一度</button></div>`);
+        R.innerHTML = (SX.loading ? '<div style="color:var(--tx3,#94a3b8);padding:20px;text-align:center">読み込み中…</div>' : `<div style="color:#fca5a5;padding:14px;text-align:center;font-size:13px">${escapeHtml(SX.err)}<br><button class="sx-btn" style="margin-top:10px" onclick="sxRetry()">もう一度</button></div>`);
         return;
       }
       if (SX.view === 'city' || SX.view === 'town') {
@@ -13176,14 +13658,14 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         const key = SX.view === 'city' ? 'city' : 'town';
         const shown = items.filter((it) => !SX.row || sxRowOf(it.kana) === SX.row);
         const title = SX.view === 'city' ? '市区町村を、50音で選んでください' : '町名を、50音で選んでください';
-        R.innerHTML = `<div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">${title}</div>` + sxKanaTabs(items, key)
-          + `<div class="sx-list">${shown.map((it) => `<button class="sx-item" onclick="${SX.view === 'city' ? 'sxPickCity' : 'sxPickTown'}(${items.indexOf(it)})">${escapeHtml(it[key])}</button>`).join('') || '<div style="color:#64748b;grid-column:1/-1;text-align:center;padding:14px">上の「あ・か・さ…」をタッチしてください</div>'}</div>`
+        R.innerHTML = `<div style="font-size:13px;color:var(--tx2,#cbd5e1);font-weight:800;flex-shrink:0">${title}</div>` + sxKanaTabs(items, key)
+          + `<div class="sx-list">${shown.map((it) => `<button class="sx-item" onclick="${SX.view === 'city' ? 'sxPickCity' : 'sxPickTown'}(${items.indexOf(it)})">${escapeHtml(it[key])}</button>`).join('') || '<div style="color:var(--ln3,#64748b);grid-column:1/-1;text-align:center;padding:14px">上の「あ・か・さ…」をタッチしてください</div>'}</div>`
           + (SX.view === 'town' ? '<button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">町を選ばず、市の中心へ</button>' : '');
         return;
       }
       if (SX.view === 'num') {                                       // 番地の入力: 左に表示とボタン、右にキーパッド(高さいっぱい)
         R.innerHTML = `<div style="display:flex;gap:10px;flex:1;min-height:0">`
-          + `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto"><div style="font-size:13px;color:#cbd5e1;font-weight:800;flex-shrink:0">番地を入れてください(例: 1700-155)</div><div class="sx-display ${SX.num ? '' : 'dim'}" style="flex-shrink:0">${SX.num ? escapeHtml(SX.num) : '数字を入れる'}</div><button class="sx-btn sx-btn-go" style="flex-shrink:0" onclick="sxAddrGo()">検索</button><button class="sx-btn" style="flex-shrink:0" onclick="sxNumKey('C')">クリア</button><button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">番地なしで町の中心へ</button></div>`
+          + `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto"><div style="font-size:13px;color:var(--tx2,#cbd5e1);font-weight:800;flex-shrink:0">番地を入れてください(例: 1700-155)</div><div class="sx-display ${SX.num ? '' : 'dim'}" style="flex-shrink:0">${SX.num ? escapeHtml(SX.num) : '数字を入れる'}</div><button class="sx-btn sx-btn-go" style="flex-shrink:0" onclick="sxAddrGo()">検索</button><button class="sx-btn" style="flex-shrink:0" onclick="sxNumKey('C')">クリア</button><button class="sx-btn" style="flex-shrink:0" onclick="sxGoCenter()">番地なしで町の中心へ</button></div>`
           + `<div class="sx-pad" id="sxPad" style="flex:0 0 210px"></div></div>`;
         sxPadFill(sx$('sxPad'), ['1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '0', '⌫'], sxNumKey);
       }
@@ -13447,16 +13929,16 @@ if (walkModeOn()) return;   // 歩行者モードではカメラを使わない
         const g = SX.geo[p[0]]; if (!g) return;
         const c = SX_COLORS[p[4]], dim = SX.region && SX.region !== p[4], sel = SX.pref === p[0];
         h += `<path class="sx-tile" onclick="sxPickPref('${p[0]}')" d="${g.d}" fill="${c}" fill-opacity="${sel ? 0.95 : dim ? 0.1 : 0.32}" stroke="${sel ? '#fff' : c}" stroke-width="${sel ? 4 : 1.6}" stroke-linejoin="round" opacity="${dim ? 0.55 : 1}"/>`;
-        if (!dim && (SX.region || p[1].length <= 3)) labels += `<text x="${g.cx.toFixed(0)}" y="${(g.cy + fs * 0.35).toFixed(0)}" text-anchor="middle" font-size="${fs.toFixed(0)}" font-weight="800" fill="${sel ? '#fff' : '#e2e8f0'}" stroke="#020617" stroke-width="${(fs / 7).toFixed(1)}" paint-order="stroke" style="pointer-events:none" font-family="sans-serif">${p[1]}</text>`;
+        if (!dim && (SX.region || p[1].length <= 3)) labels += `<text x="${g.cx.toFixed(0)}" y="${(g.cy + fs * 0.35).toFixed(0)}" text-anchor="middle" font-size="${fs.toFixed(0)}" font-weight="800" fill="${sel ? '#fff' : 'var(--tx1,#e2e8f0)'}" stroke="#020617" stroke-width="${(fs / 7).toFixed(1)}" paint-order="stroke" style="pointer-events:none" font-family="sans-serif">${p[1]}</text>`;
       });
       sx$('sxMap').innerHTML = h + labels + '</svg>';
     };
 </script>
-<div id="mapLiveSettings" class="hidden" style="position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:9400;width:min(520px,calc(100vw - 24px));background:rgba(2,6,23,.93);border:1px solid #22d3ee;border-radius:16px;padding:8px 10px;box-shadow:0 8px 28px rgba(0,0,0,.6)">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:#22d3ee;flex:1"><i class="fa-solid fa-map"></i> 地図を見ながら設定</span><button type="button" onclick="closeMapLiveSettings()" style="background:#06b6d4;color:#020617;font-weight:900;font-size:12px;border-radius:10px;padding:5px 14px">完了</button></div>
-  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">色</span><div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:5px"><button type="button" data-mc="normal" onclick="setMapColorMode('normal')" class="mset-btn">通常</button><button type="button" data-mc="dark" onclick="setMapColorMode('dark')" class="mset-btn">ダーク</button><button type="button" data-mc="invert" onclick="setMapColorMode('invert')" class="mset-btn">色反転</button><button type="button" data-mc="auto" onclick="setMapColorMode('auto')" class="mset-btn">自動</button></div></div>
-  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">向き</span><div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button type="button" data-mv="heading" onclick="setMapViewMode('heading')" class="mset-btn">進行方向</button><button type="button" data-mv="north" onclick="setMapViewMode('north')" class="mset-btn">北基準</button><button type="button" data-mv="3d" onclick="setMapViewMode('3d')" class="mset-btn">3D</button></div></div>
-  <div style="display:flex;align-items:center;gap:6px"><span style="width:34px;font-size:10px;color:#94a3b8;font-weight:700">北</span><div style="flex:1"><button type="button" id="mapLiveCompassBtn" onclick="setMapCompass(!mapCompassOn)" class="mset-btn" style="width:100%">コンパス表示</button></div></div>
+<div id="mapLiveSettings" class="hidden" style="position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:9400;width:min(520px,calc(100vw - 24px));background:rgba(var(--bg0-rgb,2,6,23),.93);border:1px solid var(--ac,#22d3ee);border-radius:16px;padding:8px 10px;box-shadow:0 8px 28px rgba(0,0,0,.6)">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:var(--ac,#22d3ee);flex:1"><i class="fa-solid fa-map"></i> 地図を見ながら設定</span><button type="button" onclick="closeMapLiveSettings()" style="background:var(--ac-d,#06b6d4);color:var(--bg0,#020617);font-weight:900;font-size:12px;border-radius:10px;padding:5px 14px">完了</button></div>
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:var(--tx3,#94a3b8);font-weight:700">色</span><div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:5px"><button type="button" data-mc="normal" onclick="setMapColorMode('normal')" class="mset-btn">通常</button><button type="button" data-mc="dark" onclick="setMapColorMode('dark')" class="mset-btn">ダーク</button><button type="button" data-mc="invert" onclick="setMapColorMode('invert')" class="mset-btn">色反転</button><button type="button" data-mc="auto" onclick="setMapColorMode('auto')" class="mset-btn">自動</button></div></div>
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="width:34px;font-size:10px;color:var(--tx3,#94a3b8);font-weight:700">向き</span><div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button type="button" data-mv="heading" onclick="setMapViewMode('heading')" class="mset-btn">進行方向</button><button type="button" data-mv="north" onclick="setMapViewMode('north')" class="mset-btn">北基準</button><button type="button" data-mv="3d" onclick="setMapViewMode('3d')" class="mset-btn">3D</button></div></div>
+  <div style="display:flex;align-items:center;gap:6px"><span style="width:34px;font-size:10px;color:var(--tx3,#94a3b8);font-weight:700">北</span><div style="flex:1"><button type="button" id="mapLiveCompassBtn" onclick="setMapCompass(!mapCompassOn)" class="mset-btn" style="width:100%">コンパス表示</button></div></div>
 </div>
 <script>
 /* ============ 地図の表示設定: 色(通常/ダーク/色反転/自動)・向き(進行方向/北基準/3D)・コンパス ============ */
@@ -13615,7 +14097,7 @@ function setupSettingsPages() {
   const blk = (txt) => blocks.find(b => { const f = b.querySelector('.font-bold'); return f && f.textContent.trim().indexOf(txt) === 0; });
   const plan = {
     map: [secBy('地図表示設定'), blk('現在地を表示する場所'), secBy('現在地マーカー設定')],
-    screen: [blk('全画面表示'), blk('最初のタップ'), blk('下のバーの透明度')],
+    screen: [blk('デザイン(見た目)'), blk('全画面表示'), blk('最初のタップ'), blk('下のバーの透明度')],
     sound: [blk('操作音'), blk('触覚フィードバック'), blk('曲がる瞬間の合図音')],
     sign: [blk('標識認識(カメラ)'), blk('カメラ映像を右上'), blk('標識の音声案内'), blk('標識認識のズーム')],
     gps: [secBy('GPS設定')],
@@ -13742,6 +14224,223 @@ function handleNaviVoiceCommand(command) {
   return false;
 }
 
+</script>
+
+<style>
+/* ===== 追加: 再探索ローディング(黒地に白いリングがぐるぐる) ===== */
+.ring{position:relative;display:inline-block;width:var(--rs,64px);height:var(--rs,64px);border-radius:50%;
+ background:conic-gradient(from 0deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.12) 40%,#fff 100%);
+ -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--rt,4px)),#000 calc(100% - var(--rt,4px)));
+ mask:radial-gradient(farthest-side,transparent calc(100% - var(--rt,4px)),#000 calc(100% - var(--rt,4px)));
+ animation:ringSpin 1s cubic-bezier(.45,.1,.55,.9) infinite}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+.reroute-badge .animate-spin{animation:none!important;font-size:0!important;--rs:11px;--rt:2px;width:11px;height:11px;background:none}
+.reroute-badge .animate-spin::before{content:"";display:block;width:11px;height:11px;border-radius:50%;background:conic-gradient(rgba(255,255,255,0),#fff);-webkit-mask:radial-gradient(farthest-side,transparent 60%,#000 62%);mask:radial-gradient(farthest-side,transparent 60%,#000 62%);animation:ringSpin .9s linear infinite}
+#rerouteOverlay{position:absolute;top:12px;right:12px;z-index:40;background:#000;border-radius:14px;padding:8px 14px 8px 10px;display:none;flex-direction:row;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.5);pointer-events:none}
+#rerouteOverlay.on{display:flex}
+#rerouteOverlay .ring{--rs:26px;--rt:3px}
+#rerouteOverlay .t{color:#fff;font-weight:700;letter-spacing:.08em;font-size:13px;white-space:nowrap}
+/* ===== 追加: 道路情報(県・市・町 + 道路番号) ===== */
+.roadinfo{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%}
+.roadaddr{font-size:9px;line-height:1.15;font-weight:700;color:#e5e5ea;text-align:right;min-width:0;overflow:hidden}
+.roadaddr b{display:block;font-size:10px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roadaddr span{display:block;color:#9a9aa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roadsign{flex:none;display:none;min-width:30px;height:26px;align-items:center;justify-content:center;font:900 13px/1 'Noto Sans JP',sans-serif;color:#fff}
+.roadsign.on{display:flex}
+.roadsign.nat{background:#0a5fb4;clip-path:polygon(50% 100%,0 20%,10% 0,90% 0,100% 20%);padding-bottom:4px;min-width:30px}
+.roadsign.pref{background:#fff;color:#0a3d91;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);min-width:30px}
+.roadsign.other{background:#3a3a3e;border-radius:6px;padding:0 6px;font-size:10px}
+#navTurnText{letter-spacing:.02em}
+</style>
+<div id="rerouteOverlay"><span class="ring"></span><div class="t">再探索中</div></div>
+<script>
+(function(){
+  /* --- 案内バナー: 次の交差点までの距離 + 方向 --- */
+  function dirLabel(m){
+    if(!m) return '直進';
+    if(m.type==='arrive') return '目的地です';
+    if(m.type==='roundabout'||m.type==='rotary') return 'ロータリー';
+    switch(m.modifier){
+      case 'left': return '左方向'; case 'right': return '右方向';
+      case 'slight left': return '斜め左'; case 'slight right': return '斜め右';
+      case 'sharp left': return '大きく左'; case 'sharp right': return '大きく右';
+      case 'uturn': return 'Uターン'; default: return '直進';
+    }
+  }
+  var _rgb=window.renderGuidanceBanner;
+  window.renderGuidanceBanner=function(){
+    _rgb.apply(this,arguments);
+    try{
+      var p=guidancePoints[guidanceIndex]; if(!p) return;
+      var r=Math.max(0,guidanceRemaining);
+      var d=r>=1000?(r/1000).toFixed(1)+'km':Math.round(r)+'m';
+      var el=document.getElementById('navTurnText');
+      if(el) el.textContent='次の交差点まで '+d+' '+dirLabel(p.maneuver);
+    }catch(e){}
+  };
+  /* --- ルート未選択・未出発では案内バナーとETAを出さない --- */
+  function guard(){
+    try{
+      var active=(typeof isNavigating!=='undefined'&&isNavigating)||(typeof demoTimer!=='undefined'&&demoTimer);
+      var b=document.getElementById('topNavGuidance');
+      if(b&&!active) b.classList.add('hidden');
+      if(!active) document.querySelectorAll('.navClockInfo').forEach(function(e){e.classList.add('hidden');});
+    }catch(e){}
+  }
+  setInterval(guard,400);
+  /* --- 再探索ローディング --- */
+  var _sri=window.setReroutingIndicator;
+  window.setReroutingIndicator=function(on){
+    _sri.apply(this,arguments);
+    var o=document.getElementById('rerouteOverlay'); if(o){ var mc=document.getElementById('mapContainer'); if(mc&&o.parentNode!==mc) mc.appendChild(o); o.classList.toggle('on',!!on); }
+  };
+  /* --- 現在地の住所 + 道路番号 --- */
+  var last=null,busy=false,cache={};
+  function dist(a,b){var R=6371000,x=(b.lat-a.lat)*Math.PI/180,y=(b.lon-a.lon)*Math.PI/180*Math.cos(a.lat*Math.PI/180);return R*Math.sqrt(x*x+y*y);}
+  function sign(ref,net,name){
+    var s=document.getElementById('roadSign'); if(!s) return;
+    s.className='roadsign'; s.textContent='';
+    var num=(ref||'').match(/\d+/); 
+    if(/国道/.test(name||'')&&!num){var n2=(name||'').match(/\d+/);num=n2;}
+    if(num&&(/national/i.test(net||'')||/^国道/.test(ref||'')||/国道/.test(name||''))){s.classList.add('on','nat');s.textContent=num[0];}
+    else if(num&&(/prefectural/i.test(net||'')||/[都道府県]道/.test((ref||'')+(name||'')))){s.classList.add('on','pref');s.textContent=num[0];}
+    else if(ref){s.classList.add('on','other');s.textContent=ref;}
+  }
+  async function update(){
+    if(!document.getElementById('roadAddr')) return;   /* 新しい住所・道路表示(curLoc)を使うので、こちらは止める */
+    if(busy||typeof userPos==='undefined'||!userPos) return;
+    if(last&&dist(last,userPos)<40) return;
+    busy=true; last={lat:userPos.lat,lon:userPos.lon};
+    var addr=document.getElementById('roadAddr');
+    try{
+      var u='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&accept-language=ja&lat='+last.lat+'&lon='+last.lon;
+      var a=await (await fetch(u)).json(); var ad=a.address||{};
+      var pref=ad.state||ad.province||'', city=ad.city||ad.town||ad.village||'', sub=[ad.city_district,ad.suburb,ad.neighbourhood,ad.quarter].filter(Boolean)[0]||'';
+      var road=ad.road||'';
+      var q='[out:json][timeout:8];way(around:25,'+last.lat+','+last.lon+')[highway][~"^(ref|name)$"~"."];out tags 8;';
+      var ref='',net='',nm=road;
+      try{
+        var o=await (await fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q))).json();
+        var best=(o.elements||[]).map(function(e){return e.tags||{};}).sort(function(x,y){return (y.ref?2:0)-(x.ref?2:0);})[0];
+        if(best){ref=best.ref||'';net=best.network||'';nm=best.name||road;}
+      }catch(e){}
+      if(addr) addr.innerHTML='<b>'+pref+' '+city+'</b><span>'+sub+(sub&&nm?' / ':'')+nm+'</span>';
+      sign(ref,net,nm);
+    }catch(e){ if(addr) addr.innerHTML='<b>住所を取得できません</b>'; }
+    busy=false;
+  }
+  setInterval(update,5000); setTimeout(update,1500);
+})();
+</script>
+
+<style>
+html.mc{--c-slate-50:245 245 247;--c-slate-100:236 236 240;--c-slate-200:226 226 231;--c-slate-300:201 201 207;--c-slate-400:154 154 160;--c-slate-500:117 117 123;--c-slate-600:74 74 79;--c-slate-700:58 58 62;--c-slate-800:42 42 45;--c-slate-900:28 28 30;--c-slate-950:13 13 15;--c-cyan-300:169 203 255;--c-cyan-400:138 180 255;--c-cyan-500:62 145 255;--c-cyan-600:47 126 232;--c-cyan-700:36 104 196;--c-cyan-800:26 79 152;--c-cyan-900:21 59 115;--c-cyan-950:18 41 77;--c-sky-200:207 224 255;--c-sky-300:169 203 255;--c-sky-400:138 180 255;--c-sky-500:62 145 255;--c-sky-600:47 126 232;--c-sky-900:21 59 115;--c-emerald-300:143 224 174;--c-emerald-400:92 205 136;--c-emerald-500:61 187 107;--c-emerald-950:15 47 28;--c-green-400:92 205 136;--c-green-500:61 187 107;--c-green-600:47 160 90;--c-green-700:37 128 74;--c-green-800:29 99 58;--c-green-900:23 73 44;--c-red-100:255 227 228;--c-red-200:255 194 196;--c-red-300:255 154 158;--c-red-400:255 122 128;--c-red-500:255 90 95;--c-red-600:229 72 77;--c-red-900:92 28 31;--c-red-950:58 17 20;--c-amber-300:255 215 107;--c-amber-400:247 197 45;--c-amber-500:242 183 5;--c-amber-950:58 44 6;--c-yellow-300:255 215 107;--c-yellow-400:247 197 45;--c-yellow-500:242 183 5;--c-orange-300:255 178 122;--c-orange-400:255 157 87;--c-orange-500:255 138 61;--c-purple-200:220 203 255;--c-purple-300:196 171 255;--c-purple-400:171 138 255;--c-purple-500:154 107 255;--c-purple-600:127 82 224;--c-purple-900:61 42 115;--c-purple-950:35 23 69;--c-indigo-400:143 155 255;--c-indigo-500:111 125 255;--c-pink-500:255 95 162;--ac:#3e91ff;--ac-t:#8ab4ff;--ac-d:#3e91ff;--ac-ln:#2a4f8f;--ac-bg:#12294d;--bg0:#000;--bg2:#1c1c1e;--bg3:#2a2a2d;--ln:#3a3a3e;--ln2:#4a4a4f;--ln3:#75757b;--tx3:#9a9aa0;--tx2:#d0d0d5;--tx1:#ececf0;--ac-rgb:62,145,255;--bg0-rgb:0,0,0;--bg2-rgb:28,28,30;--bg3-rgb:42,42,45;color-scheme:dark}
+html.mc body{background:#000 !important;color:#fff}
+html.mc .bg-cyan-500.text-slate-950,html.mc .bg-cyan-600.text-slate-950,html.mc .bg-cyan-500 .text-slate-950{color:#fff !important}
+html.mc .leaflet-control-attribution{background:rgba(28,28,30,.8) !important;color:#d0d0d5 !important}
+html.mc .leaflet-control-attribution a{color:#8ab4ff !important}
+html.mc #realMap.map-color-invert,html.mc #mapContainer.map-dark-bg #realMap,html.mc #musicMapBox{background:#1c1c1e}
+html.mc .ap-grad{background-image:linear-gradient(90deg,#3e91ff,#8ab4ff,#c4abff,#8ab4ff,#3e91ff)}
+/* 左上の案内: 色だけ変えて形は元のまま。参考画像どおり「次の次」を小さく・次を大きく・矢印を右に */
+#topNavGuidance{align-items:center}
+#topNavGuidance #navTurnIcon{order:2;background:transparent!important;box-shadow:none!important;color:rgb(var(--c-cyan-400))!important;width:auto!important;height:auto!important;font-size:3.4rem!important;line-height:1;margin-left:10px;padding:0 2px}
+#navDistanceMeters{font-size:2.1rem!important;line-height:1}
+#navDistanceUnit::after{content:" 先"}
+#navDistanceUnit{font-size:.95rem!important;font-weight:700!important}
+#navNext2{font-size:13px;font-weight:700;color:#cfd2d8;white-space:nowrap;margin-bottom:1px}
+#navNext2 .a{color:#fff;margin-left:4px;font-weight:900}
+#navTurnText{color:rgb(var(--c-cyan-300))!important}
+/* ダーク/ホワイト切替 */
+html.light-mode body{filter:invert(1) hue-rotate(180deg)}
+html.light-mode img,html.light-mode video,html.light-mode canvas,html.light-mode #rerouteOverlay,html.light-mode .leaflet-container{filter:invert(1) hue-rotate(180deg)}
+html.light-mode .leaflet-container img,html.light-mode .leaflet-container canvas{filter:none}
+</style>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i);};
+  /* ---- 到着したら案内を終えて、左上の表示・到着時刻を消す ---- */
+  var ended=false;
+  function dm(a,b){var x=(b.lat-a.lat)*111320,y=(b.lng-a.lng)*111320*Math.cos(a.lat*Math.PI/180);return Math.sqrt(x*x+y*y);}
+  function finish(){
+    if(ended) return; ended=true;
+    try{ if(typeof terminateRoute==='function'){ terminateRoute(true); setTimeout(function(){ended=false;},3000); return; } }catch(e){}
+    try{ if(typeof demoTimer!=='undefined'&&demoTimer) stopDemoDrive(); }catch(e){}
+    try{ if(typeof stopGuidanceSimulation==='function') stopGuidanceSimulation(); }catch(e){}
+    try{ isNavigating=false; }catch(e){}
+    try{ if(typeof guidancePoints!=='undefined') guidancePoints=[]; }catch(e){}
+    var b=$('topNavGuidance'); if(b) b.classList.add('hidden');
+    try{ cancelRouteSelection(); }catch(e){ try{clearRouteDisplay();}catch(_e){} }
+    document.querySelectorAll('.navClockInfo').forEach(function(x){x.classList.add('hidden');});
+    setTimeout(function(){ended=false;},3000);
+  }
+  setInterval(function(){
+    try{
+      var act=(isNavigating||demoTimer); if(!act||ended) return;
+      var p=guidancePoints[guidanceIndex];
+      var arriveNear=p&&p.maneuver&&p.maneuver.type==='arrive'&&guidanceRemaining<=25;
+      var near=false;
+      if(destMarker&&userPos){ near=dm({lat:userPos.lat,lng:userPos.lon},destMarker.getLatLng())<25 && guidanceIndex>=guidancePoints.length-1; }
+      if(arriveNear||near) finish();
+    }catch(e){}
+  },500);
+  /* ---- 案内バナー: 次の次の交差点を小さく ---- */
+  var col=$('navDestinationTitle')&&$('navDestinationTitle').parentNode;
+  var n2=document.createElement('div'); n2.id='navNext2'; n2.style.display='none';
+  if(col) col.insertBefore(n2,col.firstChild);
+  function lab(m){
+    if(!m) return '直進'; if(m.type==='arrive') return '目的地です';
+    if(m.type==='roundabout'||m.type==='rotary') return 'ロータリー';
+    return {'left':'左方向','right':'右方向','slight left':'斜め左','slight right':'斜め右','sharp left':'大きく左','sharp right':'大きく右','uturn':'Uターン'}[m.modifier]||'直進';
+  }
+  var _r=window.renderGuidanceBanner;
+  window.renderGuidanceBanner=function(){
+    _r.apply(this,arguments);
+    try{
+      var p=guidancePoints[guidanceIndex]; if(!p) return;
+      var t=$('navTurnText'); if(t) t.textContent=lab(p.maneuver);
+      var q=guidancePoints[guidanceIndex+1];
+      if(q){
+        var cum=Math.max(0,guidanceRemaining)+(q.distance||0);
+        var d=cum>=1000?(cum/1000).toFixed(1)+'km':Math.round(cum)+'m';
+        n2.innerHTML='次の次 '+d+' 先<span class="a">'+directionArrow(q.maneuver)+'</span>'; n2.style.display='';
+      } else n2.style.display='none';
+    }catch(e){}
+  };
+  /* ---- ダーク / ホワイト 切替 ---- */
+  var H=document.documentElement;
+  function setLight(on){H.classList.toggle('light-mode',on);try{localStorage.setItem('uiLight',on?'1':'0');}catch(e){} var sel=$('uiModeSelect'); if(sel) sel.value=on?'light':'dark';}
+  var selEl=$('uiModeSelect'); if(selEl) selEl.onchange=function(){setLight(this.value==='light');};
+  var saved=null; try{saved=localStorage.getItem('uiLight');}catch(e){}
+  setLight(saved==='1');
+})();
+</script>
+
+<script>
+/* 走行中でも地図をスクロールできるようにする:
+   デモ走行は毎フレーム現在地へ地図を引き戻していたので、ドラッグ中(十字ピン表示中)は引き戻さない。
+   触らず15秒たつと、自動で現在地に戻る。 */
+(function(){
+  var _p=window.panToUser;
+  window.panToUser=function(){
+    try{ if(crosshairActive&&typeof demoTimer!=='undefined'&&demoTimer) return; }catch(e){}
+    return _p.apply(this,arguments);
+  };
+  var _s=window.setViewOnUser;
+  window.setViewOnUser=function(){
+    try{ if(crosshairActive&&typeof demoTimer!=='undefined'&&demoTimer&&typeof demoFollowStarted!=='undefined'&&demoFollowStarted) return; }catch(e){}
+    return _s.apply(this,arguments);
+  };
+  var last=0, c=document.getElementById('mapContainer');
+  function touch(){last=Date.now();}
+  if(c){['touchmove','mousemove','wheel'].forEach(function(ev){c.addEventListener(ev,function(){ if(typeof manualPanActive!=='undefined'&&manualPanActive) touch(); },{passive:true});});}
+  setInterval(function(){
+    try{
+      if(!crosshairActive||!(isNavigating||demoTimer)) return;
+      if(typeof manualPanActive!=='undefined'&&manualPanActive) return;
+      if(last&&Date.now()-last>15000){ last=0; recenterToCurrentLocation(); }
+    }catch(e){}
+  },1000);
+})();
 </script>
 </body>
 </html>

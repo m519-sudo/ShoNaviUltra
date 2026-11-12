@@ -196,6 +196,12 @@
 
 /* ===== 縦画面スマホ(歩行者)モード: 車用の表示を消して、縦長の画面に組み替える ===== */
 .walk-portrait-mode { width: 100vw !important; height: 100dvh !important; max-width: none !important; border-radius: 0px !important; border: none !important; margin: 0 !important; }
+#parking3dOverlay{transition:left .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s}
+#parking3dOverlay.pk-side{box-shadow:-6px 0 18px rgba(0,0,0,.55);border-left:2px solid #34d399;transition:left .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s !important}
+#parking3dOverlay.pk-side #parkTitleBox,#parking3dOverlay.pk-side #parkEdge,#parking3dOverlay.pk-side #parkSwipeHint,#parking3dOverlay.pk-side #threeContainer>div.absolute.top-3{display:none !important}
+#parking3dOverlay.pk-side #parkSideGrip{display:flex !important}
+#parking3dOverlay.pk-side #parkHeader{padding:6px 6px 6px 30px !important;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+#parking3dOverlay.pk-side #parkHeader button{transform:scale(.9);transform-origin:right center}
 body.walk-mode .walk-hide,
 body.walk-mode #signRecogCard,
 body.walk-mode #topBanner,
@@ -513,6 +519,12 @@ body{animation:shoFade .6s ease-out}
   #sxPad { gap: 6px; }
   #sxPad .sx-key { font-size: 20px; }
 }
+</style>
+<style id="fixRightTabStyle">
+/* 全画面や検索画面から戻ったときに右側が画面外へはみ出さないようにする */
+html, body { max-width: 100%; overflow-x: hidden; }
+body.w-screen { width: 100% !important; }
+#mainDisplayContainer, #screenView { min-width: 0; }
 </style>
 </head>
 <body class="h-[100dvh] w-screen flex flex-col justify-between p-0 bg-slate-950 text-slate-100 overflow-hidden">
@@ -1271,6 +1283,14 @@ ETC
               <button data-vm="chime" onclick="setVoiceMode('chime')" class="voice-mode-btn bg-slate-800 text-slate-400 rounded-lg py-1 font-bold text-[10px]">効果音のみ</button>
               <button data-vm="off" onclick="setVoiceMode('off')" class="voice-mode-btn bg-slate-800 text-slate-400 rounded-lg py-1 font-bold text-[10px]">消音</button>
             </div>
+            <div class="grid grid-cols-2 gap-1 mt-1">
+              <select id="voiceSelect" onchange="setVoiceChoice(this.value)" aria-label="声の種類" class="bg-slate-800 text-slate-300 rounded-lg py-1 px-1 font-bold text-[10px] min-w-0"></select>
+              <select id="voiceSpeed" onchange="setVoiceSpeed(this.value)" aria-label="話す速さ" class="bg-slate-800 text-slate-300 rounded-lg py-1 px-1 font-bold text-[10px] min-w-0">
+                <option value="slow">ゆっくり</option>
+                <option value="normal">ふつう</option>
+                <option value="fast">はやい</option>
+              </select>
+            </div>
           </div>
 
           <!-- オーディオ(再生中の曲) -->
@@ -1883,10 +1903,10 @@ ETC
 
       <!-- PARKING GEAR (P) 3D VIEW (Active on startup with 5-click 3D Guidance feature) -->
       <div id="parking3dOverlay" class="absolute inset-0 z-40 bg-slate-950 flex flex-col justify-between transition-all duration-700">
-        <div class="p-3 sm:p-4 flex items-center justify-between bg-black/80 backdrop-blur border-b border-slate-800 z-10">
+        <div id="parkHeader" class="p-3 sm:p-4 flex items-center justify-between bg-black/80 backdrop-blur border-b border-slate-800 z-10">
           <div class="flex items-center gap-2 sm:gap-3">
             <span class="w-8 h-8 sm:w-9 sm:h-9 bg-amber-500 text-slate-950 font-black rounded-xl flex items-center justify-center text-lg sm:text-xl shadow">P</span>
-            <div>
+            <div id="parkTitleBox">
               <div class="text-sm sm:text-lg font-black text-amber-400">パーキングモード (3D Virtual View)</div>
               <div class="text-[10px] sm:text-xs text-slate-400">画面を5回連続タップで「3Dビュー案内」起動</div>
             </div>
@@ -1906,8 +1926,22 @@ ETC
           <div class="absolute top-3 left-3 pointer-events-none bg-black/70 border border-slate-700 px-2.5 py-1 rounded-lg text-[10px] sm:text-xs text-cyan-300 z-20">
             <i class="fa-solid fa-hand-pointer mr-1"></i> 5回連続タップで「3Dビュー案内」起動
           </div>
+          <div id="parkSwipeHint" class="absolute left-3 pointer-events-none bg-black/70 border border-slate-700 px-2.5 py-1 rounded-lg text-[10px] sm:text-xs text-emerald-300 z-20" style="top:44px">
+            <i class="fa-solid fa-angles-right mr-1"></i> 左端から右へスワイプ:右メニューに3D表示
+          </div>
         </div>
+
+        <!-- 左端スワイプ検知エリア(通常マップを右側に出す)。タップは5回タップ用にそのまま渡す -->
+        <!-- 右メニュー表示中に、左端のつまみを右/タップで全画面に戻す -->
+        <div id="parkSideGrip" style="display:none;position:absolute;left:0;top:0;bottom:0;width:26px;z-index:35;touch-action:none;align-items:center;justify-content:flex-start;background:linear-gradient(90deg,rgba(52,211,153,.25),rgba(52,211,153,0))"><i class="fa-solid fa-angles-left" style="color:#34d399;font-size:12px;margin-left:5px;pointer-events:none"></i></div>
+        <div id="parkEdge" style="position:absolute;left:0;bottom:0;width:12%;min-width:44px;z-index:25;touch-action:none;display:flex;align-items:center;justify-content:flex-start">
+          <div id="parkEdgeChev" style="margin-left:4px;width:6px;height:64px;border-radius:6px;background:linear-gradient(180deg,rgba(52,211,153,0),rgba(52,211,153,.55),rgba(52,211,153,0));pointer-events:none"></div>
+        </div>
+
       </div>
+
+      <!-- パーキング(P)のまま右メニューの3Dを引っ込めている間、右端に出る「3D」呼び戻しタブ -->
+      <button id="parkAwayTab" type="button" style="display:none;position:absolute;right:0;top:44%;width:30px;height:76px;z-index:45;border:0;border-radius:12px 0 0 12px;background:rgba(16,185,129,.92);color:#022c22;font-weight:900;font-size:11px;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:-3px 0 10px rgba(0,0,0,.5)"><i class="fa-solid fa-angles-left"></i><span>3D</span></button>
 
       <!-- PERFECT TRIPLE-PANE GUIDANCE OVERLAY (Fully matching the 3 uploaded Sho EV Minivan photos) -->
       <div id="threeDGuidanceOverlay" class="hidden absolute inset-0 z-50 bg-slate-950 flex flex-col justify-between p-2 sm:p-3 overflow-hidden">
@@ -6600,7 +6634,119 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     VIS.panel = false; VIS.hud = false;
     // ============ 音声案内の設定: 'voice'=音声で案内 / 'chime'=効果音(ポンポン)のみ / 'off'=消音 ============
     // 音声案内の話す速さ(1.0が標準。速すぎたら 1.15 くらい、もっと速くしたければ 1.4 くらいに変える)
-    const SPEECH_RATE = 1.25;
+    // ============ 人間っぽい声のしくみ ============
+    // 話す速さ: ゆっくり / ふつう / はやい(以前の固定の速さ 1.25 は「はやい」と同じ)
+    const SPEECH_SPEEDS = { slow: 0.95, normal: 1.08, fast: 1.25 };
+    let SPEECH_SPEED = 'normal';
+    try { const sp = localStorage.getItem('voiceSpeed'); if (SPEECH_SPEEDS[sp]) SPEECH_SPEED = sp; } catch (e) {}
+    let SPEECH_RATE = SPEECH_SPEEDS[SPEECH_SPEED];
+
+    // 端末に入っている日本語の声から、いちばん自然に聞こえそうなものを自動で選ぶ。
+    // (Edgeの「Natural」声 > iPhoneの拡張版 / Googleの日本語 > 普通の声 の順)
+    const JA_VOICE = { list: [], auto: null, chosen: null };
+    function jaVoiceScore(v) {
+      const lang = String(v.lang || '').replace('_', '-').toLowerCase();
+      if (lang.indexOf('ja') !== 0) return -1;
+      const n = (v.name || '') + ' ' + (v.voiceURI || '');
+      let sc = 10;
+      if (/natural|neural|online/i.test(n)) sc += 100;
+      if (/nanami|七海/i.test(n)) sc += 30;
+      if (/premium|enhanced|拡張|プレミアム|高品質/i.test(n)) sc += 60;
+      if (/google/i.test(n)) sc += 70;
+      if (/siri/i.test(n)) sc += 70;
+      if (/o-ren|kyoko/i.test(n)) sc += 20;
+      if (/compact|espeak/i.test(n)) sc -= 30;
+      return sc;
+    }
+    function shortVoiceName(v) { return String(v.name || '').replace(/^Microsoft\s+/i, '').slice(0, 30); }
+    function renderVoiceSelect() {
+      const sel = document.getElementById('voiceSelect');
+      if (!sel) return;
+      const cur = JA_VOICE.chosen ? (JA_VOICE.chosen.voiceURI || JA_VOICE.chosen.name) : '';
+      sel.innerHTML = '';
+      const o0 = document.createElement('option');
+      o0.value = '';
+      o0.textContent = 'おまかせ' + (JA_VOICE.auto ? '(' + shortVoiceName(JA_VOICE.auto) + ')' : '');
+      sel.appendChild(o0);
+      JA_VOICE.list.forEach(v => {
+        const o = document.createElement('option');
+        o.value = v.voiceURI || v.name;
+        o.textContent = shortVoiceName(v);
+        sel.appendChild(o);
+      });
+      sel.value = cur;
+      const spd = document.getElementById('voiceSpeed');
+      if (spd) spd.value = SPEECH_SPEED;
+    }
+    function refreshJaVoices() {
+      try {
+        const all = (window.speechSynthesis && window.speechSynthesis.getVoices()) || [];
+        const ja = all.map(v => ({ v: v, sc: jaVoiceScore(v) })).filter(x => x.sc >= 0).sort((a, b) => b.sc - a.sc);
+        JA_VOICE.list = ja.map(x => x.v);
+        JA_VOICE.auto = JA_VOICE.list[0] || null;
+        let saved = '';
+        try { saved = localStorage.getItem('voiceName') || ''; } catch (e) {}
+        JA_VOICE.chosen = (saved && JA_VOICE.list.find(v => v.voiceURI === saved || v.name === saved)) || null;
+        renderVoiceSelect();
+      } catch (e) {}
+    }
+    function voiceSample() {
+      if (VOICE_MODE !== 'voice') return;
+      speak('およそ300メートル先、右方向です。', { force: true });
+    }
+    function setVoiceChoice(val) {
+      try { if (val) localStorage.setItem('voiceName', val); else localStorage.removeItem('voiceName'); } catch (e) {}
+      refreshJaVoices();
+      voiceSample();
+    }
+    function setVoiceSpeed(key) {
+      if (!SPEECH_SPEEDS[key]) return;
+      SPEECH_SPEED = key; SPEECH_RATE = SPEECH_SPEEDS[key];
+      try { localStorage.setItem('voiceSpeed', key); } catch (e) {}
+      voiceSample();
+    }
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.addEventListener('voiceschanged', refreshJaVoices);
+        refreshJaVoices();
+        setTimeout(refreshJaVoices, 600); setTimeout(refreshJaVoices, 2000);   // 端末によって声の一覧が遅れて届く
+      }
+    } catch (e) {}
+    document.addEventListener('DOMContentLoaded', renderVoiceSelect);
+
+    // 機械的に聞こえる読み間違いを直し、数字の区切りなども読みやすくする
+    function humanizeJaText(t) {
+      let x = String(t);
+      x = x.replace(/(\d),(?=\d{3})/g, '$1');                                   // 1,200円 → 1200円
+      const abbr = [['JCT', 'ジャンクション'], ['IC', 'インターチェンジ'], ['SA', 'サービスエリア'], ['PA', 'パーキングエリア'],
+                    ['ETC', 'イーティーシー'], ['GPS', 'ジーピーエス'], ['3D', 'スリーディー']];
+      abbr.forEach(a => { x = x.replace(new RegExp('(^|[^A-Za-z])' + a[0] + '(?![A-Za-z])', 'g'), '$1' + a[1]); });
+      x = x.replace(/\s+/g, ' ');
+      return x;
+    }
+    // 人が話すときのように、声の速さ・高さを毎回ほんの少しだけ揺らし、いちばん自然な声を使う
+    function humanizeUtterance(u) {
+      try {
+        if (!u) return;
+        if (u.text) u.text = humanizeJaText(u.text);
+        if (!u._humanized) {
+          u._humanized = true;
+          u.rate = Math.max(0.8, Math.min(1.6, SPEECH_RATE + (Math.random() - 0.5) * 0.06));
+          u.pitch = Math.max(0.85, Math.min(1.25, 1 + (Math.random() - 0.5) * 0.08));
+        }
+        const v = JA_VOICE.chosen || JA_VOICE.auto;
+        if (v) u.voice = v;
+        u.lang = 'ja-JP';
+      } catch (e) {}
+    }
+    // 同じ言い回しが続かないよう、いくつかの言い方から選ぶ(直前と同じものは避ける)
+    const _lastPhrase = {};
+    function pickPhrase(key, arr) {
+      let i = Math.floor(Math.random() * arr.length);
+      if (arr.length > 1 && i === _lastPhrase[key]) i = (i + 1) % arr.length;
+      _lastPhrase[key] = i;
+      return arr[i];
+    }
     let VOICE_MODE = 'voice';
     try { const vm = localStorage.getItem('voiceMode'); if (vm === 'chime' || vm === 'off' || vm === 'voice') VOICE_MODE = vm; } catch (e) {}
     // 音声で喋らせる処理をまとめて見張る。音声モード以外では、ルート案内の読み上げを止める。
@@ -6610,7 +6756,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis);
       let lastPon = 0;
       window.speechSynthesis.speak = function (u) {
-        try { if (u && (!u.rate || u.rate < SPEECH_RATE)) u.rate = SPEECH_RATE; } catch (e) {}   // 話す速さ(すべての読み上げに共通)
+        humanizeUtterance(u);   // 声の選択・読み補正・話す速さ(すべての読み上げに共通)
         if (VOICE_MODE === 'voice') return orig(u);
         // 効果音のみ: 声は一切出さず、音声アシスタントの返事やボタン操作の返事は「ポンポン」だけ鳴らす
         // 消音: 何も鳴らさない
@@ -10717,7 +10863,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       if (!map || !steps || typeof g3dRoadShield !== 'function') return;
       let prev = '', count = 0;
       steps.forEach(st => {
-        if (count >= 16) return;
+        if (count >= 40) return;
         const m = st.maneuver;
         if (!m || !m.location || m.type === 'arrive') return;
         const sh = g3dRoadShield(st);
@@ -10995,7 +11141,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       const fit = opts.fit !== false; // 走行中のルート再検索では false を渡し、地図のズームを変えない
       clearRouteDisplay();
       if (!map) return;
-      renderDrivingRoadSigns(steps);   // 出発後だけ、ナンバリングの標識を出す
+      if (isNavigating) renderDrivingRoadSigns(steps); else { try { clearRoadNumberMarkers(); } catch (e) {} }   // 出発後だけ、ナンバリングの標識を出す(ルートを選ぶ画面では出さない)
       const segments = buildRoadTypeSegments(steps);
       if (!segments.length) {
         // ステップ情報が無ければ、一般道扱い(緑)でルート全体をそのまま描画
@@ -11065,18 +11211,18 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         point._announced700 = true;
         playBeepSound('navChime');
         const distText = formatAnnounceDistance(remaining);
-        setTimeout(() => speak(`${distText}先、${dirText}です。${roadPart}`), 220);
+        setTimeout(() => speak(pickPhrase('t700', [`${distText}先、${dirText}です。${roadPart}`, `この先、${distText}で、${dirText}です。${roadPart}`])), 220);
       }
       if (remaining <= 300 && !point._announced300) {
         point._announced300 = true;
         playBeepSound('navChime');
         const distText = formatAnnounceDistance(remaining);
-        setTimeout(() => speak(`${distText}先、${dirText}です。${roadPart}`), 260);
+        setTimeout(() => speak(pickPhrase('t300', [`${distText}先、${dirText}です。${roadPart}`, `まもなく、${distText}先、${dirText}です。${roadPart}`, `この先、${distText}で、${dirText}です。${roadPart}`])), 260);
       }
       if (remaining <= 40 && !point._announced40) {
         point._announced40 = true;
         playBeepSound('navChimeUrgent');
-        setTimeout(() => speak(`${dirText}です。${roadPart}`), 320);
+        setTimeout(() => speak(pickPhrase('t40', [`${dirText}です。${roadPart}`, `まもなく、${dirText}です。${roadPart}`, `そこを、${dirText}です。${roadPart}`])), 320);
       }
     }
 
@@ -14343,11 +14489,12 @@ html.mc #realMap.map-color-invert,html.mc #mapContainer.map-dark-bg #realMap,htm
 html.mc .ap-grad{background-image:linear-gradient(90deg,#3e91ff,#8ab4ff,#c4abff,#8ab4ff,#3e91ff)}
 /* 左上の案内: 色だけ変えて形は元のまま。参考画像どおり「次の次」を小さく・次を大きく・矢印を右に */
 #topNavGuidance{align-items:center}
-#topNavGuidance #navTurnIcon{order:2;background:transparent!important;box-shadow:none!important;color:rgb(var(--c-cyan-400))!important;width:auto!important;height:auto!important;font-size:3.4rem!important;line-height:1;margin-left:10px;padding:0 2px}
-#navDistanceMeters{font-size:2.1rem!important;line-height:1}
+#topNavGuidance #navTurnIcon{order:2;background:transparent!important;box-shadow:none!important;color:rgb(var(--c-cyan-400))!important;width:auto!important;height:auto!important;font-size:2.2rem!important;line-height:1;margin-left:6px;padding:0}
+#navDistanceMeters{font-size:1.45rem!important;line-height:1}
 #navDistanceUnit::after{content:" 先"}
-#navDistanceUnit{font-size:.95rem!important;font-weight:700!important}
-#navNext2{font-size:13px;font-weight:700;color:#cfd2d8;white-space:nowrap;margin-bottom:1px}
+#navDistanceUnit{font-size:.75rem!important;font-weight:700!important}
+#topNavGuidance{transform:scale(.88);transform-origin:top left}
+#navNext2{font-size:10px;font-weight:700;color:#cfd2d8;white-space:nowrap;margin-bottom:1px}
 #navNext2 .a{color:#fff;margin-left:4px;font-weight:900}
 #navTurnText{color:rgb(var(--c-cyan-300))!important}
 /* ダーク/ホワイト切替 */
@@ -14440,6 +14587,216 @@ html.light-mode .leaflet-container img,html.light-mode .leaflet-container canvas
       if(last&&Date.now()-last>15000){ last=0; recenterToCurrentLocation(); }
     }catch(e){}
   },1000);
+})();
+</script>
+
+<script>
+/* 出発ボタンを押したら、ルートを選ぶ画面で変わった地図の縮尺を、元に戻す */
+(function(){
+  var pre=null;
+  var _f=window.fitRouteOverview;
+  window.fitRouteOverview=function(){
+    try{ if(pre===null&&map&&!isNavigating) pre=map.getZoom(); }catch(e){}
+    return _f.apply(this,arguments);
+  };
+  function back(){
+    try{
+      var z=pre; pre=null; if(z===null||!map) return;
+      var go=function(){ try{ if(userPos) setViewOnUser([userPos.lat,userPos.lon],z,{animate:false}); else map.setZoom(z); }catch(e){} };
+      go(); setTimeout(go,150); setTimeout(go,700);
+    }catch(e){}
+  }
+  ['startRouteNavigation','startDemoDrive'].forEach(function(n){
+    var o=window[n]; if(typeof o!=='function') return;
+    window[n]=function(){ var r=o.apply(this,arguments); back(); return r; };
+  });
+  var _c=window.cancelRouteSelection;
+  if(typeof _c==='function') window.cancelRouteSelection=function(){ var r=_c.apply(this,arguments); back(); return r; };
+})();
+</script>
+
+<style>
+.sho-road-number-marker,.sho-route-entry-marker{display:none!important}
+#signHud{position:absolute;left:3%;top:41%;z-index:30;display:none;flex-direction:column;align-items:flex-start;gap:4px;pointer-events:none}
+#signHud.on{display:flex}
+#signHud .d{background:#000;color:#fff;border-radius:8px;padding:2px 10px;font-size:13px;font-weight:900;letter-spacing:.04em}
+#signHud .s{transform:scale(1.3);transform-origin:top left;margin-bottom:30px}
+html.light-mode #signHud{filter:invert(1) hue-rotate(180deg)}
+</style>
+<script>
+/* 道路番号・高速入口の標識は、地図の上ではなく、画面の決まった場所(左上の案内の右下)に出す */
+(function(){
+  var hud=document.createElement('div'); hud.id='signHud';
+  var host=document.getElementById('mapContainer')||document.body; host.appendChild(hud);
+  var passed=new Set(), shown=null;
+  function dm(a,b){var x=(b.lat-a[0])*111320,y=(b.lon-a[1])*111320*Math.cos(a[0]*Math.PI/180);return Math.sqrt(x*x+y*y);}
+  function tick(){
+    try{
+      if(!(isNavigating||demoTimer)||!userPos){hud.classList.remove('on');shown=null;focus(false);return;}
+      var list=[];
+      (roadNumberLayers||[]).concat(routeEntranceLayers||[]).forEach(function(m){
+        try{ var ll=m.getLatLng(); list.push({m:m,ll:[ll.lat,ll.lng],h:m.options.icon.options.html}); }catch(e){}
+      });
+      var best=null,bd=1e9;
+      list.forEach(function(it){
+        var d=dm(it.ll,userPos);
+        if(d<45) passed.add(it.m);
+        if(passed.has(it.m)) return;
+        if(d<bd){bd=d;best=it;}
+      });
+      if(!best||bd>90){hud.classList.remove('on');shown=null;focus(false);return;}
+      var html=String(best.h).replace(/transform:translate\([^)]*\);?/g,'');
+      var dist=bd>=1000?(bd/1000).toFixed(1)+'km':Math.round(bd/10)*10+'m';
+      var key=best.h;
+      if(shown!==key){hud.innerHTML='<div class="d"></div><div class="s">'+html+'</div>';shown=key;}
+      hud.querySelector('.d').textContent='この先 '+dist;
+      hud.classList.add('on'); focus(true);
+    }catch(e){}
+  }
+  /* 標識が90mまで近づいたら、現在地を「左下」へ。それ以外は標準の「下(真ん中の下)」 */
+  var curFocus=null;
+  function focus(near){
+    if(curFocus===near||typeof setMapFocusPos!=='function') return;
+    curFocus=near; try{ setMapFocusPos(near?0.28:0.5,0.68); }catch(e){}
+  }
+  setInterval(tick,700);
+  setTimeout(function(){ if(curFocus===null) focus(false); },2500);
+  var _c=window.clearRoadNumberMarkers; 
+})();
+</script>
+
+<script>
+/* パーキング(P)画面: 左端から右へスワイプ → 3Dビューが右メニューの位置に移動(アニメーション)。
+   元の地図画面(D・時計・ETC・目的地設定など)がそのまま使える。左端のつまみを右へスワイプ/タップで全画面に戻る */
+(function(){
+  var ov=document.getElementById('parking3dOverlay'), edge=document.getElementById('parkEdge'),
+      sideGrip=document.getElementById('parkSideGrip'), tc=document.getElementById('threeContainer'),
+      hdr=document.getElementById('parkHeader');
+  if(!ov||!edge||!tc||!sideGrip) return;
+  var side=false, away=false, raf=0, tab=document.getElementById('parkAwayTab');
+
+  function sideW(){ var sp=document.getElementById('sidePanel'); return Math.max(150,(sp&&sp.offsetWidth)||208); }
+  function layoutEdge(){ edge.style.top=((hdr&&hdr.offsetHeight)||tc.offsetTop||0)+'px'; }
+  function fit3d(){ try{ if(typeof initThreeJS==='function') initThreeJS(); }catch(e){} }
+  function followResize(ms){
+    cancelAnimationFrame(raf); var t0=performance.now();
+    (function step(){ fit3d(); if(performance.now()-t0<ms) raf=requestAnimationFrame(step); })();
+  }
+  function setLeft(px){ ov.style.left=px; }
+
+  function toSide(){
+    if(side) return; side=true;
+    var w=sideW();
+    ov.classList.add('pk-side');
+    setLeft('calc(100% - '+w+'px)');
+    followResize(520);
+    try{ var m=window.map; if(m&&m.invalidateSize) setTimeout(function(){ m.invalidateSize(); },500); }catch(e){}
+  }
+  function toFull(instant){
+    if(!side) return; side=false;
+    if(instant){ ov.style.transition='none'; }
+    setLeft('0px');
+    var done=function(){ ov.classList.remove('pk-side'); ov.style.transition=''; ov.style.left=''; followResize(200); layoutEdge(); };
+    if(instant) done(); else { followResize(520); setTimeout(done,470); }
+  }
+  /* 下のバー(メニュー・検索・音楽など)を押したら、Pのまま右の3Dを引っ込めて、普通のメニューを表示 */
+  function toAway(){
+    if(!side||away) return; away=true;
+    ov.style.left='100%'; followResize(0);
+    setTimeout(function(){ if(away){ ov.style.visibility='hidden'; if(tab) tab.style.display='flex'; } },470);
+  }
+  function back(){
+    if(!away) return; away=false;
+    if(tab) tab.style.display='none';
+    ov.style.visibility='';
+    ov.style.left='calc(100% - '+sideW()+'px)'; followResize(520);
+  }
+  var bar=document.getElementById('mapFloatingInfo');
+  if(bar) bar.addEventListener('click',function(e){
+    if(!side||away) return;
+    var b=e.target.closest&&e.target.closest('button');
+    if(!b||b.id==='gearBadge'||b.closest('#gearPopup')) return;
+    toAway();
+  },true);
+  if(tab) tab.addEventListener('click',back);
+  window.parkSideOpen=toSide; window.parkSideClose=toFull;
+
+  /* 全画面P → 右メニュー位置へ: 左端を右へスワイプ(タップは5回タップ用に素通し) */
+  var sx=0, sy=0, act=false, fired=false;
+  edge.addEventListener('pointerdown',function(e){ act=true; fired=false; sx=e.clientX; sy=e.clientY; try{ edge.setPointerCapture(e.pointerId); }catch(_){} });
+  edge.addEventListener('pointermove',function(e){
+    if(!act||fired) return; var dx=e.clientX-sx, dy=e.clientY-sy;
+    if(dx>56 && Math.abs(dx)>Math.abs(dy)*1.2){ fired=true; toSide(); }
+  });
+  edge.addEventListener('pointerup',function(e){
+    if(!act) return; act=false;
+    if(!fired && Math.abs(e.clientX-sx)<10 && Math.abs(e.clientY-sy)<10){ try{ if(typeof handleParkingMapClicks==='function') handleParkingMapClicks(); }catch(_){} }
+  });
+  edge.addEventListener('pointercancel',function(){ act=false; });
+
+  /* 右メニュー位置 → 全画面へ戻る: つまみを右へスワイプ(またはタップ)。 */
+  var gx=0, gy=0, ga=false, gf=false;
+  sideGrip.addEventListener('pointerdown',function(e){ ga=true; gf=false; gx=e.clientX; gy=e.clientY; try{ sideGrip.setPointerCapture(e.pointerId); }catch(_){} });
+  sideGrip.addEventListener('pointermove',function(e){
+    if(!ga||gf) return; var dx=e.clientX-gx, dy=e.clientY-gy;
+    if(dx<-40 && Math.abs(dx)>Math.abs(dy)*1.2){ gf=true; toFull(); }
+  });
+  sideGrip.addEventListener('pointerup',function(e){
+    if(!ga) return; ga=false;
+    if(!gf && Math.abs(e.clientX-gx)<10 && Math.abs(e.clientY-gy)<10) toFull();
+  });
+  sideGrip.addEventListener('pointercancel',function(){ ga=false; });
+
+  /* D などに変えて画面が隠れたら、次にPへ戻ったときは全画面から始める */
+  setInterval(function(){ if(side && ov.classList.contains('hidden')){ away=false; if(tab) tab.style.display='none'; ov.style.visibility=''; toFull(true); } },400);
+  window.addEventListener('resize',function(){ layoutEdge(); if(side){ setLeft('calc(100% - '+sideW()+'px)'); } fit3d(); });
+  layoutEdge(); setTimeout(layoutEdge,300); setTimeout(layoutEdge,1200);
+})();
+</script>
+<script id="fixRightTabScript">
+/* 検索などの全画面から戻ったとき、右側のパネル/「3D」タブが画面の外にずれたり消えたりしないよう、毎回位置を戻す */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function resetScroll() {
+    ['screenView', 'mainDisplayContainer'].forEach(function (id) {
+      var e = $(id); if (!e) return;
+      if (e.scrollLeft) e.scrollLeft = 0;
+      if (e.scrollTop) e.scrollTop = 0;
+    });
+    var de = document.documentElement, b = document.body;
+    if (de.scrollLeft) de.scrollLeft = 0;
+    if (b.scrollLeft) b.scrollLeft = 0;
+    if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
+  }
+  function syncParkTab() {
+    var ov = $('parking3dOverlay'), tab = $('parkAwayTab');
+    if (!ov || !tab) return;
+    if (ov.style.visibility === 'hidden' && !ov.classList.contains('hidden')) tab.style.display = 'flex';
+  }
+  function settle() {
+    try { resetScroll(); } catch (e) { /* 無視 */ }
+    try { syncParkTab(); } catch (e) { /* 無視 */ }
+    try { if (typeof map !== 'undefined' && map) map.invalidateSize(); } catch (e) { /* 無視 */ }
+  }
+  var t1 = null, t2 = null;
+  function later() {
+    settle();
+    clearTimeout(t1); clearTimeout(t2);
+    t1 = setTimeout(settle, 150);
+    t2 = setTimeout(settle, 600);
+  }
+  document.addEventListener('fullscreenchange', later);
+  document.addEventListener('webkitfullscreenchange', later);
+  window.addEventListener('resize', later);
+  window.addEventListener('orientationchange', later);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) later(); });
+  document.addEventListener('focusout', function () { setTimeout(later, 200); }, true);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', later);
+  var fso = $('fullSearchOverlay');
+  if (fso && window.MutationObserver) {
+    new MutationObserver(function () { if (fso.classList.contains('hidden')) later(); })
+      .observe(fso, { attributes: true, attributeFilter: ['class'] });
+  }
 })();
 </script>
 </body>

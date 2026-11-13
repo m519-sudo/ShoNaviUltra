@@ -526,6 +526,58 @@ html, body { max-width: 100%; overflow-x: hidden; }
 body.w-screen { width: 100% !important; }
 #mainDisplayContainer, #screenView { min-width: 0; }
 </style>
+<script>try{document.documentElement.setAttribute('data-barpos',localStorage.getItem('barPos')||'right');}catch(e){document.documentElement.setAttribute('data-barpos','right');}</script>
+<style id="verticalBarStyle">
+/* 操作バーの位置: 設定で「下 / 右 / 左」を切り替える(歩行者モードは今までどおり下) */
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo{top:10px !important;bottom:10px !important;width:auto !important;flex-direction:column !important;justify-content:center;gap:6px !important;padding:8px 6px !important;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo::-webkit-scrollbar{display:none}
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo > .h-5.w-0\.5{width:22px;height:2px;flex-shrink:0}
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo > div:last-child{flex-direction:column !important;gap:6px !important}
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo .navClockInfo{white-space:normal !important;text-align:center;max-width:52px;line-height:1.1}
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) #mapFloatingInfo .masterClock{font-size:13px !important;letter-spacing:0 !important}
+/* 縦バーのときだけ、Bluetooth と ETC の表示は出さない(下のバーは今までどおり出す) */
+html:is([data-barpos="right"],[data-barpos="left"]) body:not(.walk-mode) :is(#btEtcGroup,.bt-etc-divider){display:none !important}
+/* 右 */
+html[data-barpos="right"] body:not(.walk-mode) #mapFloatingInfo{left:auto !important;right:10px !important}
+html[data-barpos="right"] body:not(.walk-mode) #gearPopup{left:auto !important;right:calc(100% + 8px) !important;bottom:auto !important;top:0}
+html[data-barpos="right"] body:not(.walk-mode) #mapCompass{right:70px !important}
+/* 「ここへ行く」などのメニューは、バーとかぶらないよう反対側(右バーのときは左)へ */
+html[data-barpos="right"] body:not(.walk-mode) #mapPinPanel{right:auto !important;left:12px !important;top:12px !important;bottom:auto !important}
+/* 左 */
+html[data-barpos="left"] body:not(.walk-mode) #mapFloatingInfo{right:auto !important;left:10px !important}
+html[data-barpos="left"] body:not(.walk-mode) #gearPopup{right:auto !important;left:calc(100% + 8px) !important;bottom:auto !important;top:0}
+html[data-barpos="left"] body:not(.walk-mode) #topNavGuidance,
+html[data-barpos="left"] body:not(.walk-mode) #signRecogCard,
+html[data-barpos="left"] body:not(.walk-mode) #routeDestinationCard{left:70px !important}
+html[data-barpos="left"] body:not(.walk-mode) #mapCreditText{left:70px !important}
+#navNext2{display:none !important}
+</style>
+<style id="lightFixStyle">
+/* ホワイト表示を見やすく: 画面全体を反転しているので、反転する前の色を「より明るく」しておくと、反転後に「より濃く」見える */
+html.light-mode body{filter:invert(1) hue-rotate(180deg) contrast(1.1) !important}
+html.light-mode :is(.text-slate-300,.text-slate-400,.text-slate-500,.text-slate-600){color:#f8fafc !important}
+html.light-mode :is(.text-cyan-300,.text-cyan-400,.text-sky-300,.text-sky-400,.text-blue-300,.text-blue-400){color:#cffafe !important}
+html.light-mode :is(.text-amber-300,.text-amber-400,.text-yellow-300,.text-yellow-400){color:#fef3c7 !important}
+html.light-mode :is(.text-green-300,.text-green-400,.text-emerald-300,.text-emerald-400){color:#dcfce7 !important}
+html.light-mode :is(.text-red-300,.text-red-400,.text-rose-400){color:#fee2e2 !important}
+html.light-mode :is(.text-purple-300,.text-purple-400,.text-violet-400){color:#f3e8ff !important}
+html.light-mode :is(.text-orange-300,.text-orange-400){color:#ffedd5 !important}
+html.light-mode :is(.text-xs,.text-sm,.text-base,.text-\[9px\],.text-\[10px\],.text-\[11px\]){font-weight:700}
+html.light-mode body{text-shadow:0 0 .6px currentColor}
+html.light-mode #speedLimitBadge,html.light-mode #evCard,html.light-mode #tripClearBtn{filter:invert(1) hue-rotate(180deg)}
+/* 制限速度バッジ */
+#speedLimitBadge{position:absolute;top:12px;right:12px;z-index:21;display:none;width:54px;height:54px;border-radius:50%;background:#fff;border:6px solid #dc2626;color:#111;font:900 20px/42px sans-serif;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.55);pointer-events:none}
+#speedLimitBadge.on{display:block}
+#speedLimitBadge.over{animation:slFlash .6s ease-in-out infinite alternate}
+@keyframes slFlash{from{background:#fff}to{background:#fecaca}}
+html[data-barpos="right"] body:not(.walk-mode) #speedLimitBadge{right:70px}
+#evCard{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:35;width:min(300px,70%);background:rgba(2,6,23,.96);border:2px solid #22c55e;border-radius:14px;padding:8px 10px;color:#e2e8f0;font-size:12px;box-shadow:0 6px 20px rgba(0,0,0,.6);display:none}
+#evCard.on{display:block}
+#evCard .row{display:flex;align-items:center;gap:6px;margin-top:5px;background:#0f172a;border:1px solid #334155;border-radius:9px;padding:5px 7px}
+#evCard .row .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800}
+#evCard .row button{background:#22c55e;color:#052e16;font-weight:900;border-radius:7px;padding:3px 8px;font-size:11px;white-space:nowrap}
+#tripClearBtn{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:35;background:#f59e0b;color:#1c1917;font-weight:900;font-size:12px;border-radius:999px;padding:6px 14px;box-shadow:0 4px 14px rgba(0,0,0,.6);display:none}
+</style>
 </head>
 <body class="h-[100dvh] w-screen flex flex-col justify-between p-0 bg-slate-950 text-slate-100 overflow-hidden">
 
@@ -760,9 +812,10 @@ body.w-screen { width: 100% !important; }
             <span class="hidden navClockInfo text-[9px] font-mono font-bold text-cyan-400 tracking-tight whitespace-nowrap"></span>
           </div>
 
-          <div class="h-5 w-0.5 bg-slate-700"></div>
 
-          <div class="flex items-center gap-1.5 text-[11px]">
+          <div class="h-5 w-0.5 bg-slate-700 bt-etc-divider"></div>
+
+          <div class="flex items-center gap-1.5 text-[11px]" id="btEtcGroup">
             <div class="text-cyan-400 text-base flex items-center gap-0.5" id="btStatusIcon" title="スマホ">
               <i class="fa-solid fa-mobile-screen-button"></i>
               <span id="phoneBatteryText" class="text-[9px] font-mono text-slate-400"></span>
@@ -1177,6 +1230,20 @@ ETC
                 <div class="text-[9px] text-slate-400">マーク＝デモ ／ 文字＝カメラで白線を認識</div>
               </div>
             </button>
+            <button id="illegalModBtn" onclick="shoIllegalToggle()" class="w-full bg-slate-900 hover:bg-slate-800 border border-red-500/60 p-2.5 rounded-xl flex items-center gap-2.5 text-left active:scale-95 transition cursor-pointer">
+              <div class="w-7 h-7 bg-red-950 border border-red-500 rounded-lg flex items-center justify-center text-red-400 text-sm"><i class="fa-solid fa-ban"></i></div>
+              <div>
+                <div class="font-bold text-red-400">違法改造 <span id="illegalModState" class="text-[10px] text-slate-400">OFF</span></div>
+                <div class="text-[9px] text-slate-400">ONにすると「走行できません」画面だけになります</div>
+              </div>
+            </button>
+            <button onclick="shoLogOpen()" class="w-full bg-slate-900 hover:bg-slate-800 border border-sky-500/60 p-2.5 rounded-xl flex items-center gap-2.5 text-left active:scale-95 transition cursor-pointer">
+              <div class="w-7 h-7 bg-sky-950 border border-sky-500 rounded-lg flex items-center justify-center text-sky-400 text-sm"><i class="fa-solid fa-chart-column"></i></div>
+              <div>
+                <div class="font-bold text-sky-300">走行ログ・点検</div>
+                <div class="text-[9px] text-slate-400">月ごとの集計 ／ オイル交換・車検の通知</div>
+              </div>
+            </button>
           </div>
 
           <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 text-[10px] text-emerald-400 font-mono text-center">
@@ -1291,6 +1358,16 @@ ETC
                 <option value="fast">はやい</option>
               </select>
             </div>
+          </div>
+
+          <!-- 走行ログ -->
+          <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-[11px]">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400"><i class="fa-solid fa-route text-amber-400 mr-1"></i>走行ログ</span>
+              <label class="flex items-center gap-1 text-[10px] text-slate-400 cursor-pointer"><input type="checkbox" id="tripLogToggle" onchange="setTripLogOn(this.checked)" class="accent-cyan-400" checked>記録する</label>
+            </div>
+            <div id="tripLogSummary" class="mt-1 text-slate-200">まだ記録がありません</div>
+            <button type="button" onclick="openTripModal()" class="mt-1.5 w-full bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-100 font-bold py-1.5 rounded border border-slate-600">ログの一覧を見る</button>
           </div>
 
           <!-- オーディオ(再生中の曲) -->
@@ -1591,6 +1668,7 @@ ETC
 <select id="uiModeSelect" class="bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-3 py-1.5 text-xs font-bold focus:outline-none flex-shrink-0 ml-3">
 <option value="dark">ダーク</option>
 <option value="light">ホワイト</option>
+<option value="auto">自動(昼=ホワイト / 夜=ダーク)</option>
 </select>
 </div>
 
@@ -1756,6 +1834,61 @@ ETC
                   <div id="barOpacityLabel" class="text-cyan-300 font-black text-sm font-mono w-12 text-right">10%</div>
                 </div>
                 <input type="range" id="barOpacityRange" min="0" max="100" step="5" value="10" oninput="setBarOpacity(this.value)" class="w-full mt-2 accent-cyan-400">
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="font-bold text-white">速度超過のお知らせ</div>
+                    <div class="text-xs text-slate-400 mt-0.5">カメラで読み取った最高速度の標識の数字を、制限速度として覚えます。それを超えたら、音と声でお知らせします(標識認識がオンのときだけ働きます)</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-3"><input type="checkbox" id="toggleSpeedWarn" onchange="setSpeedWarn(this.checked)" class="sr-only peer" checked><div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div></label>
+                </div>
+                <div class="flex items-center justify-between mt-2.5">
+                  <div class="text-xs text-slate-300">制限速度をどれだけ超えたら知らせる?</div>
+                  <select id="speedWarnMargin" onchange="setSpeedWarnMargin(this.value)" class="bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-3 py-1.5 text-xs font-bold focus:outline-none flex-shrink-0 ml-3">
+                    <option value="0">ちょうど超えたら</option><option value="5">5km/h超</option><option value="10">10km/h超</option><option value="15">15km/h超</option>
+                  </select>
+                </div>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="font-bold text-white">EV充電案内</div>
+                    <div class="text-xs text-slate-400 mt-0.5">案内中に電池が少なくなりそうなとき、近くや道の途中の充電スタンドを出して、経由地にできます(標準ではオフ)。電池残量は、車から読み取れないので、下に入力した数字をもとに考えます</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-3"><input type="checkbox" id="toggleEv" onchange="setEvOn(this.checked)" class="sr-only peer"><div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div></label>
+                </div>
+                <div class="flex items-center justify-between mt-2.5">
+                  <div class="text-xs text-slate-300">いまの電池残量(%)</div>
+                  <input type="number" id="evBattInput" min="0" max="100" step="1" onchange="setEvNum('evBatt',this.value,0,100)" class="w-24 bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-2 py-1.5 text-sm font-bold text-right focus:outline-none">
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                  <div class="text-xs text-slate-300">満充電で走れる距離(km)</div>
+                  <input type="number" id="evRangeInput" min="30" max="1000" step="10" onchange="setEvNum('evRange',this.value,30,1000)" class="w-24 bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-2 py-1.5 text-sm font-bold text-right focus:outline-none">
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                  <div class="text-xs text-slate-300">残りが何%以下で知らせる</div>
+                  <input type="number" id="evWarnInput" min="5" max="50" step="1" onchange="setEvNum('evWarn',this.value,5,50)" class="w-24 bg-slate-800 text-cyan-300 border border-cyan-500/50 rounded-lg px-2 py-1.5 text-sm font-bold text-right focus:outline-none">
+                </div>
+                <button type="button" onclick="evSuggest(true)" class="w-full mt-3 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black py-2 rounded-lg text-xs transition"><i class="fa-solid fa-charging-station mr-1"></i>いま近くの充電スタンドを探す(試す)</button>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="font-bold text-white">データのバックアップ</div>
+                <div class="text-xs text-slate-400 mt-0.5 mb-2">登録地点・画像アイコン・走行ログ・各種の設定を、ファイルに書き出したり、読み込んで元に戻したりします。ブラウザのデータを消す前や、端末を替えるときに使ってください</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="exportBackup()" class="bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black py-2 rounded-lg text-xs transition"><i class="fa-solid fa-file-export mr-1"></i>書き出す</button>
+                  <label class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-100 font-black py-2 rounded-lg text-xs transition text-center cursor-pointer border border-slate-600"><i class="fa-solid fa-file-import mr-1"></i>読み込む<input type="file" accept="application/json,.json" style="display:none" onchange="importBackup(this)"></label>
+                </div>
+                <div id="backupStatus" class="text-[11px] text-slate-400 mt-2"></div>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-2.5">
+                <div class="font-bold text-white">操作バーの位置</div>
+                <div class="text-xs text-slate-400 mt-0.5 mb-2">D・時計・アイコンが並ぶバーを、画面の下・右・左のどこに置くか選びます</div>
+                <div class="grid grid-cols-3 gap-2" id="barPosBtns">
+                  <button type="button" data-pos="bottom" onclick="setBarPos('bottom')" class="barpos-btn rounded-lg py-2 text-sm font-bold bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-arrow-down mr-1"></i>下</button>
+                  <button type="button" data-pos="right" onclick="setBarPos('right')" class="barpos-btn rounded-lg py-2 text-sm font-bold bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-arrow-right mr-1"></i>右</button>
+                  <button type="button" data-pos="left" onclick="setBarPos('left')" class="barpos-btn rounded-lg py-2 text-sm font-bold bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-arrow-left mr-1"></i>左</button>
+                </div>
               </div>
             </div>
 
@@ -2106,19 +2239,40 @@ ETC
 
       <!-- REGISTER PLACE MODAL (登録地点の名前入力) -->
       <div id="registerPlaceModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-slate-900 border-2 border-cyan-500 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-          <div class="w-14 h-14 bg-cyan-950 border border-cyan-400 text-cyan-400 rounded-full flex items-center justify-center text-2xl mx-auto">
-            <i class="fa-solid fa-map-pin"></i>
-          </div>
+        <div class="bg-slate-900 border-2 border-cyan-500 rounded-3xl p-4 max-w-sm w-full shadow-2xl text-center space-y-3" style="max-height:96%;overflow-y:auto">
           <div>
             <div class="text-lg font-black text-white">地点を登録</div>
             <div class="text-xs text-slate-400 mt-1 break-words" id="registerPlaceAddressPreview">住所を取得中…</div>
           </div>
-          <input type="text" id="registerPlaceNameInput" placeholder="例: 自宅、会社" onkeydown="if(event.key==='Enter'){confirmRegisterPlace();}" class="w-full bg-slate-950 border-2 border-cyan-500 rounded-xl px-4 py-3 text-base text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-center">
+          <input type="text" id="registerPlaceNameInput" placeholder="例: 自宅、会社" oninput="onRegisterNameInput()" onkeydown="if(event.key==='Enter'){confirmRegisterPlace();}" class="w-full bg-slate-950 border-2 border-cyan-500 rounded-xl px-4 py-3 text-base text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-center">
+          <div>
+            <div class="text-[11px] text-slate-400 text-left mb-1">アイコン(選ばなければ名前から自動。「自宅」ならおうち)</div>
+            <div id="registerIconPicker"></div>
+          </div>
           <div class="flex gap-3">
             <button onclick="confirmRegisterPlace()" class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-sm transition cursor-pointer">登録する</button>
             <button onclick="cancelRegisterPlace()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">キャンセル</button>
           </div>
+        </div>
+      </div>
+
+      <div id="tripLogModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-cyan-500 rounded-3xl p-4 max-w-md w-full shadow-2xl space-y-2" style="max-height:96%;display:flex;flex-direction:column">
+          <div class="flex items-center justify-between">
+            <div class="text-lg font-black text-white"><i class="fa-solid fa-route text-amber-400 mr-1"></i>走行ログ</div>
+            <button onclick="closeTripModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1 rounded-lg border border-slate-600 font-bold">閉じる</button>
+          </div>
+          <div id="tripLogList" style="overflow-y:auto;min-height:0;flex:1" class="space-y-1.5"></div>
+          <button onclick="clearAllTrips()" class="text-[11px] text-slate-400 hover:text-red-400 text-right">すべて削除</button>
+        </div>
+      </div>
+
+      <div id="placeIconModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-cyan-500 rounded-3xl p-4 max-w-sm w-full shadow-2xl text-center space-y-3" style="max-height:96%;overflow-y:auto">
+          <div class="text-lg font-black text-white">アイコンを変更</div>
+          <div id="placeIconModalName" class="text-xs text-slate-400 break-words"></div>
+          <div id="editIconPicker"></div>
+          <button onclick="closePlaceIconModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">閉じる</button>
         </div>
       </div>
 
@@ -5164,7 +5318,7 @@ ETC
       if (waitingForDestinationName) promptMsg = "どこに設定いたしますか？";
       else if (waitingForCandidateNumber) promptMsg = "番号をおっしゃってください。";
       else if (waitingForGoOrWaypoint) promptMsg = "目的地に設定する、経由地に設定する、ここを登録する、いずれかの言葉をおっしゃってください。";
-      else if (waitingForRouteChoice) promptMsg = "ルートをお選びください。推奨、有料優先、一般優先、距離優先、エコ、渋滞回避から、お好きなルートをおっしゃってください。";
+      else if (waitingForRouteChoice) promptMsg = "ルートをお選びください。推奨、有料優先、一般優先、距離優先、エコ、パーソナルから、お好きなルートをおっしゃってください。";
       if ('speechSynthesis' in window) {
         const promptUtt = new SpeechSynthesisUtterance(promptMsg); promptUtt._keep = true;
         promptUtt.lang = 'ja-JP';
@@ -5288,7 +5442,7 @@ ETC
         return;
       }
 
-      // ルート種別(推奨/有料優先/一般優先/距離優先/エコ/渋滞回避)の音声選択待ち
+      // ルート種別(推奨/有料優先/一般優先/距離優先/エコ/パーソナル)の音声選択待ち
       if (waitingForRouteChoice) {
         handleRouteChoiceAnswer(command);
         return;
@@ -5531,19 +5685,19 @@ ETC
       }
     }
 
-    // 目的地決定後、ルート種別(推奨/有料優先/一般優先/距離優先/エコ/渋滞回避)を音声で選んでもらう
+    // 目的地決定後、ルート種別(推奨/有料優先/一般優先/距離優先/エコ/パーソナル)を音声で選んでもらう
     function announceRouteChoices() {
       if (!routeCandidates.length) {
         voiceAnnounce('ルートの取得に失敗しました。通信状況を確認して、もう一度お試しください。');
         return;
       }
       waitingForRouteChoice = true;
-      voiceAnnounce('ルートをお選びください。推奨、有料優先、一般優先、距離優先、エコ、渋滞回避、または1から6の番号でお答えください。');
+      voiceAnnounce('ルートをお選びください。推奨、有料優先、一般優先、距離優先、エコ、パーソナル、または1から6の番号でお答えください。');
     }
 
     // 音声で選んだルート種別(例:「推奨ルート」)を反映し、そのルートで案内を開始する
     // 「推奨」のような短い単語は聞き取りミスが起きやすいため、番号(1〜6)でも答えられるようにしてある
-    const VOICE_ROUTE_ORDER = ['recommended', 'toll', 'local', 'distance', 'eco', 'avoidJam'];
+    const VOICE_ROUTE_ORDER = ['recommended', 'toll', 'local', 'distance', 'eco', 'personal'];
     async function handleRouteChoiceAnswer(command) {
       let matched = VOICE_ROUTE_ORDER.find(key => command.includes(ROUTE_MODES[key].label));
       if (!matched) {
@@ -5551,7 +5705,7 @@ ETC
         if (num && VOICE_ROUTE_ORDER[num - 1]) matched = VOICE_ROUTE_ORDER[num - 1];
       }
       if (!matched) {
-        voiceAnnounce('「推奨ルート」「有料優先」「一般優先」「距離優先」「エコ」「渋滞回避」、または1から6の番号でお答えください。');
+        voiceAnnounce('「推奨ルート」「有料優先」「一般優先」「距離優先」「エコ」「パーソナル」、または1から6の番号でお答えください。');
         return;
       }
       waitingForRouteChoice = false;
@@ -8083,6 +8237,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
           // 地図の回転は、ルート上なら道路の向き、ルート外ならGPSの向きに合わせて、毎フレームなめらかに行う
           if (headingDeg !== null) RS.hdg = headingDeg;
           rsOnFix(pos, movedM, gpsKmh);
+          try { SHOLOG.onFix(pos, gpsKmh, movedM); } catch (_e) {}
 
           // 実ナビ案内中(デモ走行ではない本番の走行)は、現在地をルートに当てはめて
           // 「次の曲がり角まであと何m」を位置から直接求める。ルート上にいないときだけ、動いた分を引く。
@@ -8467,17 +8622,18 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     let savedPlaceMarkersLayer = null;
 
     // 登録地点用の★アイコン(黄色い星)を作る
-    function createSavedPlaceIcon() {
-      const svg = `<svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 1.5 L15.09 8.26 L22.5 9.24 L17 14.35 L18.5 21.75 L12 18 L5.5 21.75 L7 14.35 L1.5 9.24 L8.91 8.26 Z"
-                fill="#facc15" stroke="#78350f" stroke-width="1.2" stroke-linejoin="round"/>
-        </svg>`;
+    function createSavedPlaceIcon(p) {
+      const r = resolvePlaceIcon(p);
+      let inner;
+      if (r.kind === 'img') inner = `<img src="${r.url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`;
+      else inner = `<i class="fa-solid ${r.fa}" style="color:${r.color};font-size:17px"></i>`;
+      const border = r.kind === 'img' ? '#facc15' : r.color;
       return L.divIcon({
-        html: svg,
+        html: `<div style="width:34px;height:34px;border-radius:50%;background:#0f172a;border:2.5px solid ${border};box-shadow:0 2px 6px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;overflow:hidden">${inner}</div>`,
         className: 'nav-saved-place-marker',
-        iconSize: [30, 30],
-        iconAnchor: [15, 27],
-        popupAnchor: [0, -24]
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
+        popupAnchor: [0, -18]
       });
     }
 
@@ -8490,12 +8646,12 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       savedPlaceMarkersLayer = L.layerGroup();
       savedPlaces.forEach((p, idx) => {
         const marker = L.marker([p.lat, p.lon], {
-          icon: createSavedPlaceIcon(),
+          icon: createSavedPlaceIcon(p),
           zIndexOffset: 500
         });
         const popupHtml = `
           <div style="min-width:150px">
-            <div style="font-weight:bold;color:var(--bg2,#0f172a);">★ ${escapeHtml(p.name)}</div>
+            <div style="font-weight:bold;color:var(--bg2,#0f172a);">${placeIconHtml(p, 16)}${escapeHtml(p.name)}</div>
             <div style="font-size:11px;color:var(--ln2,#475569);margin:2px 0 6px;">${escapeHtml(p.address || '')}</div>
             <button onclick="selectSavedPlace(${idx})" style="background:var(--ac-d,#06b6d4);color:var(--bg2,#0f172a);font-weight:bold;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;">ここへ行く</button>
           </div>`;
@@ -8585,6 +8741,164 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       openRegisterPlaceModal(c.lat, c.lng);
     }
 
+
+    /* ============ 登録地点のアイコン(30個以上の用意 + 自分の画像のアップロード) ============
+       place.icon: 'p:<id>' = 用意したアイコン / 'u:<id>' = アップロードした画像 / なし = 名前から自動(自宅→おうち、会社→ビルなど、なければ★) */
+    const PLACE_ICON_PRESETS = [
+      ['home', 'fa-house', '#f59e0b', '自宅'], ['office', 'fa-building', '#60a5fa', '会社'], ['school', 'fa-school', '#34d399', '学校'],
+      ['star', 'fa-star', '#facc15', 'お気に入り'], ['heart', 'fa-heart', '#f43f5e', 'ハート'], ['flag', 'fa-flag', '#f43f5e', '旗'],
+      ['pin', 'fa-location-dot', '#ef4444', 'ピン'], ['restaurant', 'fa-utensils', '#fb923c', 'ごはん'], ['cafe', 'fa-mug-hot', '#d97706', 'カフェ'],
+      ['bar', 'fa-martini-glass', '#c084fc', 'バー'], ['fuel', 'fa-gas-pump', '#ef4444', 'ガソリン'], ['charge', 'fa-charging-station', '#22c55e', '充電'],
+      ['parking', 'fa-square-parking', '#3b82f6', '駐車場'], ['shop', 'fa-cart-shopping', '#f472b6', '買い物'], ['store', 'fa-store', '#fb7185', 'お店'],
+      ['hospital', 'fa-hospital', '#ef4444', '病院'], ['pharmacy', 'fa-prescription-bottle-medical', '#10b981', '薬局'], ['park', 'fa-tree', '#22c55e', '公園'],
+      ['mountain', 'fa-mountain', '#a8a29e', '山'], ['beach', 'fa-umbrella-beach', '#38bdf8', '海'], ['hotel', 'fa-bed', '#8b5cf6', '宿'],
+      ['onsen', 'fa-hot-tub-person', '#f97316', '温泉'], ['station', 'fa-train', '#0ea5e9', '駅'], ['airport', 'fa-plane', '#38bdf8', '空港'],
+      ['port', 'fa-ship', '#0284c7', '港'], ['gym', 'fa-dumbbell', '#a3e635', 'ジム'], ['golf', 'fa-golf-ball-tee', '#84cc16', 'ゴルフ'],
+      ['camp', 'fa-campground', '#f59e0b', 'キャンプ'], ['temple', 'fa-torii-gate', '#ef4444', '神社'], ['friend', 'fa-user-group', '#38bdf8', '友だち'],
+      ['family', 'fa-child', '#fbbf24', '家族'], ['pet', 'fa-paw', '#d97706', 'ペット'], ['camera', 'fa-camera', '#94a3b8', '景色'],
+      ['car', 'fa-car', '#cbd5e1', '車'], ['gift', 'fa-gift', '#f472b6', 'ギフト']
+    ];
+    const PLACE_ICON_MAX_CUSTOM = 30;
+    function loadCustomPlaceIcons() {
+      try { const a = JSON.parse(localStorage.getItem('shoNaviCustomIcons') || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+    }
+    function saveCustomPlaceIcons(a) {
+      try { localStorage.setItem('shoNaviCustomIcons', JSON.stringify(a)); return true; } catch (e) { console.error(e); return false; }
+    }
+    // 名前から、ふさわしい用意アイコンを選ぶ(自宅→おうち など)。当てはまらなければ null
+    function guessPlaceIconId(name) {
+      const n = String(name || '').trim();
+      if (!n) return null;
+      if (/自宅|^(?:家|いえ|うち|おうち|マイホーム|ホーム|home)$/i.test(n)) return 'home';
+      if (/会社|職場|勤務先|オフィス|事務所/.test(n)) return 'office';
+      if (/学校|大学|小学|中学|高校|幼稚園|保育/.test(n)) return 'school';
+      if (/病院|クリニック|医院/.test(n)) return 'hospital';
+      if (/ガソリン|スタンド|給油/.test(n)) return 'fuel';
+      if (/充電/.test(n)) return 'charge';
+      if (/駐車|パーキング/.test(n)) return 'parking';
+      if (/駅/.test(n)) return 'station';
+      if (/温泉|スパ|銭湯/.test(n)) return 'onsen';
+      if (/公園/.test(n)) return 'park';
+      if (/ジム|フィットネス/.test(n)) return 'gym';
+      return null;
+    }
+    // place(または 'p:xx' / 'u:xx' の文字列)から、表示用の情報を作る
+    function resolvePlaceIcon(p) {
+      let key = (p && typeof p === 'object') ? p.icon : p;
+      if (key && key.indexOf('u:') === 0) {
+        const hit = loadCustomPlaceIcons().find(c => 'u:' + c.id === key);
+        if (hit) return { kind: 'img', url: hit.url };
+        key = null;
+      }
+      let id = (key && key.indexOf('p:') === 0) ? key.slice(2) : null;
+      if (!id && p && typeof p === 'object') id = guessPlaceIconId(p.name);
+      const pr = PLACE_ICON_PRESETS.find(x => x[0] === id) || PLACE_ICON_PRESETS.find(x => x[0] === 'star');
+      return { kind: 'fa', id: pr[0], fa: pr[1], color: pr[2] };
+    }
+    function placeIconHtml(p, size) {
+      const r = resolvePlaceIcon(p), s = size || 18;
+      if (r.kind === 'img') return `<img src="${r.url}" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:cover;display:inline-block;vertical-align:middle;margin-right:5px">`;
+      return `<i class="fa-solid ${r.fa}" style="color:${r.color};margin-right:5px"></i>`;
+    }
+    // 選択画面(登録時 / あとから変更 共通)。target: 'reg' | 'edit'
+    function buildIconPickerHtml(target, selectedKey) {
+      const cell = 'width:100%;aspect-ratio:1/1;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0f172a;cursor:pointer;position:relative;';
+      const on = 'border:2px solid #22d3ee;', off = 'border:1px solid #334155;';
+      let h = '<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-height:150px;overflow-y:auto;padding:2px">';
+      PLACE_ICON_PRESETS.forEach(x => {
+        const k = 'p:' + x[0];
+        h += `<button type="button" title="${x[3]}" onclick="pickPlaceIcon('${target}','${k}')" style="${cell}${selectedKey === k ? on : off}"><i class="fa-solid ${x[1]}" style="color:${x[2]};font-size:16px"></i></button>`;
+      });
+      loadCustomPlaceIcons().forEach(c => {
+        const k = 'u:' + c.id;
+        h += `<div style="${cell}${selectedKey === k ? on : off}" onclick="pickPlaceIcon('${target}','${k}')"><img src="${c.url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px"><span onclick="event.stopPropagation();deleteCustomPlaceIcon('${target}','${c.id}')" title="この画像を削除" style="position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#dc2626;color:#fff;font-size:10px;line-height:16px;font-weight:900">×</span></div>`;
+      });
+      h += `<label style="${cell}${off}border-style:dashed;color:#22d3ee;flex-direction:column;font-size:9px;font-weight:800" title="自分の画像を追加"><i class="fa-solid fa-plus" style="font-size:14px"></i>画像<input type="file" accept="image/*" style="display:none" onchange="uploadPlaceIcon('${target}', this)"></label>`;
+      h += '</div>';
+      return h;
+    }
+    let regPickedIcon = null;   // 登録画面で、利用者が自分で選んだアイコン(null=名前から自動)
+    let regLastGuess = null;
+    let editIconIndex = -1;
+    function renderRegisterIconPicker() {
+      const host = document.getElementById('registerIconPicker');
+      if (!host) return;
+      const nameInput = document.getElementById('registerPlaceNameInput');
+      const guess = guessPlaceIconId(nameInput ? nameInput.value : '');
+      regLastGuess = guess;
+      host.innerHTML = buildIconPickerHtml('reg', regPickedIcon || (guess ? 'p:' + guess : 'p:star'));
+    }
+    function onRegisterNameInput() {
+      if (regPickedIcon) return;
+      const nameInput = document.getElementById('registerPlaceNameInput');
+      const guess = guessPlaceIconId(nameInput ? nameInput.value : '');
+      if (guess !== regLastGuess) renderRegisterIconPicker();
+    }
+    function renderEditIconPicker() {
+      const host = document.getElementById('editIconPicker');
+      const p = savedPlaces[editIconIndex];
+      if (!host || !p) return;
+      const r = resolvePlaceIcon(p);
+      host.innerHTML = buildIconPickerHtml('edit', r.kind === 'img' ? p.icon : 'p:' + r.id);
+    }
+    function pickPlaceIcon(target, key) {
+      if (target === 'reg') { regPickedIcon = key; renderRegisterIconPicker(); return; }
+      const p = savedPlaces[editIconIndex]; if (!p) return;
+      p.icon = key;
+      persistSavedPlaces(); renderEditIconPicker(); refreshSavedPlacesUI(); renderSavedPlaceMarkers();
+      const input = document.getElementById('searchInputField');
+      if (input && input.value.trim()) onSearchInputChanged(); else resetSearchResultsList();
+    }
+    function openPlaceIconModal(index) {
+      const p = savedPlaces[index]; if (!p) return;
+      editIconIndex = index;
+      const nm = document.getElementById('placeIconModalName'); if (nm) nm.textContent = p.name;
+      renderEditIconPicker();
+      document.getElementById('placeIconModal').classList.remove('hidden');
+    }
+    function closePlaceIconModal() {
+      document.getElementById('placeIconModal').classList.add('hidden');
+      editIconIndex = -1;
+    }
+    function fileToIconDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image(), url = URL.createObjectURL(file);
+        img.onload = () => {
+          const s = Math.min(img.width, img.height), c = document.createElement('canvas');
+          c.width = c.height = 96;
+          c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 96, 96);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL('image/png'));
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image load error')); };
+        img.src = url;
+      });
+    }
+    async function uploadPlaceIcon(target, input) {
+      const file = input && input.files && input.files[0];
+      if (!file) return;
+      const list = loadCustomPlaceIcons();
+      if (list.length >= PLACE_ICON_MAX_CUSTOM) { alert('アップロードした画像は' + PLACE_ICON_MAX_CUSTOM + '個までです。いらない画像を×で消してから追加してください。'); input.value = ''; return; }
+      try {
+        const url = await fileToIconDataUrl(file);
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        list.push({ id, url });
+        if (!saveCustomPlaceIcons(list)) { alert('画像を保存できませんでした(保存容量がいっぱいです)。'); return; }
+        pickPlaceIcon(target, 'u:' + id);
+      } catch (e) {
+        console.error(e);
+        alert('この画像は読み込めませんでした。');
+      }
+      input.value = '';
+    }
+    function deleteCustomPlaceIcon(target, id) {
+      saveCustomPlaceIcons(loadCustomPlaceIcons().filter(c => c.id !== id));
+      if (regPickedIcon === 'u:' + id) regPickedIcon = null;
+      if (target === 'reg') renderRegisterIconPicker(); else renderEditIconPicker();
+      refreshSavedPlacesUI(); renderSavedPlaceMarkers();
+    }
+    /* ============ 登録地点のアイコン ここまで ============ */
+
     /* ============ 登録地点(お気に入り地点)機能 ============ */
     // ページを開いた時点で、前回までに登録した地点をlocalStorageから復元する
     function loadSavedPlaces() {
@@ -8612,6 +8926,8 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     async function openRegisterPlaceModal(lat, lon, address) {
       initAudio();
       pendingRegisterPlace = { lat, lon, address: address || '' };
+      regPickedIcon = null; regLastGuess = null;
+      renderRegisterIconPicker();
       const nameInput = document.getElementById('registerPlaceNameInput');
       const preview = document.getElementById('registerPlaceAddressPreview');
       if (nameInput) nameInput.value = '';
@@ -8655,12 +8971,14 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         nameInput.focus();
         return;
       }
-      savedPlaces.push({
+      const newPlace = {
         name,
         lat: pendingRegisterPlace.lat,
         lon: pendingRegisterPlace.lon,
         address: pendingRegisterPlace.address || ''
-      });
+      };
+      if (regPickedIcon) newPlace.icon = regPickedIcon;
+      savedPlaces.push(newPlace);
       persistSavedPlaces();
       document.getElementById('registerPlaceModal').classList.add('hidden');
       pendingRegisterPlace = null;
@@ -8725,9 +9043,10 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
           return `
           <div class="p-3 bg-slate-950 hover:bg-slate-800 rounded-lg border border-cyan-800 flex justify-between items-center gap-2">
             <div onclick="selectSavedPlace(${idx})" class="min-w-0 flex-1 cursor-pointer">
-              <div class="font-bold text-cyan-300 truncate"><i class="fa-solid fa-star text-amber-400 mr-1"></i>${escapeHtml(p.name)}</div>
+              <div class="font-bold text-cyan-300 truncate">${placeIconHtml(p, 20)}${escapeHtml(p.name)}</div>
               <div class="text-xs text-slate-500 truncate">${escapeHtml(p.address || '')}</div>
             </div>
+            <button onclick="openPlaceIconModal(${idx})" class="text-slate-500 hover:text-cyan-300 px-2 flex-shrink-0" title="アイコンを変更"><i class="fa-regular fa-image text-xs"></i></button>
             <button onclick="deleteSavedPlace(${idx})" class="text-slate-500 hover:text-red-400 px-2 flex-shrink-0" title="削除"><i class="fa-solid fa-trash text-xs"></i></button>
           </div>`;
         }).join('')}
@@ -8758,17 +9077,20 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         return;
       }
       listEl.innerHTML = savedPlaces.map((p, idx) => `
-        <button onclick="selectSavedPlace(${idx})" class="w-full text-left bg-slate-900 hover:bg-slate-800 p-1.5 rounded border border-slate-800 flex justify-between items-center text-slate-300 gap-2">
-          <span class="text-[11px] truncate flex-1"><i class="fa-solid fa-star text-amber-400 mr-1"></i>${escapeHtml(p.name)}</span>
-          <span class="text-[9px] text-slate-500 truncate max-w-[90px]">${escapeHtml((p.address || '').split(',')[0] || '')}</span>
-        </button>
+        <div class="w-full bg-slate-900 rounded border border-slate-800 flex items-center text-slate-300">
+          <button onclick="selectSavedPlace(${idx})" class="flex-1 min-w-0 text-left hover:bg-slate-800 p-1.5 rounded flex justify-between items-center gap-2">
+            <span class="text-[11px] truncate flex-1">${placeIconHtml(p, 16)}${escapeHtml(p.name)}</span>
+            <span class="text-[9px] text-slate-500 truncate max-w-[70px]">${escapeHtml((p.address || '').split(',')[0] || '')}</span>
+          </button>
+          <button onclick="openPlaceIconModal(${idx})" class="text-slate-500 hover:text-cyan-300 px-1.5 flex-shrink-0" title="アイコンを変更"><i class="fa-regular fa-image text-[11px]"></i></button>
+        </div>
       `).join('');
     }
     /* ============ 登録地点機能 ここまで ============ */
 
     /* ============ 複数ルート探索(RoutePlanner) ============
        OSRMから複数の候補ルートを取得し、ルートごとに「高速距離・概算料金・概算燃料・渋滞見込み」を
-       解析して、選んだ種別(推奨/有料優先/距離優先/一般優先/エコ/渋滞回避)に合う1本を選ぶ。
+       解析して、選んだ種別(推奨/有料優先/距離優先/一般優先/エコ/パーソナル)に合う1本を選ぶ。
        種別を切り替えるときは通信せず、取得済みの候補から選び直すだけ。
        ※料金・燃料・渋滞はすべて概算(OSRMには料金表もリアルタイム渋滞情報もないため)。 */
     // color: 右側のルート選択ボタンと、地図上のルート線の色(選択画面で共通)
@@ -8778,7 +9100,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       local:       { label: '一般優先', color: '#eab308' },
       distance:    { label: '距離優先', color: '#ef4444' },
       eco:         { label: 'エコ',     color: 'var(--ac-d,#06b6d4)' },
-      avoidJam:    { label: '渋滞回避', color: '#f97316' },
+      personal:    { label: 'パーソナル', color: '#a855f7' },
       alt:         { label: '別ルート', color: '#ec4899' }
     };
     const ROUTE_MODE_STORAGE_KEY = 'shoNaviRouteMode';
@@ -9090,7 +9412,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
     // どの種別にも選ばれなかった候補のうち、いちばん速いもの(=「別ルート」)。無ければnull
     function altCandidate(cands) {
       if (!cands.length) return null;
-      const used = new Set(['recommended', 'toll', 'local', 'distance', 'eco', 'avoidJam'].map(m => pickRouteForMode(cands, m).cand));
+      const used = new Set(['recommended', 'toll', 'local', 'distance', 'eco', 'personal'].map(m => pickRouteForMode(cands, m).cand));
       const left = cands.filter(c => !used.has(c));
       return left.length ? left.reduce((b, c) => c.a.duration < b.a.duration ? c : b) : null;
     }
@@ -9127,9 +9449,15 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
         case 'eco':
           cand = best(cands, c => c.a.fuelL);
           break;
-        case 'avoidJam':
-          cand = best(cands, c => c.a.effectiveDuration);
+        case 'personal': {
+          if (!window.SHOLOG || !SHOLOG.ready()) {
+            const r = pickRouteForMode(cands, 'recommended');
+            return { cand: r.cand, note: '走行ログがまだ少ないため、推奨ルートを表示しています(走るほど学習します)' };
+          }
+          cand = best(cands, c => SHOLOG.score(c));
+          note = 'あなたの走行ログ(よく通る道・高速の使い方)に合わせたルートです';
           break;
+        }
         case 'alt': {
           const c = altCandidate(cands);
           if (c) cand = c;
@@ -9825,6 +10153,7 @@ setWalkMode(mode === 'walk');   // 縦画面(歩行者)モードの入り切り
       // 手前(現在地)を下、遠い施設を上に並べる(flex-col-reverse なので、近い順に追加する)。
       // 各区間の色つきの帯を、隙間なく上までつなげて、現在地から続く一本の線に見えるようにする
       // (角を丸めない・行の間に余白を作らない、が「一本の線」に見せるポイント)
+      try { SHOLOG.trafficCheck(traveled); } catch (_e) {}
       const nowJam = hwGuide.congested.length && hwRangeCongested(traveled - 1, traveled + 1);
       let html = `<div class="flex items-stretch gap-1 h-6">
           <div class="w-12"></div>
@@ -14225,13 +14554,14 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
    中身(スイッチやボタン)は作り直さず、元の要素をそのまま分類ページへ移すだけなので、今までの動作は変わらない */
 var SET_PAGES = [
   { id: 'map',    icon: 'fa-map',          title: '地図',       sub: '色・向き(3D)・コンパス・現在地マーク' },
-  { id: 'screen', icon: 'fa-expand',       title: '画面表示',   sub: '全画面・下のバーの透明度' },
+  { id: 'screen', icon: 'fa-expand',       title: '画面表示',   sub: '全画面・操作バーの位置と透明度' },
   { id: 'sound',  icon: 'fa-volume-high',  title: '音・振動',   sub: '操作音・バイブ・曲がる合図音' },
   { id: 'sign',   icon: 'fa-camera',       title: '標識認識',   sub: 'カメラ・ズーム・音声案内' },
+  { id: 'ev',     icon: 'fa-charging-station', title: 'EV・充電案内', sub: '電池が少ないとき充電スタンドを提案(標準はオフ)' },
   { id: 'gps',    icon: 'fa-location-crosshairs', title: 'GPS',  sub: '現在地の取得・リアルタイム追跡' },
   { id: 'demo',   icon: 'fa-road',         title: 'デモ走行',   sub: 'デモ走行の速度など' },
   { id: 'comm',   icon: 'fa-bluetooth-b',  title: '通信・接続', sub: 'スマホの電池・通信・GPS状態' },
-  { id: 'system', icon: 'fa-sliders',      title: 'システム',   sub: '縦画面(歩行者)モード・メイン動作モード・システム情報' }
+  { id: 'system', icon: 'fa-sliders',      title: 'システム',   sub: '縦画面(歩行者)モード・メイン動作モード・バックアップ・システム情報' }
 ];
 function setupSettingsPages() {
   const root = document.getElementById('settingsScroll');
@@ -14243,13 +14573,14 @@ function setupSettingsPages() {
   const blk = (txt) => blocks.find(b => { const f = b.querySelector('.font-bold'); return f && f.textContent.trim().indexOf(txt) === 0; });
   const plan = {
     map: [secBy('地図表示設定'), blk('現在地を表示する場所'), secBy('現在地マーカー設定')],
-    screen: [blk('デザイン(見た目)'), blk('全画面表示'), blk('最初のタップ'), blk('下のバーの透明度')],
+    screen: [blk('デザイン(見た目)'), blk('全画面表示'), blk('最初のタップ'), blk('下のバーの透明度'), blk('操作バーの位置')],
     sound: [blk('操作音'), blk('触覚フィードバック'), blk('曲がる瞬間の合図音')],
-    sign: [blk('標識認識(カメラ)'), blk('カメラ映像を右上'), blk('標識の音声案内'), blk('標識認識のズーム')],
+    sign: [blk('標識認識(カメラ)'), blk('カメラ映像を右上'), blk('標識の音声案内'), blk('標識認識のズーム'), blk('速度超過のお知らせ')],
+    ev: [blk('EV充電案内')],
     gps: [secBy('GPS設定')],
     demo: [secBy('デモ走行設定')],
     comm: [secBy('通信・接続設定')],
-    system: [blk('縦画面スマートフォンモード'), secBy('システム動作モード切替'), blk('システム情報')]
+    system: [blk('縦画面スマートフォンモード'), secBy('システム動作モード切替'), blk('データのバックアップ'), blk('システム情報')]
   };
   const leftover = secBy('画面表示設定');
   const mk = (cls, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; return d; };
@@ -14549,7 +14880,7 @@ html.light-mode .leaflet-container img,html.light-mode .leaflet-container canvas
       if(q){
         var cum=Math.max(0,guidanceRemaining)+(q.distance||0);
         var d=cum>=1000?(cum/1000).toFixed(1)+'km':Math.round(cum)+'m';
-        n2.innerHTML='次の次 '+d+' 先<span class="a">'+directionArrow(q.maneuver)+'</span>'; n2.style.display='';
+        n2.innerHTML='次の次 '+d+' 先<span class="a">'+directionArrow(q.maneuver)+'</span>'; n2.style.display='none';
       } else n2.style.display='none';
     }catch(e){}
   };
@@ -14797,6 +15128,464 @@ html.light-mode #signHud{filter:invert(1) hue-rotate(180deg)}
     new MutationObserver(function () { if (fso.classList.contains('hidden')) later(); })
       .observe(fso, { attributes: true, attributeFilter: ['class'] });
   }
+})();
+</script>
+<script id="barPosScript">
+function setBarPos(p) {
+  if (p !== 'bottom' && p !== 'right' && p !== 'left') p = 'right';
+  try { localStorage.setItem('barPos', p); } catch (e) { /* 無視 */ }
+  document.documentElement.setAttribute('data-barpos', p);
+  document.querySelectorAll('#barPosBtns .barpos-btn').forEach(function (b) {
+    var on = b.dataset.pos === p;
+    b.classList.toggle('bg-cyan-500', on); b.classList.toggle('text-slate-950', on);
+    b.classList.toggle('bg-slate-800', !on); b.classList.toggle('text-slate-300', !on);
+  });
+  try { if (typeof map !== 'undefined' && map) setTimeout(function () { map.invalidateSize(); }, 60); } catch (e) { /* 無視 */ }
+}
+setBarPos(document.documentElement.getAttribute('data-barpos') || 'right');
+try { refreshSavedPlacesUI(); renderSavedPlaceMarkers(); } catch (e) { /* 無視 */ }
+</script>
+<script id="moreFeaturesScript">
+/* ===== 追加機能: 速度超過のお知らせ / EV充電案内 / 昼夜の自動切り替え / 走行ログ / バックアップ ===== */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function lsGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 無視 */ } }
+  function hv(a, b) {   // 2点(緯度経度)の距離 m
+    var R = 6371000, r = Math.PI / 180, dLat = (b[0] - a[0]) * r, dLon = (b[1] - a[1]) * r;
+    var x = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(x));
+  }
+  function say(t) { try { if (typeof speak === 'function') speak(t); } catch (e) { /* 無視 */ } }
+  function beep() { try { if (typeof playBeepSound === 'function') playBeepSound('warning'); } catch (e) { /* 無視 */ } }
+  function curSpeed() { try { return (typeof meterSpeedKmh === 'number' && Date.now() - meterSpeedAt < 6000) ? meterSpeedKmh : 0; } catch (e) { return 0; } }
+  function myPos() { try { return (typeof userPos !== 'undefined' && userPos) ? [userPos.lat, userPos.lon] : null; } catch (e) { return null; } }
+  function driving() { try { return !!(isNavigating || demoTimer); } catch (e) { return false; } }
+
+  /* ---------- 1. 速度超過のお知らせ(標識で読み取った制限速度) ---------- */
+  var SL = { kmh: 0, at: 0, lastWarn: 0 };
+  window.setSpeedWarn = function (on) { lsSet('speedWarnOn', on ? '1' : '0'); slRender(); };
+  window.setSpeedWarnMargin = function (v) { lsSet('speedWarnMargin', String(parseInt(v, 10) || 0)); };
+  var host = $('mapContainer') || document.body;
+  var badge = document.createElement('div'); badge.id = 'speedLimitBadge'; host.appendChild(badge);
+  function slOn() { return lsGet('speedWarnOn', '1') === '1'; }
+  function slRender() {
+    var fresh = SL.kmh > 0 && Date.now() - SL.at < 600000;
+    if (!fresh) SL.kmh = 0;
+    badge.textContent = SL.kmh || '';
+    badge.classList.toggle('on', slOn() && fresh);
+  }
+  var _srShow = window.srShow;
+  if (typeof _srShow === 'function') {
+    window.srShow = function (kind, val) {
+      _srShow.apply(this, arguments);
+      try { if (kind === 'speed' && val) { SL.kmh = parseInt(val, 10) || 0; SL.at = Date.now(); slRender(); } } catch (e) { /* 無視 */ }
+    };
+  }
+  setInterval(function () {
+    slRender();
+    if (!slOn() || !SL.kmh) { badge.classList.remove('over'); return; }
+    var margin = parseInt(lsGet('speedWarnMargin', '5'), 10) || 0;
+    var over = curSpeed() > SL.kmh + margin;
+    badge.classList.toggle('over', over);
+    if (over && Date.now() - SL.lastWarn > 15000) {
+      SL.lastWarn = Date.now(); beep();
+      say('制限速度は' + SL.kmh + 'キロです。速度を落としてください。');
+    }
+  }, 1000);
+
+  /* ---------- 2. EV充電案内(標準はオフ) ---------- */
+  var EV = { last: 0, busy: false };
+  window.setEvOn = function (on) { lsSet('evOn', on ? '1' : '0'); if (!on) evHide(); };
+  window.setEvNum = function (key, v, lo, hi) { var n = Math.min(hi, Math.max(lo, parseFloat(v) || lo)); lsSet(key, String(n)); evInit(); };
+  function evInit() {
+    var a = $('toggleEv'); if (a) a.checked = lsGet('evOn', '0') === '1';
+    var b = $('evBattInput'); if (b) b.value = lsGet('evBatt', '80');
+    var r = $('evRangeInput'); if (r) r.value = lsGet('evRange', '300');
+    var w = $('evWarnInput'); if (w) w.value = lsGet('evWarn', '20');
+  }
+  var card = document.createElement('div'); card.id = 'evCard'; host.appendChild(card);
+  function evHide() { card.classList.remove('on'); }
+  function remainingM() {
+    try {
+      if (!driving() || !guidancePoints || !guidancePoints.length) return 0;
+      var s = Math.max(0, guidanceRemaining || 0);
+      for (var i = guidanceIndex + 1; i < guidancePoints.length; i++) s += guidancePoints[i].distance || 0;
+      return s;
+    } catch (e) { return 0; }
+  }
+  async function fetchStations(lat, lon) {
+    var q = '[out:json][timeout:15];(node["amenity"="charging_station"](around:15000,' + lat + ',' + lon + ');way["amenity"="charging_station"](around:15000,' + lat + ',' + lon + '););out center 60;';
+    var eps = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+    for (var i = 0; i < eps.length; i++) {
+      try {
+        var ctl = new AbortController(), to = setTimeout(function () { ctl.abort(); }, 14000);
+        var res = await fetch(eps[i], { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ctl.signal });
+        clearTimeout(to);
+        if (!res.ok) continue;
+        var j = await res.json();
+        return (j.elements || []).map(function (e) {
+          var la = e.lat != null ? e.lat : (e.center && e.center.lat), lo = e.lon != null ? e.lon : (e.center && e.center.lon);
+          var tg = e.tags || {};
+          return la == null ? null : { lat: la, lon: lo, name: tg.name || tg.operator || tg.brand || '充電スタンド' };
+        }).filter(Boolean);
+      } catch (e) { /* 次へ */ }
+    }
+    return null;
+  }
+  window.evSuggest = async function (force) {
+    if (EV.busy) return;
+    var me = myPos();
+    if (!me) { if (force) alert('現在地がまだわかりません。'); return; }
+    EV.busy = true; EV.last = Date.now();
+    try {
+      var batt = parseFloat(lsGet('evBatt', '80')), range = parseFloat(lsGet('evRange', '300'));
+      var est = range * batt / 100, rem = remainingM();
+      var list = await fetchStations(me[0], me[1]);
+      if (!list) { if (force) alert('充電スタンドを調べられませんでした(通信できません)。'); return; }
+      var pts = [];
+      try { if (typeof routeLine !== 'undefined' && routeLine && routeLine.getLatLngs) { var ll = routeLine.getLatLngs(); for (var i = 0; i < ll.length; i += 5) pts.push([ll[i].lat, ll[i].lng]); } } catch (e) { /* 無視 */ }
+      list.forEach(function (s) {
+        s.d = hv(me, [s.lat, s.lon]);
+        s.onRoute = pts.length ? Math.min.apply(null, pts.map(function (p) { return hv(p, [s.lat, s.lon]); })) < 2000 : false;
+      });
+      var cand = list.filter(function (s) { return s.onRoute; });
+      var useRoute = cand.length > 0;
+      if (!useRoute) cand = list;
+      cand.sort(function (a, b) { return a.d - b.d; });
+      cand = cand.slice(0, 3);
+      card.innerHTML = '';
+      var h = document.createElement('div'); h.style.cssText = 'display:flex;justify-content:space-between;align-items:center;font-weight:900;color:#4ade80';
+      h.innerHTML = '<span><i class="fa-solid fa-charging-station"></i> 充電スタンド</span>';
+      var x = document.createElement('button'); x.textContent = '✕'; x.style.cssText = 'color:#94a3b8;font-size:14px'; x.onclick = evHide; h.appendChild(x); card.appendChild(h);
+      var info = document.createElement('div'); info.style.cssText = 'font-size:11px;color:#94a3b8;margin-top:2px';
+      info.textContent = '電池 ' + batt + '%(走れる目安 約' + Math.round(est) + 'km)' + (rem ? ' / 目的地まで ' + (rem / 1000).toFixed(1) + 'km' : '') + (useRoute ? ' ・道の途中' : ' ・近く');
+      card.appendChild(info);
+      if (!cand.length) { var no = document.createElement('div'); no.textContent = '近くに見つかりませんでした'; no.style.marginTop = '6px'; card.appendChild(no); }
+      cand.forEach(function (s) {
+        var r = document.createElement('div'); r.className = 'row';
+        var n = document.createElement('span'); n.className = 'n'; n.textContent = s.name; r.appendChild(n);
+        var dd = document.createElement('span'); dd.style.cssText = 'color:#94a3b8;font-size:11px'; dd.textContent = (s.d / 1000).toFixed(1) + 'km'; r.appendChild(dd);
+        var b = document.createElement('button');
+        var canWp = false; try { canWp = !!hasDestinationSet; } catch (e) { /* 無視 */ }
+        b.textContent = canWp ? '経由地' : '地図で見る';
+        b.onclick = function () {
+          if (canWp && typeof addWaypoint === 'function') { addWaypoint(s.lat, s.lon, s.name); evHide(); }
+          else { try { map.setView([s.lat, s.lon], 16); } catch (e) { /* 無視 */ } }
+        };
+        r.appendChild(b); card.appendChild(r);
+      });
+      card.classList.add('on');
+      if (!force) { beep(); say('電池が少なくなりそうです。充電スタンドを表示します。'); }
+    } finally { EV.busy = false; }
+  };
+  setInterval(function () {
+    if (lsGet('evOn', '0') !== '1' || !driving() || Date.now() - EV.last < 15 * 60000) return;
+    var batt = parseFloat(lsGet('evBatt', '80')), range = parseFloat(lsGet('evRange', '300')), warn = parseFloat(lsGet('evWarn', '20'));
+    var est = range * batt / 100, rem = remainingM();
+    if (batt <= warn || (rem > 0 && est < rem * 1.1 + 10)) window.evSuggest(false);
+  }, 30000);
+  evInit();
+
+  /* ---------- 3. 昼夜の自動切り替え ---------- */
+  var H = document.documentElement;
+  function isDaytime() {
+    var now = new Date(), me = myPos() || [35.6895, 139.6917], rad = Math.PI / 180;
+    var doy = Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(now.getFullYear(), 0, 0)) / 864e5);
+    var g = 2 * Math.PI / 365 * (doy - 1 + (now.getHours() - 12) / 24);
+    var eqt = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+    var dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+    var c = Math.cos(90.833 * rad) / (Math.cos(me[0] * rad) * Math.cos(dec)) - Math.tan(me[0] * rad) * Math.tan(dec);
+    if (!(c >= -1 && c <= 1)) { var hr = now.getHours(); return hr >= 6 && hr < 18; }
+    var ha = Math.acos(c) / rad;
+    var rise = 720 - 4 * (me[1] + ha) - eqt, set = 720 - 4 * (me[1] - ha) - eqt;   // 分(UTC)
+    var m = now.getUTCHours() * 60 + now.getUTCMinutes();
+    rise = ((rise % 1440) + 1440) % 1440; set = ((set % 1440) + 1440) % 1440;
+    return rise < set ? (m >= rise && m < set) : (m >= rise || m < set);
+  }
+  function autoApply() {
+    if (lsGet('uiModeAuto', '0') !== '1') return;
+    var day = isDaytime();
+    H.classList.toggle('light-mode', day);
+    lsSet('uiLight', day ? '1' : '0');
+  }
+  var uiSel = $('uiModeSelect');
+  if (uiSel) {
+    uiSel.onchange = function () {
+      var v = this.value;
+      if (v === 'auto') { lsSet('uiModeAuto', '1'); autoApply(); }
+      else { lsSet('uiModeAuto', '0'); var on = v === 'light'; H.classList.toggle('light-mode', on); lsSet('uiLight', on ? '1' : '0'); }
+    };
+    if (lsGet('uiModeAuto', '0') === '1') { uiSel.value = 'auto'; autoApply(); }
+  }
+  setInterval(autoApply, 60000);
+
+  /* ---------- 4. 走行ログ(車両ステータスの中) ---------- */
+  var TL = { cur: null, last: null, moveAt: 0, tick: 0, layer: null };
+  function loadTrips() { try { var a = JSON.parse(localStorage.getItem('shoNaviTrips') || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function saveTrips(list) {
+    for (var n = 0; n < 6; n++) {
+      try { localStorage.setItem('shoNaviTrips', JSON.stringify(list)); return true; } catch (e) { list = list.slice(0, Math.max(1, list.length - 3)); }
+    }
+    return false;
+  }
+  function fmtDur(ms) { var m = Math.round(ms / 60000); return m >= 60 ? Math.floor(m / 60) + '時間' + (m % 60) + '分' : m + '分'; }
+  function fmtDate(ts) { var d = new Date(ts), p = function (n) { return (n < 10 ? '0' : '') + n; }; return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+  window.setTripLogOn = function (on) { lsSet('tripLogOn', on ? '1' : '0'); if (!on) tlEnd(); tlSummary(); };
+  function tlSummary() {
+    var t = $('tripLogToggle'); if (t) t.checked = lsGet('tripLogOn', '1') === '1';
+    var el = $('tripLogSummary'); if (!el) return;
+    var list = loadTrips(), c = TL.cur;
+    if (c) el.textContent = '記録中: ' + (c.dist / 1000).toFixed(1) + 'km / ' + fmtDur(Date.now() - c.start);
+    else if (list.length) { var l = list[0]; el.textContent = '前回: ' + fmtDate(l.start) + ' ' + (l.dist / 1000).toFixed(1) + 'km / ' + fmtDur(l.end - l.start) + '(全' + list.length + '件)'; }
+    else el.textContent = 'まだ記録がありません';
+  }
+  function tlFlush() {
+    if (!TL.cur) return;
+    var list = loadTrips().filter(function (x) { return x.id !== TL.cur.id; });
+    list.unshift(TL.cur); saveTrips(list.slice(0, 20));
+  }
+  function tlEnd() {
+    var c = TL.cur; if (!c) return;
+    TL.cur = null; TL.last = null;
+    var list = loadTrips().filter(function (x) { return x.id !== c.id; });
+    if (c.dist >= 200) { c.end = Date.now(); delete c.live; list.unshift(c); }
+    saveTrips(list.slice(0, 20)); tlSummary();
+  }
+  setInterval(function () {
+    if (lsGet('tripLogOn', '1') !== '1') return;
+    var p = myPos(); if (!p) return;
+    var now = Date.now();
+    if (!TL.last) { TL.last = p; return; }
+    var d = hv(TL.last, p);
+    if (d >= 12) {
+      if (!TL.cur) TL.cur = { id: now, start: now, end: now, dist: 0, max: 0, demo: (function () { try { return !!demoTimer; } catch (e) { return false; } })(), live: 1, pts: [TL.last] };
+      TL.cur.pts.push([+p[0].toFixed(5), +p[1].toFixed(5)]);
+      if (TL.cur.pts.length > 3000) TL.cur.pts = TL.cur.pts.filter(function (_, i) { return i % 2 === 0; });
+      TL.cur.dist += d; TL.last = p; TL.moveAt = now; TL.cur.end = now;
+      if (++TL.tick % 10 === 0) { tlFlush(); tlSummary(); }
+    }
+    if (TL.cur) { TL.cur.max = Math.max(TL.cur.max, Math.round(curSpeed())); if (now - TL.moveAt > 10 * 60000) tlEnd(); }
+  }, 3000);
+  window.addEventListener('pagehide', tlFlush);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) tlFlush(); });
+  (function fixLive() { var l = loadTrips(); var ch = false; l.forEach(function (x) { if (x.live) { delete x.live; ch = true; } }); if (ch) saveTrips(l); })();
+
+  var clearBtn = document.createElement('button'); clearBtn.id = 'tripClearBtn'; clearBtn.textContent = '走行ログの表示を消す'; host.appendChild(clearBtn);
+  clearBtn.onclick = function () { if (TL.layer) { TL.layer.remove(); TL.layer = null; } clearBtn.style.display = 'none'; };
+  window.openTripModal = function () { tlFlush(); renderTrips(); $('tripLogModal').classList.remove('hidden'); };
+  window.closeTripModal = function () { $('tripLogModal').classList.add('hidden'); };
+  function renderTrips() {
+    var box = $('tripLogList'); if (!box) return;
+    var list = loadTrips();
+    if (!list.length) { box.innerHTML = '<div class="text-slate-400 text-sm py-4 text-center">まだ記録がありません</div>'; return; }
+    box.innerHTML = list.map(function (t, i) {
+      return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex items-center gap-2">' +
+        '<div class="flex-1 min-w-0"><div class="font-bold text-white text-sm">' + fmtDate(t.start) + (t.demo ? ' <span class="text-[10px] text-purple-300 border border-purple-500/50 rounded px-1">デモ</span>' : '') + '</div>' +
+        '<div class="text-xs text-slate-300">' + (t.dist / 1000).toFixed(1) + 'km ・ ' + fmtDur(t.end - t.start) + ' ・ 最高 ' + (t.max || 0) + 'km/h</div></div>' +
+        '<button onclick="showTripOnMap(' + i + ')" class="bg-cyan-500 text-slate-950 font-black text-[11px] px-2 py-1.5 rounded-lg">地図で見る</button>' +
+        '<button onclick="exportTripGpx(' + i + ')" class="text-slate-400 hover:text-cyan-300 px-1.5" title="GPXで書き出す"><i class="fa-solid fa-download text-xs"></i></button>' +
+        '<button onclick="deleteTrip(' + i + ')" class="text-slate-500 hover:text-red-400 px-1.5" title="削除"><i class="fa-solid fa-trash text-xs"></i></button></div>';
+    }).join('');
+  }
+  window.showTripOnMap = function (i) {
+    var t = loadTrips()[i]; if (!t || !t.pts || t.pts.length < 2) return;
+    try {
+      if (TL.layer) TL.layer.remove();
+      TL.layer = L.layerGroup([
+        L.polyline(t.pts, { color: '#f59e0b', weight: 5, opacity: .9 }),
+        L.circleMarker(t.pts[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#22c55e', fillOpacity: 1 }),
+        L.circleMarker(t.pts[t.pts.length - 1], { radius: 7, color: '#fff', weight: 2, fillColor: '#ef4444', fillOpacity: 1 })
+      ]).addTo(map);
+      map.fitBounds(L.latLngBounds(t.pts), { padding: [40, 40] });
+      clearBtn.style.display = 'block';
+    } catch (e) { console.error(e); }
+    window.closeTripModal();
+  };
+  window.deleteTrip = function (i) {
+    var list = loadTrips(); if (!list[i]) return;
+    if (TL.cur && list[i].id === TL.cur.id) return;
+    if (!confirm('この走行ログを削除しますか?')) return;
+    list.splice(i, 1); saveTrips(list); renderTrips(); tlSummary();
+  };
+  window.clearAllTrips = function () {
+    if (!confirm('走行ログをすべて削除しますか?')) return;
+    TL.cur = null; TL.last = null; saveTrips([]); renderTrips(); tlSummary();
+  };
+  function download(name, text, type) {
+    var blob = new Blob([text], { type: type || 'application/octet-stream' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  window.exportTripGpx = function (i) {
+    var t = loadTrips()[i]; if (!t) return;
+    var xml = '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="SHO_NAVI" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>' + fmtDate(t.start) + '</name><trkseg>' +
+      t.pts.map(function (p) { return '<trkpt lat="' + p[0] + '" lon="' + p[1] + '"></trkpt>'; }).join('') + '</trkseg></trk></gpx>';
+    download('trip-' + t.id + '.gpx', xml, 'application/gpx+xml');
+  };
+  tlSummary();
+
+  /* ---------- 5. バックアップ(書き出し / 読み込み) ---------- */
+  function bkStatus(msg) { var el = $('backupStatus'); if (el) el.textContent = msg; }
+  window.exportBackup = async function () {
+    tlFlush();
+    var data = {};
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); data[k] = localStorage.getItem(k); } } catch (e) { bkStatus('読み取れませんでした'); return; }
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    var name = 'sho-navi-backup-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '.json';
+    var text = JSON.stringify({ app: 'SHO_NAVI', version: 1, exportedAt: d.toISOString(), data: data });
+    try {
+      var file = new File([text], name, { type: 'application/json' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'SHO_NAVI バックアップ' }); bkStatus('書き出しました(' + Object.keys(data).length + '項目)'); return; }
+        catch (e) { if (e && e.name === 'AbortError') return; }
+      }
+    } catch (e) { /* ファイルでの共有ができない場合は、ふつうの保存へ */ }
+    download(name, text, 'application/json');
+    bkStatus('書き出しました(' + Object.keys(data).length + '項目): ' + name);
+  };
+  window.importBackup = function (input) {
+    var f = input && input.files && input.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var j = JSON.parse(r.result);
+        if (!j || j.app !== 'SHO_NAVI' || !j.data || typeof j.data !== 'object') throw new Error('形式が違います');
+        var keys = Object.keys(j.data);
+        if (!confirm('バックアップ(' + keys.length + '項目)を読み込みます。いまの登録地点や設定は、この内容に置き換わります。よろしいですか?')) { input.value = ''; return; }
+        keys.forEach(function (k) { try { localStorage.setItem(k, String(j.data[k])); } catch (e) { /* 無視 */ } });
+        bkStatus('読み込みました。再読み込みします…');
+        setTimeout(function () { location.reload(); }, 600);
+      } catch (e) { bkStatus('このファイルは読み込めませんでした: ' + e.message); }
+      input.value = '';
+    };
+    r.readAsText(f);
+  };
+
+  /* 設定画面の初期表示 */
+  var sw = $('toggleSpeedWarn'); if (sw) sw.checked = slOn();
+  var sm = $('speedWarnMargin'); if (sm) sm.value = lsGet('speedWarnMargin', '5');
+})();
+</script>
+
+<div id="illegalLock" style="display:none;position:fixed;inset:0;z-index:2147483647;background:#000;color:#fff;align-items:center;justify-content:center;text-align:center;padding:24px;touch-action:none;user-select:none">
+  <div><div style="font-size:64px;color:#ef4444;line-height:1">&#9888;</div>
+  <div style="font-size:clamp(20px,5vw,34px);font-weight:900;margin-top:16px;color:#ef4444">この車は違法改造がされているため<br>走行できません</div></div>
+</div>
+<div id="shoLogPanel" style="display:none;position:fixed;inset:0;z-index:9500;background:#0b1220;color:#e2e8f0;overflow:auto;padding:14px;font-size:13px"></div>
+<script>
+(function(){
+  var KEY='shoDriveLog2', MK='shoMaint2', IK='shoIllegalMod';
+  var D; try{D=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
+  D=D||{months:{},cells:{},hwKm:0,km:0,last:null};
+  var M; try{M=JSON.parse(localStorage.getItem(MK)||'null');}catch(e){}
+  M=M||{offset:0,oil:{interval:5000,lastKm:0},shaken:{date:'',interval:20000,lastKm:0},notified:{}};
+  var saveAt=0;
+  function save(f){var n=Date.now(); if(!f&&n-saveAt<10000)return; saveAt=n; try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){} }
+  function saveM(){try{localStorage.setItem(MK,JSON.stringify(M));}catch(e){}}
+  function ck(la,lo){return Math.round(la/0.0025)+','+Math.round(lo/0.0025);}
+  function mkey(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);}
+  function odo(){return D.km+(M.offset||0);}
+  function fmt(sec){var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);return h+'時間'+m+'分';}
+  var S={};
+  S.ready=function(){return Object.keys(D.cells).length>=30;};
+  S.score=function(c){
+    var g=c.route.geometry.coordinates,n=g.length,st=Math.max(1,Math.floor(n/80)),t=0,h=0;
+    for(var i=0;i<n;i+=st){t++;if(D.cells[ck(g[i][1],g[i][0])])h++;}
+    var fam=t?h/t:0,a=c.a,hw=a.distance?a.hwM/a.distance:0,pref=D.km>1?D.hwKm/D.km:0.3;
+    return Math.abs(hw-pref)*40+(1-fam)*30+a.duration/60*0.3;
+  };
+  S.onFix=function(pos,kmh,movedM){
+    var now=Date.now(),la=pos.coords.latitude,lo=pos.coords.longitude,L=D.last,mo=mkey();
+    var m=D.months[mo]||(D.months[mo]={km:0,max:0,sec:0,trips:0});
+    var moving=kmh===null?movedM>3:kmh>=5;
+    if(L&&now-L.t<30000&&moving&&pos.coords.accuracy<60){
+      var d=movedM>0&&movedM<600?movedM:0;
+      m.km+=d/1000;D.km+=d/1000;m.sec+=(now-L.t)/1000;
+      if(kmh!==null&&kmh>=70)D.hwKm+=d/1000;
+    } else if(!L||now-L.t>=600000){ if(moving)m.trips++; }
+    if(kmh!==null&&kmh>m.max&&kmh<250)m.max=kmh;
+    if(moving){var k=ck(la,lo);D.cells[k]=(D.cells[k]||0)+1;
+      if(Object.keys(D.cells).length>8000){for(var x in D.cells)if(D.cells[x]<2)delete D.cells[x];}}
+    D.last={t:now};save();
+  };
+  /* 渋滞・事故の音声通知(hwGuide.congested の区間を使用。事故は区間に accident:true を付ける) */
+  var ann={};
+  function say(key,txt){if(ann[key])return;ann[key]=1;try{voiceAnnounce(txt);}catch(e){}}
+  S.trafficCheck=function(tr){
+    if(!window.isNavigating&&typeof isNavigating!=='undefined'&&!isNavigating)return;
+    (hwGuide.congested||[]).forEach(function(r){
+      if(r.m1<=tr)return;var dist=r.m0-tr,k=Math.round(r.m0/100)+(r.accident?'a':'j');
+      if(dist>3000)return;
+      var len=((r.m1-r.m0)/1000).toFixed(1);
+      if(r.accident)say(k,dist>0?'この先、約'+(dist/1000).toFixed(1)+'キロで事故が発生しています。ご注意ください。':'事故のあった区間を走行中です。ご注意ください。');
+      else say(k,dist>0?'この先、約'+(dist/1000).toFixed(1)+'キロで渋滞があります。長さは約'+len+'キロです。':'渋滞区間を走行中です。');
+    });
+  };
+  S.reportTraffic=function(kind,txt){say(kind+Date.now(),txt||(kind==='accident'?'この先で事故が発生しています。ご注意ください。':'この先で渋滞が発生しています。'));};
+  /* 点検の通知(走行距離ベース) */
+  function checkMaint(){
+    var t=odo(),today=new Date().toISOString().slice(0,10),msgs=[];
+    var oilLeft=M.oil.lastKm+M.oil.interval-t;
+    if(oilLeft<=500)msgs.push(['oil',oilLeft<=0?'オイル交換の時期を過ぎています。':'オイル交換まであと約'+Math.round(oilLeft)+'キロです。']);
+    var shLeft=M.shaken.lastKm+M.shaken.interval-t;
+    if(shLeft<=1000)msgs.push(['shk',shLeft<=0?'車検の目安距離を超えています。':'車検の目安まであと約'+Math.round(shLeft)+'キロです。']);
+    if(M.shaken.date){var days=Math.ceil((new Date(M.shaken.date)-new Date())/86400000);
+      if(days<=30)msgs.push(['shd',days<0?'車検の期限が過ぎています。':'車検の期限まであと'+days+'日です。']);}
+    msgs.forEach(function(x){if(M.notified[x[0]]===today)return;M.notified[x[0]]=today;saveM();try{voiceAnnounce(x[1]);}catch(e){}});
+  }
+  setTimeout(checkMaint,6000);setInterval(checkMaint,600000);
+  /* 走行ログ画面 */
+  var P=document.getElementById('shoLogPanel');
+  window.shoLogOpen=function(){
+    var ks=Object.keys(D.months).sort().reverse(),rows=ks.map(function(k){var m=D.months[k];
+      return '<tr><td>'+k+'</td><td>'+m.km.toFixed(1)+' km</td><td>'+Math.round(m.max)+' km/h</td><td>'+fmt(m.sec)+'</td><td>'+(m.sec>60?(m.km/(m.sec/3600)).toFixed(0):'-')+' km/h</td><td>'+m.trips+'</td></tr>';}).join('')||'<tr><td colspan="6" style="color:#94a3b8">まだ走行ログがありません(実走行で記録されます)</td></tr>';
+    var st='border:1px solid #334155;border-radius:8px;padding:8px;margin:6px 0;background:#111827';
+    var inp='background:#0f172a;color:#fff;border:1px solid #475569;border-radius:6px;padding:4px;width:90px';
+    var oilL=Math.round(M.oil.lastKm+M.oil.interval-odo()),shL=Math.round(M.shaken.lastKm+M.shaken.interval-odo());
+    P.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:16px">走行ログ・点検</b><button onclick="shoLogClose()" style="background:#334155;color:#fff;border-radius:8px;padding:6px 14px">閉じる</button></div>'
+     +'<div style="'+st+'">総走行距離: <b>'+odo().toFixed(1)+' km</b> ／ 学習した道: '+Object.keys(D.cells).length+'区画 ／ 高速の割合: '+(D.km>1?Math.round(D.hwKm/D.km*100):0)+'%<br><span style="color:#94a3b8;font-size:11px">パーソナルルートは、よく通る道と高速の使い方から選びます(30区画以上で有効)</span></div>'
+     +'<table style="width:100%;border-collapse:collapse;text-align:right" cellpadding="4"><tr style="color:#94a3b8"><th>月</th><th>距離</th><th>最高速度</th><th>走行時間</th><th>平均</th><th>回数</th></tr>'+rows+'</table>'
+     +'<div style="'+st+'"><b>オイル交換</b> あと約'+oilL+' km<br>間隔 <input id="mOilI" type="number" value="'+M.oil.interval+'" style="'+inp+'"> km　<button onclick="shoOilDone()" style="background:#0e7490;color:#fff;border-radius:6px;padding:4px 10px">交換した</button></div>'
+     +'<div style="'+st+'"><b>車検</b> 距離の目安まであと約'+shL+' km<br>期限日 <input id="mShD" type="date" value="'+M.shaken.date+'" style="'+inp+';width:150px"> 間隔 <input id="mShI" type="number" value="'+M.shaken.interval+'" style="'+inp+'"> km　<button onclick="shoShakenDone()" style="background:#0e7490;color:#fff;border-radius:6px;padding:4px 10px">受けた</button></div>'
+     +'<div style="'+st+'">走行距離の補正(今のメーター値) <input id="mOdo" type="number" value="'+Math.round(odo())+'" style="'+inp+'"> km　<button onclick="shoMaintSave()" style="background:#16a34a;color:#fff;border-radius:6px;padding:4px 10px">保存</button></div>';
+    P.style.display='block';
+  };
+  window.shoLogClose=function(){P.style.display='none';};
+  window.shoMaintSave=function(){
+    M.oil.interval=+document.getElementById('mOilI').value||5000;M.shaken.interval=+document.getElementById('mShI').value||20000;
+    M.shaken.date=document.getElementById('mShD').value;M.offset=(+document.getElementById('mOdo').value||0)-D.km;M.notified={};saveM();shoLogOpen();};
+  window.shoOilDone=function(){M.oil.lastKm=odo();M.oil.interval=+document.getElementById('mOilI').value||5000;M.notified={};saveM();shoLogOpen();};
+  window.shoShakenDone=function(){M.shaken.lastKm=odo();M.notified={};saveM();shoLogOpen();};
+  window.SHOLOG=S;window.addEventListener('pagehide',function(){save(true);});
+
+  /* ===== 違法改造ロック =====
+     解除: ①電源ケーブルを抜く ②(全画面で始めた場合)全画面を終了 ③(全画面でない場合)電源ボタン
+     ※Webは電源ボタンそのものは検知できないため「画面が消えて点いた(visibilitychange)」で代用 */
+  var LK=document.getElementById('illegalLock'),locked=false,wasFS=false,hid=false,armed=false,bat=null;
+  function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement;}
+  function ui(){var e=document.getElementById('illegalModState');if(e){e.textContent=locked?'ON':'OFF';e.style.color=locked?'#f87171':'';}}
+  function lock(){
+    try{if(window.currentGear!=='P'&&typeof currentGear!=='undefined'&&currentGear!=='P')window.__origChangeGear('P');}catch(e){}
+    locked=true;wasFS=!!fsEl();hid=false;armed=chg()===true;
+    LK.style.display='flex';try{localStorage.setItem(IK,'1');}catch(e){} ui();
+    try{window.speechSynthesis.cancel();}catch(e){}
+  }
+  function unlock(){locked=false;LK.style.display='none';try{localStorage.setItem(IK,'0');}catch(e){} ui();}
+  window.shoIllegalToggle=function(){locked?unlock():lock();};
+  if(typeof changeGear==='function'){window.__origChangeGear=changeGear;
+    window.changeGear=function(g){if(locked)return;return window.__origChangeGear.apply(this,arguments);};}
+  /* 充電の検知: ナビ本体が使っている電池の情報(phoneBattery)を使い、1秒ごとにも確認する(イベントが来ない端末対策) */
+  function chg(){try{var b=(typeof phoneBattery!=='undefined'&&phoneBattery)||bat;return b?!!b.charging:null;}catch(e){return bat?!!bat.charging:null;}}
+  if(navigator.getBattery)navigator.getBattery().then(function(b){bat=b;}).catch(function(){});
+  function chkChg(){if(!locked)return;var c=chg();if(c===null)return;if(c)armed=true;else if(armed)unlock();}
+  setInterval(chkChg,1000);
+  function onFS(){if(locked&&wasFS&&!fsEl())unlock();}
+  document.addEventListener('fullscreenchange',onFS);document.addEventListener('webkitfullscreenchange',onFS);
+  document.addEventListener('visibilitychange',function(){
+    if(!locked)return;if(document.hidden)hid=true;else if(hid&&!wasFS)unlock();});
+  if(localStorage.getItem(IK)==='1')lock();
 })();
 </script>
 </body>
